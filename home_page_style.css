@@ -3,12 +3,37 @@
   --secondary-bg: #f0f0f0;
   --text-color: #555;
   --highlight-color: #000;
+  --price-color: #444;
+  --buy-bg: #28a745;
+  --rent-bg: #007bff;
+  --button-text-color: #ffffff;
+
   --spacing-xxs: 4px;
   --spacing-xs: 8px;
   --spacing-sm: 16px;
   --spacing-md: 24px;
   --spacing-lg: 32px;
+
+  --font-xs: 0.8rem;
+  --font-sm: 0.9rem;
+  --font-md: 1rem;
+  --font-lg: 1.1rem;
+  --font-xl: 1.3rem;
+  --font-xxl: 1.4rem;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-full: 50%;
+
+  --search-height: 56px;
+  --search-height-mobile: 48px;
+  --search-height-xs: 32px;
+
+  --logo-max-width: 100px;
+  --logo-max-width-xs: 80px;
 }
+
 
 * {
   box-sizing: border-box;
@@ -31,7 +56,6 @@ main {
   padding: var(--spacing-sm);
 }
 
-/* Header */
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -46,7 +70,6 @@ main {
   height: auto;
 }
 
-/* Search Bar */
 .search-bar {
   flex: 1;
   min-width: 220px;
@@ -64,19 +87,18 @@ main {
   border: none;
   background: transparent;
   outline: none;
-  font-size: 1.1rem;
+  font-size: var(--font-lg);
   color: var(--text-color);
 }
 
 .search-button {
   color: var(--text-color);
-  font-size: 1.5rem;
+  font-size: var(--font-xl);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Tray */
 .tray {
   display: flex;
   gap: var(--spacing-xs);
@@ -113,7 +135,7 @@ main {
 }
 
 .instrument-types-title {
-  font-size: 1.4rem;
+  font-size: var(--font-xxl);
 }
 
 .instrument-types-controls {
@@ -125,9 +147,9 @@ main {
 .view-all-button {
   background-color: var(--secondary-bg);
   border-radius: 20px;
-  height: 32px;
+  height: var(--search-height-xs);
   padding: 0 var(--spacing-sm);
-  font-size: 0.9rem;
+  font-size: var(--font-sm);
   color: var(--text-color);
 }
 
@@ -135,9 +157,9 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  width: var(--search-height-xs);
+  height: var(--search-height-xs);
+  border-radius: var(--radius-full);
   background-color: var(--secondary-bg);
   color: var(--text-color);
 }
@@ -151,37 +173,54 @@ main {
 }
 
 .instrument-card {
+  width: 96px;
+  height: 140px;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-lg);
+  background-color: var(--secondary-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 96px;
-  height: 140px;
-  padding: var(--spacing-xs);
-  background-color: var(--secondary-bg);
-  border-radius: 12px;
   flex-shrink: 0;
+  scale: 0.94;
+}
+
+.instrument-card:hover {
+  scale: 0.98;
+}
+
+.instrument-card:active {
+  scale: 0.98;
+}
+
+.instrument-card:hover .instrument-name {
+  color: var(--highlight-color);
 }
 
 .instrument-icon {
   width: 64px;
   height: 80px;
-  background-color: #ccc;
-  border-radius: 8px;
+  background-color: var(--secondary-bg);
+  border-radius: var(--radius-md);
 }
 
 .instrument-name {
   margin-top: var(--spacing-xs);
-  font-size: 0.9rem;
+  font-size: var(--font-sm);
   text-align: center;
   color: var(--text-color);
 }
 
-.instrument-card.selected .instrument-name {
-  color: var(--highlight-color);
+.instrument-card.selected {
+  scale: 1;
 }
 
-/* Responsive - Tablet */
+.instrument-card.selected .instrument-name {
+  color: var(--highlight-color);
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
@@ -190,24 +229,24 @@ main {
   }
 
   .search-bar {
-    height: 48px;
+    height: var(--search-height-mobile);
     border-radius: 24px;
   }
 
   .search-input {
-    height: 48px;
-    font-size: 1rem;
+    height: var(--search-height-mobile);
+    font-size: var(--font-md);
   }
 
   .search-button {
-    height: 48px;
-    font-size: 1rem;
+    height: var(--search-height-mobile);
+    font-size: var(--font-md);
   }
 
   .tray-item {
     width: 100%;
-    height: 48px;
-    font-size: 1rem;
+    height: var(--search-height-mobile);
+    font-size: var(--font-md);
     border-radius: 24px;
     display: flex;
     gap: var(--spacing-xs);
@@ -228,7 +267,6 @@ main {
   }
 }
 
-/* Responsive - Mobile */
 @media (max-width: 480px) {
   header {
     margin-bottom: var(--spacing-sm);
@@ -243,18 +281,17 @@ main {
   }
 
   .search-bar {
-    height: 32px;
-    border-radius: 24px;
+    height: var(--search-height-xs);
   }
 
   .search-input {
-    height: 32px;
-    font-size: 0.8rem;
+    height: var(--search-height-xs);
+    font-size: var(--font-xs);
   }
 
   .search-button {
-    height: 32px;
-    font-size: 0.8rem;
+    height: var(--search-height-xs);
+    font-size: var(--font-xs);
   }
 
   .tray {
@@ -263,21 +300,26 @@ main {
 
   .tray-item {
     width: 100%;
-    height: 32px;
-    font-size: 0.8rem;
+    height: var(--search-height-xs);
+    font-size: var(--font-xs);
     border-radius: 20px;
     display: flex;
     gap: var(--spacing-xxs);
   }
 
   .view-all-button {
-    font-size: 0.8rem;
+    font-size: var(--font-xs);
     height: 28px;
     padding: 0 var(--spacing-xs);
   }
 
+  .scroll-button {
+    height: 28px;
+    width: 28px;
+  }
+
   .instrument-types-title {
-    font-size: 1.2rem;
+    font-size: var(--font-xl);
   }
 
   .instrument-card {
@@ -291,6 +333,6 @@ main {
   }
 
   .instrument-name {
-    font-size: 0.8rem;
+    font-size: var(--font-xs);
   }
 }
