@@ -93,7 +93,7 @@ main {
   color: var(--text-color);
 }
 
-.tray-item p {
+.tray-item span {
   display: none;
 }
 
@@ -215,7 +215,7 @@ main {
     justify-content: center;
   }
 
-  .tray-item p {
+  .tray-item span {
     display: block;
   }
 
