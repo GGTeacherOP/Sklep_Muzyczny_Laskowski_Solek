@@ -209,6 +209,7 @@ main {
   justify-content: space-between;
   scale: 0.94;
   scroll-snap-align: start;
+  cursor: pointer;
 }
 
 .instrument-card:focus-visible {
@@ -231,6 +232,7 @@ main {
 
 .instrument-card.selected {
   scale: 1;
+  cursor: default;
 }
 
 .instrument-card.selected .instrument-name {
@@ -377,7 +379,7 @@ main {
   }
 
   .instrument-types-title {
-    font-size: var(--font-xl);
+    font-size: var(--font-md);
   }
 
   .instrument-card {
