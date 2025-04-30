@@ -12,15 +12,6 @@ body {
   background-color: var(--primary-bg);
 }
 
-@keyframes bodyFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 button {
   cursor: pointer;
   border: none;
@@ -232,12 +223,6 @@ main {
 .view-all-button,
 .scroll-button {
   transition: all 0.3s ease-in-out;
-}
-
-.fade-in {
-  transform: translateY(10px);
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
 }
 
 .instrument-card:nth-child(1) {
@@ -466,13 +451,6 @@ footer {
 
 .buy-product-btn:hover {
   background-color: var(--button-buy-bg-hover);
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 768px) {
