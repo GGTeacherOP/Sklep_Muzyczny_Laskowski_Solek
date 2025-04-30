@@ -58,7 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       try {
-        window.location.href = path;
+        const basePath = window.location.pathname.split('/').slice(0, -1).join('/');
+
+        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+
+        const fullPath = `${basePath}/${cleanPath}`;
+
+        window.location.href = fullPath;
       }
       catch (error) {
         console.error('Błąd przekierowania:', error);
@@ -115,15 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (trayItems.notifications) {
-    trayItems.notifications.addEventListener('click', () => redirectTo('/powiadomienia'));
+    trayItems.notifications.addEventListener('click', () => redirectTo('/powiadomienia.html'));
   }
 
   if (trayItems.cart) {
-    trayItems.cart.addEventListener('click', () => redirectTo('/koszyk'));
+    trayItems.cart.addEventListener('click', () => redirectTo('/koszyk.html'));
   }
 
   if (trayItems.profile) {
-    trayItems.profile.addEventListener('click', () => redirectTo('/profil'));
+    trayItems.profile.addEventListener('click', () => redirectTo('/profil.html'));
   }
 
   /**
