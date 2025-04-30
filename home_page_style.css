@@ -65,9 +65,8 @@ button {
   border: none;
 }
 
-button:hover {
+button:hover:not(.search-button) {
   background-color: #dcdcdc;
-  transform: scale(1.02);
 }
 
 button:active {
@@ -197,7 +196,14 @@ main {
   gap: var(--spacing-md);
   overflow-x: auto;
   padding-bottom: var(--spacing-xs);
+  scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.instrument-types-list::-webkit-scrollbar {
+  display: none;
 }
 
 .instrument-card {
@@ -210,9 +216,14 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  scale: 0.94;
   scroll-snap-align: start;
   cursor: pointer;
+  transform: translateY(0);
+  will-change: transform;
+}
+
+.instrument-card:hover:not(.selected) {
+  translate: 0 8px;
 }
 
 .instrument-card:focus-visible {
@@ -220,21 +231,11 @@ main {
   outline-offset: 4px;
 }
 
-.instrument-card:hover {
-  scale: 1.02;
-  transform: scale(1.02);
-}
-
-.instrument-card:active {
-  scale: 0.98;
-}
-
 .instrument-card:hover .instrument-name {
   color: var(--highlight-color);
 }
 
 .instrument-card.selected {
-  scale: 1;
   cursor: default;
 }
 
@@ -274,7 +275,25 @@ main {
 }
 
 .instrument-card:nth-child(1) { animation-delay: 0.1s; }
-.instrument-card:nth-child(2) { animation-delay: 0.2s; }
+.instrument-card:nth-child(2) { animation-delay: 0.11s; }
+.instrument-card:nth-child(3) { animation-delay: 0.12s; }
+.instrument-card:nth-child(4) { animation-delay: 0.13s; }
+.instrument-card:nth-child(5) { animation-delay: 0.14s; }
+.instrument-card:nth-child(6) { animation-delay: 0.15s; }
+.instrument-card:nth-child(7) { animation-delay: 0.16s; }
+.instrument-card:nth-child(8) { animation-delay: 0.17s; }
+.instrument-card:nth-child(9) { animation-delay: 0.18s; }
+.instrument-card:nth-child(10) { animation-delay: 0.19s; }
+.instrument-card:nth-child(11) { animation-delay: 0.20s; }
+.instrument-card:nth-child(12) { animation-delay: 0.21s; }
+.instrument-card:nth-child(13) { animation-delay: 0.22s; }
+.instrument-card:nth-child(14) { animation-delay: 0.23s; }
+.instrument-card:nth-child(15) { animation-delay: 0.24s; }
+.instrument-card:nth-child(16) { animation-delay: 0.25s; }
+.instrument-card:nth-child(17) { animation-delay: 0.26s; }
+.instrument-card:nth-child(18) { animation-delay: 0.27s; }
+.instrument-card:nth-child(19) { animation-delay: 0.28s; }
+.instrument-card:nth-child(20) { animation-delay: 0.29s; }
 
 footer {
   background-color: var(--footer-bg);
