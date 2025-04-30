@@ -11,7 +11,8 @@
     name="description">
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
-  <link href="home_page_style.css" rel="stylesheet">
+  <link href="home.css" rel="stylesheet">
+  <script src="home.js"></script>
   <title>Sklep Muzyczny</title>
 </head>
 <body>
@@ -53,8 +54,7 @@
       </div>
     </div>
     <div class="instrument-types-list fade-in">
-      <div aria-label="Strunowe – aktualnie wybrany typ" class="instrument-card selected fade-in" role="button"
-           tabindex="1">
+      <div aria-label="Wybierz typ Strunowe" class="instrument-card fade-in" role="button" tabindex="1">
         <div aria-hidden="true" class="instrument-icon"></div>
         <span class="instrument-name">Strunowe</span>
       </div>
@@ -124,47 +124,47 @@
       </div>
     </div>
   </section>
-<section class="popular-products fade-in">
-  <div class="popular-section">
-    <h2 class="section-title">Najczęściej Kupowane</h2>
-    <div class="products-grid">
-      <article class="product-card">
-        <div class="product-image">
-          <img src="assets/images/electric_guitar.jpg" alt="Gitara elektryczna">
-          <span class="category-badge">Strunowe</span>
-        </div>
-        <div class="product-info">
-          <h3 class="product-name">Fender Stratocaster</h3>
-          <p class="product-price">2499 zł</p>
-          <div class="product-actions">
-            <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
-            <button class="product-action-btn buy-product-btn">Kup <i class="fas fa-shopping-cart"></i></button>
+  <section class="popular-products fade-in">
+    <div class="popular-section">
+      <h2 class="section-title">Najczęściej Kupowane</h2>
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-image">
+            <img alt="Gitara elektryczna" src="assets/images/electric_guitar.jpg">
+            <span class="category-badge">Strunowe</span>
           </div>
-        </div>
-      </article>
+          <div class="product-info">
+            <h3 class="product-name">Fender Stratocaster</h3>
+            <p class="product-price">2499 zł</p>
+            <div class="product-actions">
+              <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
+              <button class="product-action-btn buy-product-btn">Kup <i class="fas fa-shopping-cart"></i></button>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
-  </div>
 
-  <div class="popular-section">
-    <h2 class="section-title">Najczęściej Wypożyczane</h2>
-    <div class="products-grid">
-      <article class="product-card">
-        <div class="product-image">
-          <img src="assets/images/drumset1.jpg" alt="Perkusja akustyczna">
-          <span class="category-badge">Perkusyjne</span>
-        </div>
-        <div class="product-info">
-          <h3 class="product-name">Pearl Export</h3>
-          <p class="product-price">199 zł/dzień</p>
-          <div class="product-actions">
-            <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
-            <button class="product-action-btn buy-product-btn">Wypożycz <i class="fas fa-handshake"></i></button>
+    <div class="popular-section">
+      <h2 class="section-title">Najczęściej Wypożyczane</h2>
+      <div class="products-grid">
+        <article class="product-card">
+          <div class="product-image">
+            <img alt="Perkusja akustyczna" src="assets/images/drumset1.jpg">
+            <span class="category-badge">Perkusyjne</span>
           </div>
-        </div>
-      </article>
+          <div class="product-info">
+            <h3 class="product-name">Pearl Export</h3>
+            <p class="product-price">199 zł/dzień</p>
+            <div class="product-actions">
+              <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
+              <button class="product-action-btn buy-product-btn">Wypożycz <i class="fas fa-handshake"></i></button>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 </main>
 <footer class="fade-in">
   <div class="footer-container">
@@ -176,7 +176,7 @@
     <div class="footer-section">
       <h3 class="footer-section-title"><i class="fas fa-link"></i> Linki</h3>
       <ul class="footer-list">
-        <li><a class="footer-list-el" href="home_page.html"><i class="fas fa-home"></i> Strona główna</a></li>
+        <li><a class="footer-list-el" href="home.html"><i class="fas fa-home"></i> Strona główna</a></li>
         <li><a class="footer-list-el" href="#"><i class="fas fa-guitar"></i> Instrumenty</a></li>
         <li><a class="footer-list-el" href="#"><i class="fas fa-volume-up"></i> Nagłośnienie</a></li>
         <li><a class="footer-list-el" href="mailto:sklepmuzyczny@example.com"><i class="fas fa-envelope"></i>
