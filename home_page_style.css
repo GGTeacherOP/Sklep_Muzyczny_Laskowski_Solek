@@ -198,8 +198,8 @@ main {
 }
 
 .instrument-card {
-  width: 96px;
-  height: 140px;
+  width: 106px;
+  height: 150px;
   padding: var(--spacing-xs);
   border-radius: var(--radius-lg);
   background-color: var(--secondary-bg);
@@ -241,8 +241,8 @@ main {
 }
 
 .instrument-icon {
-  width: 64px;
-  height: 80px;
+  width: 84px;
+  height: 100px;
   background-color: var(--secondary-bg);
   border-radius: var(--radius-md);
 }
