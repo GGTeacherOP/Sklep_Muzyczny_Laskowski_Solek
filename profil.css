@@ -1,0 +1,201 @@
+@import "./global.css";
+
+* {
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-bg);
+  overflow: hidden;
+  animation: bodyFadeIn 0.6s ease-in;
+}
+
+.back-button {
+  position: fixed;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-md);
+  color: var(--text-color);
+  background-color: var(--secondary-bg);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  background-color: var(--form-border);
+}
+
+.back-button i {
+  font-size: var(--font-md);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 600px;
+  margin: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background-color: var(--primary-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.login-tabs {
+  display: flex;
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--form-border);
+}
+
+.login-tab {
+  font-size: var(--font-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all 0.3s ease;
+  flex: 1;
+  margin-bottom: -2px;
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  text-align: center;
+  color: var(--text-color);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+}
+
+.login-tab:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.login-tab.active {
+  font-weight: bold;
+  color: var(--highlight-color);
+  border-bottom-color: var(--form-button-bg);
+}
+
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  font-size: var(--font-sm);
+  display: block;
+  margin-bottom: var(--spacing-xxs);
+  color: var(--text-color);
+}
+
+.form-input {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: var(--font-md);
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--form-border);
+  border-radius: var(--radius-md);
+  background-color: var(--form-input-bg);
+}
+
+.form-input:focus {
+  box-shadow: 0 0 0 2px rgba(48, 95, 187, 0.2);
+  border-color: var(--form-button-bg);
+  outline: none;
+}
+
+.form-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  height: 48px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  font-size: var(--font-md);
+  width: 100%;
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: var(--button-text-color);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--form-button-bg);
+}
+
+.form-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 95, 187, 0.2);
+  background-color: var(--form-button-hover);
+}
+
+.form-button:active {
+  transform: translateY(0);
+}
+
+.form-link {
+  font-size: var(--font-sm);
+  display: block;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.form-link:hover {
+  color: var(--form-button-bg);
+}
+
+.form-error {
+  font-size: var(--font-sm);
+  margin-top: var(--spacing-xxs);
+  color: var(--error-color);
+}
+
+@media (max-width: 480px) {
+  .back-button {
+    padding: var(--spacing-xs);
+    font-size: var(--font-sm);
+  }
+
+  .back-button span {
+    display: none;
+  }
+
+  .login-container {
+    margin: var(--spacing-xs);
+    padding: var(--spacing-sm);
+  }
+
+  .login-tab {
+    font-size: var(--font-sm);
+    padding: var(--spacing-xs);
+  }
+
+  .form-input,
+  .form-button {
+    font-size: var(--font-sm);
+    padding: var(--spacing-xs);
+  }
+
+  .form-label,
+  .form-link {
+    font-size: var(--font-xs);
+  }
+}
