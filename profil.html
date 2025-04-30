@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="Laskowski i Sołek" name="author">
+  <meta content="logowanie, rejestracja, sklep muzyczny" name="keywords">
+  <meta content="Panel logowania do sklepu muzycznego" name="description">
+  <meta content="index, follow" name="robots">
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
+  <link href="profil.css" rel="stylesheet">
+  <script src="profil.js" defer></script>
+  <title>Logowanie - Sklep Muzyczny</title>
+</head>
+<body>
+<button class="back-button" onclick="window.location.href='home.html'">
+  <i class="fas fa-arrow-left"></i> Powrót
+</button>
+
+  <div class="login-container fade-in">
+    <div class="login-tabs">
+      <button class="login-tab active" data-tab="login">Logowanie</button>
+      <button class="login-tab" data-tab="register">Rejestracja</button>
+      <button class="login-tab" data-tab="employee">Panel Pracownika</button>
+    </div>
+
+    <!-- Formularz logowania -->
+    <form class="login-form" id="loginForm">
+      <div class="form-group">
+        <label class="form-label" for="loginEmail">Email</label>
+        <input class="form-input" id="loginEmail" name="email" required type="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Hasło</label>
+        <input class="form-input" id="loginPassword" name="password" required type="password">
+      </div>
+      <button class="form-button" type="submit">Zaloguj się</button>
+      <a class="form-link" href="#">Zapomniałeś hasła?</a>
+    </form>
+
+    <!-- Formularz rejestracji (domyślnie ukryty) -->
+    <form class="login-form" id="registerForm" style="display: none;">
+      <div class="form-group">
+        <label class="form-label" for="registerName">Nazwa użytkownika</label>
+        <input class="form-input" id="registerName" name="username" required type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="registerEmail">Email</label>
+        <input class="form-input" id="registerEmail" name="email" required type="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="registerPassword">Hasło</label>
+        <input class="form-input" id="registerPassword" name="password" required type="password">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="registerPasswordConfirm">Potwierdź hasło</label>
+        <input class="form-input" id="registerPasswordConfirm" name="passwordConfirm" required type="password">
+      </div>
+      <button class="form-button" type="submit">Zarejestruj się</button>
+    </form>
+
+    <!-- Formularz logowania pracownika (domyślnie ukryty) -->
+    <form class="login-form" id="employeeForm" style="display: none;">
+      <div class="form-group">
+        <label class="form-label" for="employeeId">ID Pracownika</label>
+        <input class="form-input" id="employeeId" name="employeeId" required type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="employeePassword">Hasło</label>
+        <input class="form-input" id="employeePassword" name="password" required type="password">
+      </div>
+      <button class="form-button" type="submit">Zaloguj jako pracownik</button>
+    </form>
+  </div>
+</body>
+</html>
