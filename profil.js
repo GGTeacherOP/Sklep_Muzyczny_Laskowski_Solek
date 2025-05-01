@@ -3,9 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const forms = {
     login: document.getElementById('loginForm'),
     register: document.getElementById('registerForm'),
-    employee: document.getElementById('employeeForm')
+    employee: document.getElementById('employeeForm'),
   };
 
+  /**
+   * Czyści pola formularza z wartości i błędów.
+   *
+   * @param {HTMLFormElement} form - Formularz, który ma zostać wyczyszczony.
+   */
   function clearForm(form) {
     const inputs = form.querySelectorAll('input');
     inputs.forEach(input => {
@@ -15,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     form.querySelectorAll('.form-error').forEach(error => error.remove());
   }
 
+  /**
+   * Przełącza aktywny formularz i zakładkę.
+   *
+   * @param {string} activeTabId - Identyfikator aktywnej zakładki i formularza (np. "login", "register", "employee").
+   */
   function switchForm(activeTabId) {
     Object.values(forms).forEach(form => {
       if (form) {
