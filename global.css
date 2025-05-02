@@ -41,14 +41,28 @@
   --font-xl: 1.3rem;
   --font-xxl: 1.4rem;
 
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
+  --radius-xxs: 4px;
+  --radius-xs: 8px;
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
   --radius-full: 50%;
 
-  --search-height: 56px;
-  --search-height-mobile: 48px;
-  --search-height-xs: 32px;
+  --button-height-xs: 24px;
+  --button-height-sm: 32px;
+  --button-height-md: 40px;
+  --button-height-lg: 48px;
+
+  --card-size-xxs: 32px;
+  --card-size-xs-sm: 48px;
+  --card-size-xs: 64px;
+  --card-size-sm: 96px;
+  --card-size-md: 128px;
+  --card-size-lg: 160px;
+  --card-size-xl: 192px;
+  --card-size-xxl: 224px;
+  --card-size-xxxl: 256px;
+
   --logo-max-width: 100px;
   --logo-max-width-xs: 80px;
 }
@@ -58,6 +72,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  transition: all 0.3s ease-in-out;
 }
 
 body {
@@ -68,25 +83,53 @@ body {
 button {
   cursor: pointer;
   border: none;
+  outline: none;
   background: none;
 }
 
-button:hover:not(.search-button):not(.more-info-btn):not(.buy-product-btn) {
+button:hover {
   background-color: #DCDCDC;
 }
 
-button:active:not(.search-button):not(.more-info-btn):not(.buy-product-btn) {
+button:active {
   transform: scale(0.96);
   background-color: #E0E0E0;
 }
 
 button:focus-visible {
-  outline: 2px dashed var(--highlight-color);
-  outline-offset: 4px;
+  outline: 1px dashed var(--highlight-color);
+  outline-offset: 2px;
+  transition: 0s;
 }
 
 a {
   text-decoration: none;
+}
+
+.back-button {
+  position: fixed;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-md);
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  background-color: var(--secondary-bg);
+}
+
+.back-button i {
+  font-size: var(--font-md);
 }
 
 .fade-in {
