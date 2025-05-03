@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (trayItems.profile) {
-    trayItems.profile.addEventListener('click', () => redirectTo('/profil.html'));
+    trayItems.profile.addEventListener('click', () => redirectTo('/profile.html'));
   }
 
   /**
