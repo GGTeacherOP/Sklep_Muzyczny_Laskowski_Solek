@@ -9,13 +9,42 @@
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
   <link href="profile.css" rel="stylesheet">
+  <script type="module" src="_header.js"></script>z
   <script src="profile.js" defer></script>
   <title>Logowanie - Sklep Muzyczny</title>
 </head>
 <body>
-<button class="back-button" onclick="window.location.href='home.html'">
-  <i class="fas fa-arrow-left"></i> Powrót
-</button>
+<main class="fade-in">
+  <header class="header">
+    <div class="logo">
+      <img alt="Logo Sklepu Muzycznego" src="assets/images/logo_sklepu.png">
+    </div>
+    <form class="search-bar" role="search">
+      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..."
+             type="text">
+      <button aria-label="Wyszukaj" class="search-button" type="button">
+        <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
+    <nav class="tray">
+      <button aria-label="Alerty" class="tray-item" title="Wyświetl alerty" type="button">
+        <i aria-hidden="true" class="fa-solid fa-bell"></i>
+        <span>Alerty</span>
+      </button>
+      <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
+        <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
+        <span>Koszyk</span>
+      </button>
+      <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
+        <i aria-hidden="true" class="fa-solid fa-user"></i>
+        <span>Profil</span>
+      </button>
+      <button aria-label="Strona główna" class="tray-item" title="Przejdź do strony głównej" type="button">
+        <i aria-hidden="true" class="fa-solid fa-home"></i>
+        <span>Główna</span>
+      </button>
+    </nav>
+  </header>
 
   <div class="login-container fade-in">
     <div class="login-tabs">
@@ -69,5 +98,6 @@
       <button class="form-button" type="submit">Zaloguj jako pracownik</button>
     </form>
   </div>
+</main>
 </body>
 </html>

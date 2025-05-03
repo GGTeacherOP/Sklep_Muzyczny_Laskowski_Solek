@@ -179,32 +179,6 @@ main {
   display: none;
 }
 
-.back-button {
-  position: fixed;
-  top: var(--spacing-md);
-  left: var(--spacing-md);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-md);
-  color: var(--text-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-
-.back-button:hover {
-  background-color: var(--secondary-bg);
-}
-
-.back-button i {
-  font-size: var(--font-md);
-}
-
 .fade-in {
   transform: translateY(10px);
   animation: fadeInUp 0.5s ease-out forwards;
