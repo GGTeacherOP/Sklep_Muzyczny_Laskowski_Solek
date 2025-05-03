@@ -1,15 +1,20 @@
 @import "./global.css";
 
+html, body, main {
+  width: 100%;
+  height: 100%;
+}
+
 .login-container {
   width: 100%;
+  align-self: center;
   max-width: 600px;
-  margin: var(--spacing-lg);
+  margin-top: calc(var(--spacing-lg) * 4);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   background-color: var(--primary-bg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-height: 100vh;
-  overflow-y: auto;
 }
 
 .login-tabs {
@@ -37,7 +42,6 @@
 }
 
 .login-tab.active {
-  font-weight: bold;
   color: var(--highlight-color);
   border-bottom-color: var(--form-button-bg);
 }
@@ -130,7 +134,7 @@
   }
 
   .login-container {
-    margin: var(--spacing-xs);
+    margin-top: calc(var(--spacing-lg) * 3);
     padding: var(--spacing-sm);
   }
 
