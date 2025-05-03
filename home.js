@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (trayItems.cart) {
-    trayItems.cart.addEventListener('click', () => redirectTo('/koszyk.html'));
+    trayItems.cart.addEventListener('click', () => redirectTo('/cart.html'));
   }
 
   if (trayItems.profile) {
