@@ -47,6 +47,11 @@ main {
   color: var(--text-color);
 }
 
+.search-button:hover {
+  transform: scale(1);
+  background: none;
+}
+
 .tray {
   display: flex;
   gap: var(--spacing-xs);
