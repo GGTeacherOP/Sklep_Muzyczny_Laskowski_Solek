@@ -120,7 +120,7 @@ main {
 }
 
 .logo img {
-  max-width: var(--card-size-md);
+  width: var(--card-size-md);
   height: auto;
 }
 
@@ -228,6 +228,10 @@ main {
 }
 
 @media (max-width: 768px) {
+  .logo img {
+    width: 100%;
+  }
+
   .header {
     align-items: stretch;
     flex-direction: column;
@@ -274,10 +278,6 @@ main {
 
   main {
     padding: var(--spacing-xs);
-  }
-
-  .logo img {
-    max-width: var(--card-size-sm);
   }
 
   .search-bar {
