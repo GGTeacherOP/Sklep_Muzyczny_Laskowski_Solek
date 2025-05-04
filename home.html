@@ -12,7 +12,8 @@
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
   <link href="home.css" rel="stylesheet">
-  <script src="home.js"></script>
+  <script type="module" src="_header.js"></script>
+  <script type="module" src="home.js"></script>
   <title>Sklep Muzyczny</title>
 </head>
 <body>
@@ -29,9 +30,9 @@
       </button>
     </form>
     <nav class="tray">
-      <button aria-label="Powiadomienia" class="tray-item" title="Wyświetl powiadomienia" type="button">
+      <button aria-label="Alerty" class="tray-item" title="Wyświetl alerty" type="button">
         <i aria-hidden="true" class="fa-solid fa-bell"></i>
-        <span>Powiadomienia</span>
+        <span>Alerty</span>
       </button>
       <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
         <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
@@ -40,6 +41,10 @@
       <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
         <i aria-hidden="true" class="fa-solid fa-user"></i>
         <span>Profil</span>
+      </button>
+      <button aria-label="Strona główna - aktualnie wyświetlana podstrona" class="tray-item active_subpage" title="Przejdź do strony głównej" type="button">
+        <i aria-hidden="true" class="fa-solid fa-home"></i>
+        <span>Główna</span>
       </button>
     </nav>
   </header>
