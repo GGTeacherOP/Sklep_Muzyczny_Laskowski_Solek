@@ -9,7 +9,6 @@ html, body, main {
   width: 100%;
   align-self: center;
   max-width: 600px;
-  margin-top: calc(var(--spacing-lg) * 4);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   background-color: var(--primary-bg);
@@ -134,7 +133,6 @@ html, body, main {
   }
 
   .login-container {
-    margin-top: calc(var(--spacing-lg) * 3);
     padding: var(--spacing-sm);
   }
 

@@ -187,6 +187,11 @@ main {
   opacity: 0;
 }
 
+.active_subpage {
+  background-color: #DCDCDC;
+  color: var(--price-color);
+}
+
 @keyframes bodyFadeIn {
   from {
     opacity: 0;
