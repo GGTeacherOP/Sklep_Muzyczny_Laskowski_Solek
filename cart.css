@@ -228,39 +228,6 @@ ul {
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: var(--background-light);
-}
-
-.cart-summary h2 {
-  margin-bottom: var(--spacing-md);
-}
-
-.cart-summary p {
-  margin-bottom: var(--spacing-sm);
-}
-
-.cart-summary hr {
-  margin: var(--spacing-md) 0;
-  border: none;
-  border-top: 1px solid var(--form-border);
-}
-
-/* Checkout button */
-.checkout-button {
-  width: 100%;
-  padding: var(--spacing-md);
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: var(--form-button-bg);
-  color: var(--button-text-color);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.checkout-button:hover {
-  background-color: var(--form-button-hover);
 }
 
 @media (max-width: 1024px) {

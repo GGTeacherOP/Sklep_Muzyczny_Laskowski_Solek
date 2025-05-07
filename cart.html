@@ -138,10 +138,23 @@
 
       <aside class="cart-summary">
         <h2>Podsumowanie</h2>
+
+        <label for="promo-code">Kod promocyjny:</label>
+        <div class="promo-code-container">
+          <input id="promo-code" class="promo-code-input" type="text" placeholder="Wpisz kod">
+        </div>
+
         <p>Kwota za kupno: <span id="total-buy">2000 zł</span></p>
         <p>Kwota za wypożyczenie: <span id="total-rent">300 zł</span></p>
         <hr>
-        <p>Łączna kwota: <span id="total-amount">2300 zł</span></p>
+
+        <p>Wartość koszyka: <span id="subtotal">2300 zł</span></p>
+        <p>Zniżka: <span id="discount">0 zł</span></p>
+        <p>Dostawa: <span id="delivery">20 zł</span></p>
+        <p>Podatek: <span id="tax">0 zł</span></p>
+        <hr>
+
+        <p>Łączna kwota: <span id="total-amount">2320 zł</span></p>
         <button class="checkout-button">Przejdź do kasy</button>
       </aside>
     </section>
