@@ -192,6 +192,47 @@ main {
   color: var(--price-color);
 }
 
+footer {
+  padding: var(--spacing-sm);
+  color: var(--footer-secondary-text);
+  background-color: var(--footer-bg);
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1 1 var(--card-size-xl);
+  margin: var(--spacing-xs);
+}
+
+.footer-section-title {
+  font-size: var(--font-lg);
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-xxs);
+  color: var(--footer-primary-text);
+  border-bottom: 2px solid #555555;
+}
+
+.footer-list {
+  line-height: 1.6;
+  list-style: none;
+}
+
+.footer-bottom {
+  font-size: var(--font-sm);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  text-align: center;
+  color: #AAAAAA;
+  border-top: 1px solid #444444;
+}
+
 @keyframes bodyFadeIn {
   from {
     opacity: 0;
