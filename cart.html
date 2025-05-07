@@ -48,37 +48,11 @@
   <section class="cart-container-full">
     <section class="cart-container">
       <div class="cart-items">
-        <h1>Koszyk</h1>
+        <h2>Koszyk</h2>
 
         <div class="cart-section" id="buy-section">
           <h3>Kupno</h3>
           <ul>
-            <li class="cart-item">
-              <img src="assets/images/electric_guitar.jpg" alt="Gitara elektryczna">
-              <div class="cart-item-details">
-                <div class="cart-item-name">Gitara elektryczna</div>
-                <div class="cart-item-category">Strunowe</div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">-</button>
-                  <input class="quantity-input" type="number" value="1" min="1">
-                  <button class="quantity-button">+</button>
-                </div>
-              </div>
-              <button class="remove-button">&times;</button>
-            </li>
-            <li class="cart-item">
-              <img src="assets/images/keyboard.jpg" alt="Keyboard">
-              <div class="cart-item-details">
-                <div class="cart-item-name">Keyboard</div>
-                <div class="cart-item-category">Klawiszowe</div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">-</button>
-                  <input class="quantity-input" type="number" value="2" min="1">
-                  <button class="quantity-button">+</button>
-                </div>
-              </div>
-              <button class="remove-button">&times;</button>
-            </li>
           </ul>
         </div>
 
@@ -86,30 +60,26 @@
           <h3>Wypożyczenie</h3>
           <ul>
             <li class="cart-item">
-              <img src="assets/images/violin.jpg" alt="Skrzypce">
-              <div class="cart-item-details">
-                <div class="cart-item-name">Skrzypce</div>
-                <div class="cart-item-category">Strunowe</div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">-</button>
-                  <input class="quantity-input" type="number" value="1" min="1">
-                  <button class="quantity-button">+</button>
-                </div>
-              </div>
-              <button class="remove-button">&times;</button>
-            </li>
-            <li class="cart-item">
               <img src="assets/images/drum_set.jpg" alt="Perkusja">
               <div class="cart-item-details">
+                <div class="cart-item-text">
                 <div class="cart-item-name">Perkusja</div>
                 <div class="cart-item-category">Perkusyjne</div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">-</button>
-                  <input class="quantity-input" type="number" value="1" min="1">
-                  <button class="quantity-button">+</button>
                 </div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-button">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <input class="quantity-input" type="number" value="1" min="1">
+                  <button class="quantity-button">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <div class="cart-item-price">1500 zł</div>
+                <button class="remove-button">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               </div>
-              <button class="remove-button">&times;</button>
             </li>
           </ul>
         </div>
@@ -127,47 +97,5 @@
     </section>
   </section>
 </main>
-<footer class="fade-in">
-  <div class="footer-container">
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-store"></i> O Nas</h3>
-      <p>Sklep muzyczny z instrumentami, akcesoriami i sprzętem nagłośnieniowym. Profesjonalne doradztwo!</p>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-link"></i> Linki</h3>
-      <ul class="footer-list">
-        <li><a class="footer-list-el" href="home.html"><i class="fas fa-home"></i> Strona główna</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-guitar"></i> Instrumenty</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-volume-up"></i> Nagłośnienie</a></li>
-        <li><a class="footer-list-el" href="mailto:sklepmuzyczny@example.com"><i class="fas fa-envelope"></i>
-          Kontakt</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-address-card"></i> Kontakt</h3>
-      <ul class="footer-list">
-        <li><i class="fas fa-envelope"></i> sklepmuzyczny@example.com</li>
-        <li><i class="fas fa-phone"></i> +48 111 222 333</li>
-        <li><i class="fas fa-map-marker-alt"></i> Kazimierza Jagiellończyka 3 Mielec</li>
-      </ul>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-share-alt"></i> Social Media</h3>
-      <ul class="footer-list">
-        <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-        <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
-        <li><a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-        <li><a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <i class="far fa-copyright"></i> 2025 SklepMuzik
-  </div>
-</footer>
 </body>
 </html>

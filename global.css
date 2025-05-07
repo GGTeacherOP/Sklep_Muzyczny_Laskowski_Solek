@@ -17,6 +17,9 @@
   --form-button-bg: var(--button-more-bg);
   --form-button-hover: var(--button-more-bg-hover);
   --error-color: #FF4444;
+  --error-color-hover: #FF2222;
+  --error-color-bg: rgba(255, 68, 68, 0.1);
+  --error-color-bg-hover: rgba(255, 68, 68, 0.2);
   --success-color: var(--button-buy-bg);
 
   --footer-bg: var(--secondary-bg);
