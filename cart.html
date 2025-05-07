@@ -9,7 +9,8 @@
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
   <link href="cart.css" rel="stylesheet">
-  <script src="koszyk.js" defer></script>
+  <script defer src="cart.js"></script>
+  <script type="module" src="_header.js"></script>
   <title>Koszyk - Sklep Muzyczny</title>
 </head>
 <body>
@@ -19,8 +20,7 @@
       <img alt="Logo Sklepu Muzycznego" src="assets/images/logo_sklepu.png">
     </div>
     <form class="search-bar" role="search">
-      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..."
-             type="text">
+      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..." type="text">
       <button aria-label="Wyszukaj" class="search-button" type="button">
         <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
       </button>
@@ -44,6 +44,88 @@
       </button>
     </nav>
   </header>
+
+  <section class="cart-container-full">
+    <section class="cart-container">
+      <div class="cart-items">
+        <h1>Koszyk</h1>
+
+        <div class="cart-section" id="buy-section">
+          <h3>Kupno</h3>
+          <ul>
+            <li class="cart-item">
+              <img src="assets/images/electric_guitar.jpg" alt="Gitara elektryczna">
+              <div class="cart-item-details">
+                <div class="cart-item-name">Gitara elektryczna</div>
+                <div class="cart-item-category">Strunowe</div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-button">-</button>
+                  <input class="quantity-input" type="number" value="1" min="1">
+                  <button class="quantity-button">+</button>
+                </div>
+              </div>
+              <button class="remove-button">&times;</button>
+            </li>
+            <li class="cart-item">
+              <img src="assets/images/keyboard.jpg" alt="Keyboard">
+              <div class="cart-item-details">
+                <div class="cart-item-name">Keyboard</div>
+                <div class="cart-item-category">Klawiszowe</div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-button">-</button>
+                  <input class="quantity-input" type="number" value="2" min="1">
+                  <button class="quantity-button">+</button>
+                </div>
+              </div>
+              <button class="remove-button">&times;</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cart-section" id="rent-section">
+          <h3>Wypożyczenie</h3>
+          <ul>
+            <li class="cart-item">
+              <img src="assets/images/violin.jpg" alt="Skrzypce">
+              <div class="cart-item-details">
+                <div class="cart-item-name">Skrzypce</div>
+                <div class="cart-item-category">Strunowe</div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-button">-</button>
+                  <input class="quantity-input" type="number" value="1" min="1">
+                  <button class="quantity-button">+</button>
+                </div>
+              </div>
+              <button class="remove-button">&times;</button>
+            </li>
+            <li class="cart-item">
+              <img src="assets/images/drum_set.jpg" alt="Perkusja">
+              <div class="cart-item-details">
+                <div class="cart-item-name">Perkusja</div>
+                <div class="cart-item-category">Perkusyjne</div>
+                <div class="cart-item-quantity">
+                  <button class="quantity-button">-</button>
+                  <input class="quantity-input" type="number" value="1" min="1">
+                  <button class="quantity-button">+</button>
+                </div>
+              </div>
+              <button class="remove-button">&times;</button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <aside class="cart-summary">
+        <h2>Podsumowanie</h2>
+        <p>Kwota za kupno: <span id="total-buy">2000 zł</span></p>
+        <p>Kwota za wypożyczenie: <span id="total-rent">300 zł</span></p>
+        <hr>
+        <p>Łączna kwota: <span id="total-amount">2300 zł</span></p>
+        <button class="checkout-button">Przejdź do kasy</button>
+      </aside>
+    </section>
+  </section>
 </main>
 </body>
 </html>
