@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (trayItems.home) {
-    trayItems.home.addEventListener('click', () => redirectTo('/home.html'));
+    trayItems.home.addEventListener('click', () => redirectTo('/home.php'));
   }
 
   /**
