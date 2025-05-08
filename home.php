@@ -1,3 +1,9 @@
+<?php
+$server_name = "localhost";
+$user_name = "root";
+$password = "";
+$databse_name = "sm";
+?>
 <!doctype html>
 <html lang="pl">
 <head>
@@ -38,7 +44,8 @@
         <i aria-hidden="true" class="fa-solid fa-user"></i>
         <span>Profil</span>
       </button>
-      <button aria-label="Strona główna - aktualnie wyświetlana podstrona" class="tray-item active_subpage" title="Przejdź do strony głównej" type="button">
+      <button aria-label="Strona główna - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
+              title="Przejdź do strony głównej" type="button">
         <i aria-hidden="true" class="fa-solid fa-home"></i>
         <span>Główna</span>
       </button>
@@ -55,74 +62,22 @@
       </div>
     </div>
     <div class="instrument-types-list fade-in">
-      <div aria-label="Wybierz typ Strunowe" class="instrument-card fade-in" role="button" tabindex="1">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Strunowe</span>
-      </div>
-      <div aria-label="Wybierz typ Perkusyjne" class="instrument-card fade-in" role="button" tabindex="2">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Perkusyjne</span>
-      </div>
-      <div aria-label="Wybierz typ Klawiszowe" class="instrument-card fade-in" role="button" tabindex="3">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Klawiszowe</span>
-      </div>
-      <div aria-label="Wybierz typ Dęte" class="instrument-card fade-in" role="button" tabindex="4">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Dęte</span>
-      </div>
-      <div aria-label="Wybierz typ Klasyczne" class="instrument-card fade-in" role="button" tabindex="5">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Klasyczne</span>
-      </div>
-      <div aria-label="Wybierz typ Nuty" class="instrument-card fade-in" role="button" tabindex="6">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Nuty</span>
-      </div>
-      <div aria-label="Wybierz typ Mikrofony" class="instrument-card fade-in" role="button" tabindex="7">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Mikrofony</span>
-      </div>
-      <div aria-label="Wybierz typ Rejestratory" class="instrument-card fade-in" role="button" tabindex="8">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Rejestratory</span>
-      </div>
-      <div aria-label="Wybierz typ Kable" class="instrument-card fade-in" role="button" tabindex="9">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Kable</span>
-      </div>
-      <div aria-label="Wybierz typ Akcesoria" class="instrument-card fade-in" role="button" tabindex="10">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Akcesoria</span>
-      </div>
-      <div aria-label="Wybierz typ Pokrowce" class="instrument-card fade-in" role="button" tabindex="11">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Pokrowce</span>
-      </div>
-      <div aria-label="Wybierz typ Nagłośnienie" class="instrument-card fade-in" role="button" tabindex="12">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Nagłośnienie</span>
-      </div>
-      <div aria-label="Wybierz typ Oświetlenie" class="instrument-card fade-in" role="button" tabindex="13">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Oświetlenie</span>
-      </div>
-      <div aria-label="Wybierz typ Efekty" class="instrument-card fade-in" role="button" tabindex="14">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Efekty</span>
-      </div>
-      <div aria-label="Wybierz typ Programy" class="instrument-card fade-in" role="button" tabindex="15">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Programy</span>
-      </div>
-      <div aria-label="Wybierz typ DJ" class="instrument-card fade-in" role="button" tabindex="16">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Sprzęt DJ</span>
-      </div>
-      <div aria-label="Wybierz typ Procesory" class="instrument-card fade-in" role="button" tabindex="17">
-        <div aria-hidden="true" class="instrument-icon"></div>
-        <span class="instrument-name">Procesory</span>
-      </div>
+        <?php
+        $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+
+        if (!$connection) {
+            die("Połączenie nieudane: " . mysqli_connect_error());
+        }
+
+        $sql = "SELECT kategorie_instrumentow.nazwa FROM kategorie_instrumentow;";
+        $result = mysqli_query($connection, $sql);
+
+        while ($row = mysqli_fetch_array($result)) {
+            echo "<div aria-label=\"Wybierz typ " . $row['nazwa'] . "\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">" . "<div aria-hidden=\"true\" class=\"instrument-icon\"></div>" . "<span class=\"instrument-name\">" . $row['nazwa'] . "</span>" . "</div>";
+        }
+
+        mysqli_close($connection);
+        ?>
     </div>
   </section>
   <section class="popular-products fade-in">
@@ -177,11 +132,11 @@
     <div class="footer-section">
       <h3 class="footer-section-title"><i class="fas fa-link"></i> Linki</h3>
       <ul class="footer-list">
-        <li><a class="footer-list-el" href="home.html"><i class="fas fa-home"></i> Strona główna</a></li>
+        <li><a class="footer-list-el" href="home.php"><i class="fas fa-home"></i> Strona główna</a></li>
         <li><a class="footer-list-el" href="#"><i class="fas fa-guitar"></i> Instrumenty</a></li>
         <li><a class="footer-list-el" href="#"><i class="fas fa-volume-up"></i> Nagłośnienie</a></li>
         <li><a class="footer-list-el" href="mailto:sklepmuzyczny@example.com"><i class="fas fa-envelope"></i>
-          Kontakt</a></li>
+            Kontakt</a></li>
       </ul>
     </div>
 
