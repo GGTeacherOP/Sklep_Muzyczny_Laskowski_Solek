@@ -370,6 +370,12 @@ ul {
     height: var(--card-size-xs-sm);
     border-radius: var(--radius-xs);
   }
+
+  .promo-code-input, .checkout-button {
+    height: var(--button-height-md);
+    border-radius: var(--radius-xs);
+    font-size: var(--font-md);
+  }
 }
 
 @media (max-width: 480px) {
@@ -429,5 +435,10 @@ ul {
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
     font-size: var(--font-md);
+  }
+
+  .promo-code-input, .checkout-button {
+    height: var(--button-height-sm);
+    font-size: var(--font-xs);
   }
 }
