@@ -64,16 +64,22 @@ $databse_name = "sm";
     <div class="instrument-types-list fade-in">
         <?php
         $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
-
         if (!$connection) {
             die("Połączenie nieudane: " . mysqli_connect_error());
         }
 
-        $sql = "SELECT kategorie_instrumentow.nazwa FROM kategorie_instrumentow;";
+        $sql = "
+SELECT kategorie_instrumentow.nazwa 
+FROM kategorie_instrumentow;
+";
         $result = mysqli_query($connection, $sql);
 
         while ($row = mysqli_fetch_array($result)) {
-            echo "<div aria-label=\"Wybierz typ " . $row['nazwa'] . "\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">" . "<div aria-hidden=\"true\" class=\"instrument-icon\"></div>" . "<span class=\"instrument-name\">" . $row['nazwa'] . "</span>" . "</div>";
+            echo "
+            <div aria-label=\"Wybierz typ {$row['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">
+              <div aria-hidden=\"true\" class=\"instrument-icon\"></div>
+              <span class=\"instrument-name\">{$row['nazwa']}</span>
+            </div>";
         }
 
         mysqli_close($connection);
@@ -84,20 +90,48 @@ $databse_name = "sm";
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
-        <article class="product-card">
-          <div class="product-image">
-            <img alt="Gitara elektryczna" src="assets/images/electric_guitar.jpg">
-            <span class="category-badge">Strunowe</span>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Fender Stratocaster</h3>
-            <p class="product-price">2499 zł</p>
-            <div class="product-actions">
-              <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
-              <button class="product-action-btn buy-product-btn">Kup <i class="fas fa-shopping-cart"></i></button>
-            </div>
-          </div>
-        </article>
+          <?php
+          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          if (!$connection) {
+              die("Połączenie nieudane: " . mysqli_connect_error());
+          }
+
+          $sql = "
+SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
+FROM instrumenty
+JOIN zamowienie_szczegoly
+ON instrumenty.id = zamowienie_szczegoly.instrument_id
+JOIN instrument_zdjecia
+ON instrumenty.id = instrument_zdjecia.instrument_id AND instrument_zdjecia.kolejnosc = 1
+JOIN kategorie_instrumentow
+ON instrumenty.kategoria_id = kategorie_instrumentow.id
+JOIN zamowienia
+ON zamowienie_szczegoly.zamowienie_id = zamowienia.id AND zamowienia.status NOT LIKE 'anulowane'
+GROUP BY zamowienie_szczegoly.instrument_id
+ORDER BY COUNT(zamowienie_szczegoly.instrument_id) DESC
+LIMIT 10;
+";
+          $result = mysqli_query($connection, $sql);
+
+          while ($row = mysqli_fetch_array($result)) {
+              echo "
+              <article class=\"product-card\">
+                <div class=\"product-image\">
+                  <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
+                  <span class=\"category-badge\">$row[nazwa_kategorii]</span>\
+                </div>
+                <div class=\"product-info\">
+                  <h3 class=\"product-name\">$row[nazwa]</h3>
+                  <p class=\"product-price\">$row[cena]</p>
+                  <div class=\"product-actions\">
+                    <button class=\"product-action-btn more-info-btn\">Więcej <i class=\"fas fa-arrow-right\"></i></button>
+                    <button class=\"product-action-btn buy-product-btn\">Kup <i class=\"fas fa-shopping-cart\"></i></button>
+                  </div>
+                </div>
+              </article>
+              ";
+          }
+          ?>
       </div>
     </div>
 
