@@ -1,8 +1,8 @@
 <?php
-$server_name = "localhost";
-$user_name = "root";
-$password = "";
-$databse_name = "sm";
+  $server_name = "localhost";
+  $user_name = "root";
+  $password = "";
+  $databse_name = "sm";
 ?>
 <!doctype html>
 <html lang="pl">
@@ -62,10 +62,10 @@ $databse_name = "sm";
       </div>
     </div>
     <div class="instrument-types-list fade-in">
-        <?php
+      <?php
         $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
         if (!$connection) {
-            die("Połączenie nieudane: " . mysqli_connect_error());
+          die("Połączenie nieudane: " . mysqli_connect_error());
         }
 
         $sql = "
@@ -75,7 +75,7 @@ FROM kategorie_instrumentow;
         $result = mysqli_query($connection, $sql);
 
         while ($row = mysqli_fetch_array($result)) {
-            echo "
+          echo "
             <div aria-label=\"Wybierz typ {$row['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">
               <div aria-hidden=\"true\" class=\"instrument-icon\"></div>
               <span class=\"instrument-name\">{$row['nazwa']}</span>
@@ -83,17 +83,17 @@ FROM kategorie_instrumentow;
         }
 
         mysqli_close($connection);
-        ?>
+      ?>
     </div>
   </section>
   <section class="popular-products fade-in">
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
-          <?php
+        <?php
           $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
           if (!$connection) {
-              die("Połączenie nieudane: " . mysqli_connect_error());
+            die("Połączenie nieudane: " . mysqli_connect_error());
           }
 
           $sql = "
@@ -114,7 +114,7 @@ LIMIT 10;
           $result = mysqli_query($connection, $sql);
 
           while ($row = mysqli_fetch_array($result)) {
-              echo "
+            echo "
               <article class=\"product-card\">
                 <div class=\"product-image\">
                   <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
@@ -133,17 +133,17 @@ LIMIT 10;
           }
 
           mysqli_close($connection);
-          ?>
+        ?>
       </div>
     </div>
 
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
-          <?php
+        <?php
           $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
           if (!$connection) {
-              die("Połączenie nieudane: " . mysqli_connect_error());
+            die("Połączenie nieudane: " . mysqli_connect_error());
           }
 
           $sql = "
@@ -162,7 +162,7 @@ LIMIT 10;
           $result = mysqli_query($connection, $sql);
 
           while ($row = mysqli_fetch_array($result)) {
-              echo "
+            echo "
               <article class=\"product-card\">
                 <div class=\"product-image\">
                   <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
@@ -181,7 +181,7 @@ LIMIT 10;
           }
 
           mysqli_close($connection);
-          ?>
+        ?>
       </div>
     </div>
   </section>
