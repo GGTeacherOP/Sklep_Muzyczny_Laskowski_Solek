@@ -131,6 +131,8 @@ LIMIT 10;
               </article>
               ";
           }
+
+          mysqli_close($connection);
           ?>
       </div>
     </div>
@@ -138,20 +140,48 @@ LIMIT 10;
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
-        <article class="product-card">
-          <div class="product-image">
-            <img alt="Perkusja akustyczna" src="assets/images/drumset1.jpg">
-            <span class="category-badge">Perkusyjne</span>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Pearl Export</h3>
-            <p class="product-price">199 zł/dzień</p>
-            <div class="product-actions">
-              <button class="product-action-btn more-info-btn">Więcej <i class="fas fa-arrow-right"></i></button>
-              <button class="product-action-btn buy-product-btn">Wypożycz <i class="fas fa-handshake"></i></button>
-            </div>
-          </div>
-        </article>
+          <?php
+          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          if (!$connection) {
+              die("Połączenie nieudane: " . mysqli_connect_error());
+          }
+
+          $sql = "
+SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
+FROM instrumenty
+JOIN wypozyczenia
+ON instrumenty.id = wypozyczenia.instrument_id AND wypozyczenia.status NOT IN ('anulowane', 'uszkodzone')
+JOIN instrument_zdjecia
+ON instrumenty.id = instrument_zdjecia.instrument_id AND instrument_zdjecia.kolejnosc = 1
+JOIN kategorie_instrumentow
+ON instrumenty.kategoria_id = kategorie_instrumentow.id
+GROUP BY wypozyczenia.instrument_id
+ORDER BY COUNT(wypozyczenia.instrument_id) DESC
+LIMIT 10;
+";
+          $result = mysqli_query($connection, $sql);
+
+          while ($row = mysqli_fetch_array($result)) {
+              echo "
+              <article class=\"product-card\">
+                <div class=\"product-image\">
+                  <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
+                  <span class=\"category-badge\">$row[nazwa_kategorii]</span>\
+                </div>
+                <div class=\"product-info\">
+                  <h3 class=\"product-name\">$row[nazwa]</h3>
+                  <p class=\"product-price\">$row[cena]</p>
+                  <div class=\"product-actions\">
+                    <button class=\"product-action-btn more-info-btn\">Więcej <i class=\"fas fa-arrow-right\"></i></button>
+                    <button class=\"product-action-btn buy-product-btn\">Kup <i class=\"fas fa-shopping-cart\"></i></button>
+                  </div>
+                </div>
+              </article>
+              ";
+          }
+
+          mysqli_close($connection);
+          ?>
       </div>
     </div>
   </section>
