@@ -29,15 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchButton = document.querySelector('.search-button');
 
   const trayItems = {
-    alerts: document.querySelector('.tray-item[aria-label="Alerty"]'),
     cart: document.querySelector('.tray-item[aria-label="Koszyk"]'),
     profile: document.querySelector('.tray-item[aria-label="Profil użytkownika"]'),
     home: document.querySelector('.tray-item[aria-label="Strona główna"]'),
   };
-
-  if (trayItems.alerts) {
-    trayItems.alerts.addEventListener('click', () => redirectTo('/alerts.html'));
-  }
 
   if (trayItems.cart) {
     trayItems.cart.addEventListener('click', () => redirectTo('/cart.html'));
@@ -48,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (trayItems.home) {
-    trayItems.home.addEventListener('click', () => redirectTo('/home.html'));
+    trayItems.home.addEventListener('click', () => redirectTo('/home.php'));
   }
 
   /**
