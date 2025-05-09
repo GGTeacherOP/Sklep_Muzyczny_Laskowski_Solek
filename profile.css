@@ -47,6 +47,11 @@ html, body, main {
 
 .login-form {
   width: 100%;
+  display: none;
+}
+
+.login-form.active {
+  display: block;
 }
 
 .form-group {

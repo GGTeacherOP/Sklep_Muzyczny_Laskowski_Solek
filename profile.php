@@ -4,41 +4,89 @@
   $password = "";
   $database_name = "sm";
 
-  $email_error = $password_error = $email_value = "";
+  $errors = array(
+    'email' => '',
+    'password' => '',
+    'employee' => '',
+    'employee_password' => '',
+  );
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $values = array(
+    'email' => '',
+    'employee_id' => '',
+  );
+
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
 
     if (!$connection) {
       die("Połączenie nieudane: " . mysqli_connect_error());
     }
 
-    $email = $_POST['email'];
-    $input_password = $_POST['password'];
+    if (!empty($_POST['email'])) {
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+      $values['email'] = htmlspecialchars($email);
 
-    $email_value = htmlspecialchars($email);
+      $query = "SELECT id, haslo FROM uzytkownicy WHERE email = ?";
+      $stmt = mysqli_prepare($connection, $query);
+      mysqli_stmt_bind_param($stmt, 's', $email);
+      mysqli_stmt_execute($stmt);
+      $result = mysqli_stmt_get_result($stmt);
 
-    $email_check_sql = "SELECT id, haslo FROM uzytkownicy WHERE email = '$email';";
-    $email_check_result = mysqli_query($connection, $email_check_sql);
-
-    if (mysqli_num_rows($email_check_result) !== 0) {
-      $user = mysqli_fetch_assoc($email_check_result);
-
-      if ($input_password === $user['haslo']) {
-        session_start();
-        $_SESSION['uzytkownik_id'] = $user['id'];
-        header("Location: home.php");
-        exit();
+      if ($user = mysqli_fetch_assoc($result)) {
+        if ($password === $user['haslo']) {
+          session_start();
+          $_SESSION['user_id'] = $user['id'];
+          header("Location: home.php");
+          exit();
+        } else {
+          $errors['password'] = "Nieprawidłowe hasło.";
+        }
       } else {
-        $password_error = "Nieprawidłowe hasło.";
-        echo $user['haslo'], $input_password;
+        $errors['email'] = "Nie znaleziono konta z tym adresem email.";
       }
-    } else {
-      $email_error = "Nie znaleziono konta z tym adresem email.";
+
+      mysqli_stmt_close($stmt);
+    }
+
+    if (!empty($_POST['employeeId'])) {
+      $employee_id = $_POST['employeeId'];
+      $employee_password = $_POST['employeePassword'];
+      $values['employee_id'] = htmlspecialchars($employee_id);
+
+      $query = "
+        SELECT pracownicy.*, uzytkownicy.haslo 
+        FROM pracownicy 
+        JOIN uzytkownicy ON pracownicy.uzytkownik_id = uzytkownicy.id 
+        WHERE pracownicy.identyfikator = ?
+      ";
+      $stmt = mysqli_prepare($connection, $query);
+      mysqli_stmt_bind_param($stmt, 's', $employee_id);
+      mysqli_stmt_execute($stmt);
+      $result = mysqli_stmt_get_result($stmt);
+
+      if ($employee = mysqli_fetch_assoc($result)) {
+        if ($employee_password === $employee['haslo']) {
+          session_start();
+          $_SESSION['user_id'] = $employee['uzytkownik_id'];
+          $_SESSION['employee_id'] = $employee['id'];
+          header("Location: home.php");
+          exit();
+        } else {
+          $errors['employee_password'] = "Nieprawidłowe hasło.";
+        }
+      } else {
+        $errors['employee'] = "Nie znaleziono pracownika z tym ID.";
+      }
+
+      mysqli_stmt_close($stmt);
     }
 
     mysqli_close($connection);
   }
+
+  $active_form = !empty($values['employee_id']) ? 'employee' : 'login';
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -87,33 +135,34 @@
 
   <div class="login-container">
     <div class="login-tabs">
-      <button class="login-tab active" data-tab="login">Logowanie</button>
+      <button class="login-tab <?= $active_form === 'login' ? 'active' : '' ?>" data-tab="login">Logowanie</button>
       <button class="login-tab" data-tab="register">Rejestracja</button>
-      <button class="login-tab" data-tab="employee">Panel Pracownika</button>
+      <button class="login-tab <?= $active_form === 'employee' ? 'active' : '' ?>" data-tab="employee">Panel
+        Pracownika
+      </button>
     </div>
 
-    <form class="login-form" id="loginForm" method="POST"
-          action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form class="login-form <?= $active_form === 'login' ? 'active' : '' ?>" id="loginForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="loginEmail">Email</label>
-        <input class="form-input" id="loginEmail" name="email" required type="email" value="<?= $email_value ?>">
-        <?php if (!empty($email_error)): ?>
-          <p class="form-error"><?= $email_error ?></p>
+        <input class="form-input" id="loginEmail" name="email" required type="email" value="<?= $values['email'] ?>">
+        <?php if (!empty($errors['email'])): ?>
+          <p class="form-error"><?= $errors['email'] ?></p>
         <?php endif; ?>
       </div>
       <div class="form-group">
         <label class="form-label" for="loginPassword">Hasło</label>
         <input class="form-input" id="loginPassword" name="password" required type="password">
-        <?php if (!empty($password_error)): ?>
-          <p class="form-error"><?= $password_error ?></p>
+        <?php if (!empty($errors['password'])): ?>: ?><p class="form-error"><?= $errors['password'] ?></p>
         <?php endif; ?>
       </div>
       <button class="form-button" type="submit">Zaloguj się</button>
       <a class="form-link" href="#">Zapomniałeś hasła?</a>
     </form>
 
-    <form class="login-form" id="registerForm" style="display: none;" method="POST"
-          action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form class="login-form" style="display: none" id="registerForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="registerName">Nazwa użytkownika</label>
         <input class="form-input" id="registerName" name="username" required type="text">
@@ -133,19 +182,26 @@
       <button class="form-button" type="submit">Zarejestruj się</button>
     </form>
 
-    <form class="login-form" id="employeeForm" style="display: none;" method="POST"
-          action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form class="login-form <?= $active_form === 'employee' ? 'active' : '' ?>" id="employeeForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="employeeId">ID Pracownika</label>
-        <input class="form-input" id="employeeId" name="employeeId" required type="text">
+        <input class="form-input" id="employeeId" name="employeeId" required type="text"
+               value="<?= $values['employee_id'] ?>">
+        <?php if (!empty($errors['employee'])): ?><p class="form-error"><?= $errors['employee'] ?></p>
+        <?php endif; ?>
       </div>
       <div class="form-group">
         <label class="form-label" for="employeePassword">Hasło</label>
-        <input class="form-input" id="employeePassword" name="password" required type="password">
+        <input class="form-input" id="employeePassword" name="employeePassword" required type="password">
+        <?php if (!empty($errors['employee_password'])): ?>
+          <p class="form-error"><?= $errors['employee_password'] ?></p>
+        <?php endif; ?>
       </div>
       <button class="form-button" type="submit">Zaloguj jako pracownik</button>
     </form>
   </div>
+
 </main>
 </body>
 </html>
