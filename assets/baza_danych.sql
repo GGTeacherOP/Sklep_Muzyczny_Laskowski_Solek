@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 08, 2025 at 08:11 PM
+-- Generation Time: Maj 10, 2025 at 01:45 AM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -135,23 +135,19 @@ INSERT INTO `kategorie_instrumentow` (`id`, `nazwa`) VALUES
 
 CREATE TABLE `klienci` (
   `id` int(11) NOT NULL,
-  `uzytkownik_id` int(11) NOT NULL,
-  `adres` varchar(255) NOT NULL,
-  `miasto` varchar(255) NOT NULL,
-  `kod_pocztowy` varchar(10) NOT NULL,
-  `kraj` varchar(255) NOT NULL
+  `uzytkownik_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `klienci`
 --
 
-INSERT INTO `klienci` (`id`, `uzytkownik_id`, `adres`, `miasto`, `kod_pocztowy`, `kraj`) VALUES
-(1, 1, 'ul. Słowackiego 10', 'Warszawa', '01-001', 'Polska'),
-(2, 2, 'ul. Pięciomorgowa 5', 'Kraków', '30-101', 'Polska'),
-(3, 3, 'ul. Jagodowa 3', 'Wrocław', '50-202', 'Polska'),
-(4, 4, 'ul. Zielona 7', 'Poznań', '60-301', 'Polska'),
-(5, 5, 'ul. Wiosenna 8', 'Gdańsk', '80-402', 'Polska');
+INSERT INTO `klienci` (`id`, `uzytkownik_id`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 
 -- --------------------------------------------------------
 
@@ -185,21 +181,19 @@ INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_
 
 CREATE TABLE `koszyk` (
   `id` int(11) NOT NULL,
-  `klient_id` int(11) NOT NULL,
-  `data_utworzenia` datetime NOT NULL DEFAULT current_timestamp(),
-  `data_aktualizacji` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `klient_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `koszyk`
 --
 
-INSERT INTO `koszyk` (`id`, `klient_id`, `data_utworzenia`, `data_aktualizacji`) VALUES
-(1, 1, '2025-05-08 14:33:13', '2025-05-08 14:33:13'),
-(2, 2, '2025-05-08 14:33:13', '2025-05-08 14:33:13'),
-(3, 3, '2025-05-08 14:33:13', '2025-05-08 14:33:13'),
-(4, 4, '2025-05-08 14:33:13', '2025-05-08 14:33:13'),
-(5, 5, '2025-05-08 14:33:13', '2025-05-08 14:33:13');
+INSERT INTO `koszyk` (`id`, `klient_id`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
 
 -- --------------------------------------------------------
 
@@ -214,7 +208,7 @@ CREATE TABLE `koszyk_szczegoly` (
   `ilosc` int(11) NOT NULL DEFAULT 1 CHECK (`ilosc` > 0),
   `cena` decimal(10,2) NOT NULL CHECK (`cena` > 0),
   `typ` enum('kupno','wypozyczenie') NOT NULL DEFAULT 'kupno',
-  `okres_wypozyczenia` int(11) DEFAULT NULL CHECK (`okres_wypozyczenia` > 0)
+  `okres_wypozyczenia` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -222,11 +216,11 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(1, 1, 1, 1, 1499.99, 'kupno', NULL),
-(2, 2, 2, 1, 2499.99, 'kupno', NULL),
-(3, 3, 3, 1, 3999.99, 'kupno', NULL),
-(4, 4, 4, 1, 1899.99, 'wypozyczenie', NULL),
-(5, 5, 5, 1, 799.99, 'kupno', NULL);
+(1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
+(2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
+(3, 3, 3, 1, 3999.99, 'kupno', '2025-05-08'),
+(4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
+(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08');
 
 -- --------------------------------------------------------
 
@@ -238,19 +232,20 @@ CREATE TABLE `pracownicy` (
   `id` int(11) NOT NULL,
   `uzytkownik_id` int(11) NOT NULL,
   `stanowisko` enum('pracownik','manager','właściciel') NOT NULL DEFAULT 'pracownik',
-  `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp()
+  `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
+  `identyfikator` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pracownicy`
 --
 
-INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko`, `data_zatrudnienia`) VALUES
-(1, 1, 'pracownik', '2025-05-08 14:33:12'),
-(2, 2, 'manager', '2025-05-08 14:33:12'),
-(3, 3, 'właściciel', '2025-05-08 14:33:12'),
-(4, 4, 'pracownik', '2025-05-08 14:33:12'),
-(5, 5, 'manager', '2025-05-08 14:33:12');
+INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko`, `data_zatrudnienia`, `identyfikator`) VALUES
+(1, 1, 'pracownik', '2025-05-08 14:33:12', '0159'),
+(2, 2, 'manager', '2025-05-08 14:33:12', '1594'),
+(3, 3, 'właściciel', '2025-05-08 14:33:12', '7494'),
+(4, 4, 'pracownik', '2025-05-08 14:33:12', '2690'),
+(5, 5, 'manager', '2025-05-08 14:33:12', '0969');
 
 -- --------------------------------------------------------
 
@@ -283,24 +278,23 @@ INSERT INTO `producenci` (`id`, `nazwa`) VALUES
 
 CREATE TABLE `uzytkownicy` (
   `id` int(11) NOT NULL,
-  `imie` varchar(255) NOT NULL,
-  `nazwisko` varchar(255) NOT NULL,
+  `nazwa_uzytkownika` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `haslo` varchar(255) NOT NULL,
-  `numer_telefonu` varchar(15) DEFAULT NULL,
-  `data_rejestracji` datetime NOT NULL DEFAULT current_timestamp()
+  `data_rejestracji` datetime NOT NULL DEFAULT current_timestamp(),
+  `typ` enum('pracownik','klient') NOT NULL DEFAULT 'klient'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `uzytkownicy`
 --
 
-INSERT INTO `uzytkownicy` (`id`, `imie`, `nazwisko`, `email`, `haslo`, `numer_telefonu`, `data_rejestracji`) VALUES
-(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', 'password123', '123456789', '2025-05-08 14:33:12'),
-(2, 'Anna', 'Nowak', 'anna.nowak@example.com', 'password123', '987654321', '2025-05-08 14:33:12'),
-(3, 'Piotr', 'Zieliński', 'piotr.zielinski@example.com', 'password123', '112233445', '2025-05-08 14:33:12'),
-(4, 'Maria', 'Wiśniewska', 'maria.wisniewska@example.com', 'password123', '223344556', '2025-05-08 14:33:12'),
-(5, 'Adam', 'Kaczmarek', 'adam.kaczmarek@example.com', 'password123', '334455667', '2025-05-08 14:33:12');
+INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_rejestracji`, `typ`) VALUES
+(1, 'Jan', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(2, 'Anna', 'anna.nowak@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(4, 'Maria', 'maria.wisniewska@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik');
 
 -- --------------------------------------------------------
 
@@ -453,6 +447,7 @@ ALTER TABLE `koszyk_szczegoly`
 --
 ALTER TABLE `pracownicy`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `identyfikator` (`identyfikator`),
   ADD KEY `idx_uzytkownik_id` (`uzytkownik_id`);
 
 --
@@ -468,7 +463,6 @@ ALTER TABLE `producenci`
 ALTER TABLE `uzytkownicy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `numer_telefonu` (`numer_telefonu`),
   ADD KEY `idx_email` (`email`);
 
 --
