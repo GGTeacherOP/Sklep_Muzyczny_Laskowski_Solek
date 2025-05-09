@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   if (trayItems.cart) {
-    trayItems.cart.addEventListener('click', () => redirectTo('/cart.html'));
+    trayItems.cart.addEventListener('click', () => redirectTo('/cart.php'));
   }
 
   if (trayItems.profile) {
-    trayItems.profile.addEventListener('click', () => redirectTo('/profile.html'));
+    trayItems.profile.addEventListener('click', () => redirectTo('/profile.php'));
   }
 
   if (trayItems.home) {
