@@ -17,20 +17,20 @@
     $quantity = 1;
 
     if (!isset($_SESSION['cart'])) {
-      $_SESSION['cart'] = [];
-    }
-
-    $cartKey = $productId . "_" . $productType;
-
-    if (isset($_SESSION['cart'][$cartKey])) {
-      $_SESSION['cart'][$cartKey]['quantity'] += $quantity;
-    } else {
-      $_SESSION['cart'][$cartKey] = [
-        'product_id' => $productId,
-        'type' => $productType,
-        'quantity' => $quantity
+      $_SESSION['cart'] = [
+        'buy' => [],
+        'rent' => []
       ];
     }
+
+    if (!isset($_SESSION['cart'][$productType][$productId])) {
+      $_SESSION['cart'][$productType][$productId] = [
+        'product_id' => $productId,
+        'quantity' => 0
+      ];
+    }
+
+    $_SESSION['cart'][$productType][$productId]['quantity'] += $quantity;
 
     header("Location: home.php");
     exit();
@@ -38,8 +38,8 @@
 
   $totalItems = 0;
   if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $item) {
-      $totalItems++;
+    foreach ($_SESSION['cart'] as $productType => $products) {
+      $totalItems += count($products);
     }
   }
 ?>

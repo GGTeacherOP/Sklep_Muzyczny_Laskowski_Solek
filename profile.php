@@ -1,4 +1,7 @@
 <?php
+  session_start();
+  $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
+
   $server_name = "localhost";
   $user_name = "root";
   $password = "";
@@ -41,7 +44,6 @@
 
       if ($user = mysqli_fetch_assoc($result)) {
         if ($password === $user['haslo']) {
-          session_start();
           $_SESSION['user_id'] = $user['id'];
           header("Location: home.php");
           exit();
@@ -182,7 +184,7 @@
     <nav class="tray">
       <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
         <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk</span>
+        <span>Koszyk <?= ($totalItems) ?></span>
       </button>
       <button aria-label="Profil użytkownika - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
               title="Przejdź do swojego profilu" type="button">

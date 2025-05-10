@@ -1,5 +1,6 @@
 <?php
   session_start();
+  $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
 
   $server_name = "localhost";
   $user_name = "root";
@@ -11,32 +12,24 @@
     die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
   }
 
-  $cartItems = [];
+  $cartItems = ["buy" => [], "rent" => []];
 
-  if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-    $productIds = array_map(function ($key) {
-      return explode("_", $key)[0];
-    }, array_keys($_SESSION['cart']));
+  $productIds = array_unique(array_merge(
+    array_keys($_SESSION['cart']['buy'] ?? []),
+    array_keys($_SESSION['cart']['rent'] ?? [])
+  ));
 
-    $productIds = array_unique($productIds);
-
+  if (!empty($productIds)) {
     $idList = implode(",", array_map('intval', $productIds));
     $sql = "SELECT * FROM instrumenty WHERE id IN ($idList)";
     $result = mysqli_query($connection, $sql);
 
-    if ($result) {
-      while ($row = mysqli_fetch_assoc($result)) {
-        $productId = $row['id'];
-
-        foreach ($_SESSION['cart'] as $cartKey => $cartInfo) {
-          [$cartProductId, $cartType] = explode("_", $cartKey);
-
-          if ($cartProductId == $productId) {
-            $item = $row;
-            $item['type'] = $cartType;
-            $item['quantity'] = $cartInfo['quantity'];
-            $cartItems[] = $item;
-          }
+    while ($row = mysqli_fetch_assoc($result)) {
+      $productId = $row['id'];
+      foreach (['buy', 'rent'] as $type) {
+        if (isset($_SESSION['cart'][$type][$productId])) {
+          $row['quantity'] = $_SESSION['cart'][$type][$productId]['quantity'];
+          $cartItems[$type][$productId] = $row;
         }
       }
     }
@@ -76,7 +69,7 @@
       <button aria-label="Koszyk - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
               title="Przejdź do koszyka" type="button">
         <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk (<?= count($cartItems) ?>)</span>
+        <span>Koszyk (<?= $totalItems ?>)</span>
       </button>
       <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
         <i aria-hidden="true" class="fa-solid fa-user"></i>
@@ -89,13 +82,13 @@
     </nav>
   </header>
 
-  <section class="cart-container-empty <?= count($cartItems) === 0 ? 'active' : '' ?>">
+  <section class="cart-container-empty <?= $totalItems === 0 ? 'active' : '' ?>">
     <i class="fa-solid fa-box-open empty-cart-icon"></i>
     <h2>Twój koszyk jest pusty</h2>
     <button>Znajdź coś dla siebie <i class="fa-solid fa-arrow-right"></i></button>
   </section>
 
-  <section class="cart-container-full <?= count($cartItems) > 0 ? 'active' : '' ?>">
+  <section class="cart-container-full <?= $totalItems > 0 ? 'active' : '' ?>">
     <section class="cart-container">
       <div class="cart-items">
         <h2>Koszyk</h2>
