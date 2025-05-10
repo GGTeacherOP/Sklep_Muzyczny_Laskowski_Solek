@@ -126,6 +126,24 @@ ul {
   width: 100%;
 }
 
+.cart-item-product-details {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.cart-item-product-details > * {
+  width: 33%;
+  display: flex;
+  justify-content: center;
+}
+
+.cart-item-product-details > *:first-child {
+  flex-direction: column;
+}
+
 .cart-item-name, .cart-item-category, .cart-item-price {
   font-weight: bold;
 }

@@ -128,25 +128,27 @@ WHERE instrumenty.id IN ($idList)
                 <li class=\"cart-item\">
                   <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
                   <div class=\"cart-item-details\">
-                    <div class=\"cart-item-text\">
-                      <div class=\"cart-item-name\">{$product['nazwa']}</div>
-                      <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                    <div class=\"cart-item-product-details\">
+                      <div class=\"cart-item-text\">
+                        <div class=\"cart-item-name\">{$product['nazwa']}</div>
+                        <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                      </div>
+                      <div class=\"cart-item-quantity\">
+                        <button class=\"quantity-button\">
+                          <i class=\"fa-solid fa-minus\"></i>
+                        </button>
+                        <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
+                        <button class=\"quantity-button\">
+                          <i class=\"fa-solid fa-plus\"></i>
+                        </button>
+                      </div>
+                      <div class=\"cart-item-price\">{$product['cena']} zł</div>
                     </div>
-                    <div class=\"cart-item-quantity\">
-                      <button class=\"quantity-button\">
-                        <i class=\"fa-solid fa-minus\"></i>
-                      </button>
-                      <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
-                      <button class=\"quantity-button\">
-                        <i class=\"fa-solid fa-plus\"></i>
-                      </button>
-                    </div>
-                    <div class=\"cart-item-price\">{$product['cena']}</div>
-                      <button class=\"remove-button\">
-                        <i class=\"fa-solid fa-trash\"></i>
-                      </button>
-                    </div>
-                  </li>
+                    <button class=\"remove-button\">
+                      <i class=\"fa-solid fa-trash\"></i>
+                    </button>
+                  </div>
+                </li>
                 ";
               }
               unset($product);
@@ -163,25 +165,27 @@ WHERE instrumenty.id IN ($idList)
                 <li class=\"cart-item\">
                   <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
                   <div class=\"cart-item-details\">
-                    <div class=\"cart-item-text\">
-                      <div class=\"cart-item-name\">{$product['nazwa']}</div>
-                      <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                    <div class=\"cart-item-product-details\">
+                      <div class=\"cart-item-text\">
+                        <div class=\"cart-item-name\">{$product['nazwa']}</div>
+                        <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                      </div>
+                      <div class=\"cart-item-quantity\">
+                        <button class=\"quantity-button\">
+                          <i class=\"fa-solid fa-minus\"></i>
+                        </button>
+                        <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
+                        <button class=\"quantity-button\">
+                          <i class=\"fa-solid fa-plus\"></i>
+                        </button>
+                      </div>
+                      <div class=\"cart-item-price\">{$product['cena']} zł</div>
                     </div>
-                    <div class=\"cart-item-quantity\">
-                      <button class=\"quantity-button\">
-                        <i class=\"fa-solid fa-minus\"></i>
-                      </button>
-                      <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
-                      <button class=\"quantity-button\">
-                        <i class=\"fa-solid fa-plus\"></i>
-                      </button>
-                    </div>
-                    <div class=\"cart-item-price\">{$product['cena']}</div>
-                      <button class=\"remove-button\">
-                        <i class=\"fa-solid fa-trash\"></i>
-                      </button>
-                    </div>
-                  </li>
+                    <button class=\"remove-button\">
+                      <i class=\"fa-solid fa-trash\"></i>
+                    </button>
+                  </div>
+                </li>
                 ";
               }
               unset($product);
