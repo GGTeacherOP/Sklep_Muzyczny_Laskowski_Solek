@@ -22,6 +22,7 @@ main {
   justify-content: space-between;
   width: 100%;
   max-width: 100%;
+  flex: 1;
 }
 
 .cart-container-empty {
@@ -440,15 +441,15 @@ ul {
     border-radius: var(--radius-xxs);
   }
 
-  .cart-container-empty > .fa-solid, .cart-container-not-logged-in > .fa-solid {
+  .cart-container-empty > .fa-solid {
     font-size: var(--card-size-xl);
   }
 
-  .cart-container-empty h2, .cart-container-not-logged-in h2 {
+  .cart-container-empty h2 {
     font-size: var(--card-size-xxxs);
   }
 
-  .cart-container-empty button, .cart-container-not-logged-in button {
+  .cart-container-empty button {
     font-size: var(--font-md);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);

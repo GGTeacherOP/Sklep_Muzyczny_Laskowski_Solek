@@ -11,6 +11,19 @@
     die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
   }
 
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
+    $productId = intval($_POST['product_id']);
+    $type = $_POST['type'];
+    unset($_SESSION['cart'][$type][$productId]);
+  }
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
+    $productId = intval($_POST['product_id']);
+    $type = $_POST['type'];
+    $quantity = max(1, intval($_POST['quantity']));
+    $_SESSION['cart'][$type][$productId]['quantity'] = $quantity;
+  }
+
   $cartItems = ["buy" => [], "rent" => []];
   $totalItems = 0;
 
@@ -26,10 +39,8 @@
     $sql = "
 SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
 FROM instrumenty
-JOIN instrument_zdjecia
-ON instrumenty.id = instrument_zdjecia.instrument_id
-JOIN kategorie_instrumentow
-ON instrumenty.kategoria_id = kategorie_instrumentow.id
+JOIN instrument_zdjecia ON instrumenty.id = instrument_zdjecia.instrument_id
+JOIN kategorie_instrumentow ON instrumenty.kategoria_id = kategorie_instrumentow.id
 WHERE instrumenty.id IN ($idList)
 ";
     $result = mysqli_query($connection, $sql);
@@ -42,9 +53,7 @@ WHERE instrumenty.id IN ($idList)
           $cartItems[$type][$productId] = $row;
         }
       }
-      unset($type);
     }
-
     mysqli_free_result($result);
   }
 
@@ -54,12 +63,63 @@ WHERE instrumenty.id IN ($idList)
   foreach ($cartItems['buy'] as $item) {
     $totalBuy += $item['cena'] * $item['quantity'];
   }
-  unset($item);
 
   foreach ($cartItems['rent'] as $item) {
     $totalRent += $item['cena'] * $item['quantity'];
   }
-  unset($item);
+
+  function formatPrice(float $price, int $quantity = 1): string {
+    $total = $price * $quantity;
+    return number_format($total, 2, ',', ' ') . ' zł';
+  }
+
+  function renderCartItem(array $product, string $type = 'buy'): string {
+    $productId = $product['id'];
+    $name = htmlspecialchars($product['nazwa']);
+    $category = htmlspecialchars($product['nazwa_kategorii']);
+    $imageUrl = htmlspecialchars($product['url']);
+    $altText = htmlspecialchars($product['alt_text']);
+    $quantity = intval($product['quantity']);
+    $price = formatPrice($product['cena'], $quantity);
+
+    return "
+    <li class=\"cart-item\">
+      <img alt=\"{$altText}\" src=\"{$imageUrl}\">
+      <div class=\"cart-item-details\">
+        <div class=\"cart-item-product-details\">
+          <div class=\"cart-item-text\">
+            <div class=\"cart-item-name\">{$name}</div>
+            <div class=\"cart-item-category\">{$category}</div>
+          </div>
+          
+          <form method=\"POST\" action=\"cart.php\" class=\"quantity-form\">
+            <input type=\"hidden\" name=\"product_id\" value=\"{$productId}\">
+            <input type=\"hidden\" name=\"type\" value=\"{$type}\">
+            <div class=\"cart-item-quantity\">
+              <button type=\"submit\" name=\"update_quantity\" value=\"{$quantity}\" class=\"quantity-button\" onclick=\"this.form.quantity.value = Math.max(1, this.form.quantity.value - 1)\">
+                <i class=\"fa-solid fa-minus\"></i>
+              </button>
+              <input class=\"quantity-input\" name=\"quantity\" min=\"1\" type=\"number\" value=\"{$quantity}\">
+              <button type=\"submit\" name=\"update_quantity\" value=\"{$quantity}\" class=\"quantity-button\" onclick=\"this.form.quantity.value = parseInt(this.form.quantity.value) + 1\">
+                <i class=\"fa-solid fa-plus\"></i>
+              </button>
+            </div>
+          </form>
+          
+          <div class=\"cart-item-price\">{$price}</div>
+        </div>
+
+        <form method=\"POST\" action=\"cart.php\" class=\"remove-item-form\">
+          <input type=\"hidden\" name=\"product_id\" value=\"{$productId}\">
+          <input type=\"hidden\" name=\"type\" value=\"{$type}\">
+          <button type=\"submit\" name=\"remove\" class=\"remove-button\">
+            <i class=\"fa-solid fa-trash\"></i>
+          </button>
+        </form>
+      </div>
+    </li>
+    ";
+  }
 
   mysqli_close($connection);
 ?>
@@ -124,35 +184,11 @@ WHERE instrumenty.id IN ($idList)
           <ul>
             <?php
               foreach ($cartItems['buy'] as $product) {
-                echo "
-                <li class=\"cart-item\">
-                  <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
-                  <div class=\"cart-item-details\">
-                    <div class=\"cart-item-product-details\">
-                      <div class=\"cart-item-text\">
-                        <div class=\"cart-item-name\">{$product['nazwa']}</div>
-                        <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
-                      </div>
-                      <div class=\"cart-item-quantity\">
-                        <button class=\"quantity-button\">
-                          <i class=\"fa-solid fa-minus\"></i>
-                        </button>
-                        <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
-                        <button class=\"quantity-button\">
-                          <i class=\"fa-solid fa-plus\"></i>
-                        </button>
-                      </div>
-                      <div class=\"cart-item-price\">{$product['cena']} zł</div>
-                    </div>
-                    <button class=\"remove-button\">
-                      <i class=\"fa-solid fa-trash\"></i>
-                    </button>
-                  </div>
-                </li>
-                ";
+                echo renderCartItem($product);
               }
               unset($product);
             ?>
+
           </ul>
         </div>
 
@@ -161,32 +197,7 @@ WHERE instrumenty.id IN ($idList)
           <ul>
             <?php
               foreach ($cartItems['rent'] as $product) {
-                echo "
-                <li class=\"cart-item\">
-                  <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
-                  <div class=\"cart-item-details\">
-                    <div class=\"cart-item-product-details\">
-                      <div class=\"cart-item-text\">
-                        <div class=\"cart-item-name\">{$product['nazwa']}</div>
-                        <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
-                      </div>
-                      <div class=\"cart-item-quantity\">
-                        <button class=\"quantity-button\">
-                          <i class=\"fa-solid fa-minus\"></i>
-                        </button>
-                        <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
-                        <button class=\"quantity-button\">
-                          <i class=\"fa-solid fa-plus\"></i>
-                        </button>
-                      </div>
-                      <div class=\"cart-item-price\">{$product['cena']} zł</div>
-                    </div>
-                    <button class=\"remove-button\">
-                      <i class=\"fa-solid fa-trash\"></i>
-                    </button>
-                  </div>
-                </li>
-                ";
+                echo renderCartItem($product, 'rent');
               }
               unset($product);
             ?>
@@ -204,8 +215,8 @@ WHERE instrumenty.id IN ($idList)
           </div>
 
           <div class="cart-summary-section">
-            <p>Kupno: <span id="total-buy"><?= $totalBuy ?> zł</span></p>
-            <p>Wypożyczenie: <span id="total-rent"><?= $totalRent ?> zł</span></p>
+            <p>Kupno: <span id="total-buy"><?= formatPrice($totalBuy) ?></span></p>
+            <p>Wypożyczenie: <span id="total-rent"><?= formatPrice($totalRent) ?></span></p>
           </div>
 
           <hr>
@@ -213,21 +224,22 @@ WHERE instrumenty.id IN ($idList)
           <?php
             $totalPriceForItems = $totalBuy + $totalRent;
             $discount = 0;
-            $delivery = min(($totalBuy + $totalRent) / 100, 20);
+            $delivery = min($totalPriceForItems / 100, 20);
             $vatTax = round($totalPriceForItems * 0.23, 2);
             $totalAmount = $totalPriceForItems - $discount + $delivery + $vatTax;
           ?>
+
           <div class="cart-summary-section">
-            <p>Koszyk: <span id="subtotal"><?= $totalPriceForItems ?> zł</span></p>
-            <p>Zniżka: <span id="discount"><?= $discount ?></span></p>
-            <p>Dostawa: <span id="delivery"><?= $delivery ?> zł</span></p>
-            <p>Podatek: <span id="tax"><?= $vatTax ?> zł</span></p>
+            <p>Koszyk: <span id="subtotal"><?= formatPrice($totalPriceForItems) ?></span></p>
+            <p>Zniżka: <span id="discount"><?= formatPrice($discount) ?></span></p>
+            <p>Dostawa: <span id="delivery"><?= formatPrice($delivery) ?></span></p>
+            <p>Podatek: <span id="tax"><?= formatPrice($vatTax) ?></span></p>
           </div>
 
           <hr>
 
           <div class="cart-summary-section">
-            <p>Łączna kwota: <span id="total-amount"><?= $totalAmount ?> zł</span></p>
+            <p>Łączna kwota: <span id="total-amount"><?= formatPrice($totalAmount) ?></span></p>
           </div>
 
         </div>
