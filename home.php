@@ -4,26 +4,32 @@
   $server_name = "localhost";
   $user_name = "root";
   $password = "";
-  $databse_name = "sm";
+  $database_name = "sm";
 
-  $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
-
+  $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
   if (!$connection) {
     die("Połączenie nieudane: " . mysqli_connect_error());
   }
 
   if (isset($_POST['add_to_cart'])) {
     $productId = $_POST['product_id'];
+    $productType = $_POST['product_type'];
     $quantity = 1;
 
     if (!isset($_SESSION['cart'])) {
       $_SESSION['cart'] = [];
     }
 
-    if (isset($_SESSION['cart'][$productId])) {
-      $_SESSION['cart'][$productId] += $quantity;
+    $cartKey = $productId . "_" . $productType;
+
+    if (isset($_SESSION['cart'][$cartKey])) {
+      $_SESSION['cart'][$cartKey]['quantity'] += $quantity;
     } else {
-      $_SESSION['cart'][$productId] = $quantity;
+      $_SESSION['cart'][$cartKey] = [
+        'product_id' => $productId,
+        'type' => $productType,
+        'quantity' => $quantity
+      ];
     }
 
     header("Location: home.php");
@@ -32,8 +38,8 @@
 
   $totalItems = 0;
   if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $quantity) {
-      $totalItems += $quantity;
+    foreach ($_SESSION['cart'] as $item) {
+      $totalItems++;
     }
   }
 ?>
@@ -96,7 +102,7 @@
     </div>
     <div class="instrument-types-list fade-in">
       <?php
-        $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+        $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
         if (!$connection) {
           die("Połączenie nieudane: " . mysqli_connect_error());
         }
@@ -124,7 +130,7 @@ FROM kategorie_instrumentow;
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
           if (!$connection) {
             die("Połączenie nieudane: " . mysqli_connect_error());
           }
@@ -158,8 +164,9 @@ LIMIT 10;
                   <p class=\"product-price\">{$row['cena']} PLN</p>
                   <form method=\"post\" action=\"home.php\">
                     <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
+                    <input type=\"hidden\" name=\"product_type\" value=\"buy\">
                     <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
-                      Dodaj <i class=\"fa-solid fa-cart-plus\"></i>
+                      Kup <i class=\"fa-solid fa-cart-plus\"></i>
                     </button>
                   </form>
                 </div>
@@ -176,7 +183,7 @@ LIMIT 10;
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
           if (!$connection) {
             die("Połączenie nieudane: " . mysqli_connect_error());
           }
@@ -208,10 +215,11 @@ LIMIT 10;
                   <p class=\"product-price\">{$row['cena']} PLN</p>
                   <form method=\"post\" action=\"home.php\">
                     <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
+                    <input type=\"hidden\" name=\"product_type\" value=\"rent\">
                     <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
-                      Dodaj <i class=\"fa-solid fa-cart-plus\"></i>
+                      Wypożycz <i class=\"fa-solid fa-cart-plus\"></i>
                     </button>
-                  </form>
+                    </form>
                 </div>
               </article>
             ";
