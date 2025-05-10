@@ -1,0 +1,185 @@
+@import "./global.css";
+
+.instrument-types-list {
+    background-color: var(--instruments-nav-bg);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--spacing-sm);
+}
+
+.instrument-name{
+    color: var(--instruments-nav-text-color);
+    padding: var(--spacing-sm);
+    transition: all 0.3s;
+    border-radius: var(--spacing-xs);
+}
+
+.instrument-name:hover{
+    background-color: var(--instruments-nav-bg-hover);
+}
+
+.category-banner {
+  background-color: #000; /*da sie jakies zdj na tlo np gitare*/
+  padding: 40px 20px;
+  position: relative;
+  color: var(--banner-text-color);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.category-pill {
+  background-color: #222;
+  padding: 5px 10px;
+  border-radius: var(--radius-xxs);
+  text-decoration: none;
+  color: var(--banner-text-color);
+}
+
+.breadcrumb-arrow {
+  color: var(--breadcrumb-arrow-color);
+}
+
+.banner-title {
+  font-size: var(--banner-title-size-xl);
+  font-weight: bold;
+}
+
+.banner-bottom{
+  margin: var(--spacing-md) var(--spacing-xxs) var(--spacing-xs);
+}
+
+.banner-bottom-el{
+  color: var(--banner-bottom-text);
+  font-weight: bold;
+}
+
+.popular-products {
+  margin: var(--spacing-lg) 0;
+}
+
+.popular-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-sm);
+}
+
+.section-title {
+  font-size: var(--font-xl);
+  color: var(--highlight-color);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxxl), 1fr));
+  gap: var(--spacing-md);
+}
+
+.product-card {
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--primary-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: var(--card-size-xxl);
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-badge {
+  font-size: var(--font-xs);
+  position: absolute;
+  top: var(--spacing-xs);
+  left: var(--spacing-xs);
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  color: var(--primary-bg);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.product-info {
+  padding: var(--spacing-sm);
+}
+
+.product-name {
+  font-size: var(--font-md);
+  margin-bottom: var(--spacing-xs);
+  color: var(--highlight-color);
+}
+
+.product-price {
+  font-size: var(--font-lg);
+  font-weight: bold;
+  margin-bottom: var(--spacing-sm);
+  color: var(--price-color);
+}
+
+.product-actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xs);
+}
+
+.product-action-btn {
+  font-size: var(--font-sm);
+  width: 100%;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--button-text-color);
+  border-radius: var(--radius-xs);
+}
+
+.more-info-btn {
+  height: var(--button-height-md);
+  color: var(--button-more-bg);
+  border: solid 2px var(--button-more-bg);
+}
+
+.more-info-btn:hover {
+  color: var(--button-more-bg-hover);
+  border: solid 2px var(--button-more-bg-hover);
+  background: none;
+}
+
+.buy-product-btn {
+  background-color: var(--button-buy-bg);
+}
+
+.buy-product-btn:hover {
+  background-color: var(--button-buy-bg-hover);
+}
+
+@media (max-width: 768px) {
+  .instrument-types {
+    display: none;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxxl), 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-image {
+    height: var(--card-size-lg);
+  }
+}

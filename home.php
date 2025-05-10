@@ -69,17 +69,20 @@
         }
 
         $sql = "
-SELECT kategorie_instrumentow.nazwa 
-FROM kategorie_instrumentow;
+SELECT kategorie_instrumentow.nazwa, kategorie_instrumentow.id 
+FROM kategorie_instrumentow
+ORDER BY kategorie_instrumentow.id;
 ";
         $result = mysqli_query($connection, $sql);
 
         while ($row = mysqli_fetch_array($result)) {
           echo "
-            <div aria-label=\"Wybierz typ {$row['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">
-              <div aria-hidden=\"true\" class=\"instrument-icon\"></div>
-              <span class=\"instrument-name\">{$row['nazwa']}</span>
-            </div>";
+            <a href=\"instruments.php?instrument={$row['id']}\">
+              <div aria-label=\"Wybierz typ {$row['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\" data-category={$row['id']}>
+                <div aria-hidden=\"true\" class=\"instrument-icon\"></div>
+                <span class=\"instrument-name\">{$row['nazwa']}</span>
+              </div>
+            </a>";
         }
 
         mysqli_close($connection);

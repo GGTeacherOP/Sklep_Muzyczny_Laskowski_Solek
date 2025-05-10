@@ -26,6 +26,14 @@
   --footer-primary-text: var(--highlight-color);
   --footer-secondary-text: var(--text-color);
 
+  --instruments-nav-bg: var(--highlight-color);
+  --instruments-nav-bg-hover: #333333;
+  --instruments-nav-text-color: var(--primary-bg);
+
+  --banner-text-color: var(--primary-bg);
+  --breadcrumb-arrow-color: #808080;
+  --banner-bottom-text: #bbb;
+
   --link-color: #000EE;
   --link-visited-color: #551A8B;
   --link-hover-color: #0000EE;
@@ -69,6 +77,12 @@
 
   --logo-max-width: 100px;
   --logo-max-width-xs: 80px;
+
+  --banner-title-size-xxl: 52px;
+  --banner-title-size-xl: 48px;
+  --baner-title-size-lg: 38px;
+  --baner-title-size-lg: 32px;
+  --baner-title-size-sm: 14px;
 }
 
 * {
