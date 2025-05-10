@@ -1,6 +1,5 @@
 <?php
   session_start();
-  $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
 
   $server_name = "localhost";
   $user_name = "root";
@@ -13,6 +12,7 @@
   }
 
   $cartItems = ["buy" => [], "rent" => []];
+  $totalItems = 0;
 
   $productIds = array_unique(array_merge(
     array_keys($_SESSION['cart']['buy'] ?? []),
@@ -20,8 +20,18 @@
   ));
 
   if (!empty($productIds)) {
+    $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
+
     $idList = implode(",", array_map('intval', $productIds));
-    $sql = "SELECT * FROM instrumenty WHERE id IN ($idList)";
+    $sql = "
+SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
+FROM instrumenty
+JOIN instrument_zdjecia
+ON instrumenty.id = instrument_zdjecia.instrument_id
+JOIN kategorie_instrumentow
+ON instrumenty.kategoria_id = kategorie_instrumentow.id
+WHERE instrumenty.id IN ($idList)
+";
     $result = mysqli_query($connection, $sql);
 
     while ($row = mysqli_fetch_assoc($result)) {
@@ -32,7 +42,10 @@
           $cartItems[$type][$productId] = $row;
         }
       }
+      unset($type);
     }
+
+    mysqli_free_result($result);
   }
 
   mysqli_close($connection);
@@ -96,78 +109,70 @@
         <div class="cart-section" id="buy-section">
           <h3>Kupno</h3>
           <ul>
-            <li class="cart-item">
-              <img alt="Perkusja" src="assets/images/drum_set.jpg">
-              <div class="cart-item-details">
-                <div class="cart-item-text">
-                  <div class="cart-item-name">Perkusja</div>
-                  <div class="cart-item-category">Perkusyjne</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-minus"></i>
-                  </button>
-                  <input class="quantity-input" min="1" type="number" value="1">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
-                </div>
-                <div class="cart-item-price">1500 zł</div>
-                <button class="remove-button">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </li>
+            <?php
+              foreach ($cartItems['buy'] as $product) {
+                echo "
+                <li class=\"cart-item\">
+                  <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
+                  <div class=\"cart-item-details\">
+                    <div class=\"cart-item-text\">
+                      <div class=\"cart-item-name\">{$product['nazwa']}</div>
+                      <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                    </div>
+                    <div class=\"cart-item-quantity\">
+                      <button class=\"quantity-button\">
+                        <i class=\"fa-solid fa-minus\"></i>
+                      </button>
+                      <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
+                      <button class=\"quantity-button\">
+                        <i class=\"fa-solid fa-plus\"></i>
+                      </button>
+                    </div>
+                    <div class=\"cart-item-price\">{$product['cena']}</div>
+                      <button class=\"remove-button\">
+                        <i class=\"fa-solid fa-trash\"></i>
+                      </button>
+                    </div>
+                  </li>
+                ";
+              }
+              unset($product);
+            ?>
           </ul>
         </div>
 
         <div class="cart-section" id="rent-section">
           <h3>Wypożyczenie</h3>
           <ul>
-            <li class="cart-item">
-              <img alt="Perkusja" src="assets/images/drum_set.jpg">
-              <div class="cart-item-details">
-                <div class="cart-item-text">
-                  <div class="cart-item-name">Perkusja</div>
-                  <div class="cart-item-category">Perkusyjne</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-minus"></i>
-                  </button>
-                  <input class="quantity-input" min="1" type="number" value="1">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
-                </div>
-                <div class="cart-item-price">1500 zł</div>
-                <button class="remove-button">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </li>
-            <li class="cart-item">
-              <img alt="Perkusja" src="assets/images/drum_set.jpg">
-              <div class="cart-item-details">
-                <div class="cart-item-text">
-                  <div class="cart-item-name">Perkusja</div>
-                  <div class="cart-item-category">Perkusyjne</div>
-                </div>
-                <div class="cart-item-quantity">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-minus"></i>
-                  </button>
-                  <input class="quantity-input" min="1" type="number" value="1">
-                  <button class="quantity-button">
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
-                </div>
-                <div class="cart-item-price">1500 zł</div>
-                <button class="remove-button">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </li>
+            <?php
+              foreach ($cartItems['rent'] as $product) {
+                echo "
+                <li class=\"cart-item\">
+                  <img alt=\"{$product['alt_text']}\" src=\"{$product['url']}\">
+                  <div class=\"cart-item-details\">
+                    <div class=\"cart-item-text\">
+                      <div class=\"cart-item-name\">{$product['nazwa']}</div>
+                      <div class=\"cart-item-category\">{$product['nazwa_kategorii']}</div>
+                    </div>
+                    <div class=\"cart-item-quantity\">
+                      <button class=\"quantity-button\">
+                        <i class=\"fa-solid fa-minus\"></i>
+                      </button>
+                      <input class=\"quantity-input\" min=\"1\" type=\"number\" value=\"{$product['quantity']}\">
+                      <button class=\"quantity-button\">
+                        <i class=\"fa-solid fa-plus\"></i>
+                      </button>
+                    </div>
+                    <div class=\"cart-item-price\">{$product['cena']}</div>
+                      <button class=\"remove-button\">
+                        <i class=\"fa-solid fa-trash\"></i>
+                      </button>
+                    </div>
+                  </li>
+                ";
+              }
+              unset($product);
+            ?>
           </ul>
         </div>
 
@@ -181,24 +186,45 @@
             <input class="promo-code-input" id="promo-code" placeholder="Kod promocyjny" type="text" maxlength="16">
           </div>
 
+          <?php
+            $totalBuy = 0;
+            $totalRent = 0;
+
+            foreach ($cartItems['buy'] as $item) {
+              $totalBuy += $item['cena'] * $item['quantity'];
+            }
+            unset($item);
+
+            foreach ($cartItems['rent'] as $item) {
+              $totalRent += $item['cena'] * $item['quantity'];
+            }
+            unset($item);
+          ?>
           <div class="cart-summary-section">
-            <p>Kupno: <span id="total-buy">2000 zł</span></p>
-            <p>Wypożyczenie: <span id="total-rent">300 zł</span></p>
+            <p>Kupno: <span id="total-buy"><?= $totalBuy ?> zł</span></p>
+            <p>Wypożyczenie: <span id="total-rent"><?= $totalRent ?> zł</span></p>
+          </div>
+
+          <hr>
+
+          <?php
+            $totalPriceForItems = $totalBuy + $totalRent;
+            $discount = 0;
+            $delivery = min(($totalBuy + $totalRent) / 100, 20);
+            $vatTax = round($totalPriceForItems * 0.23, 2);
+            $totalAmount = $totalPriceForItems - $discount + $delivery + $vatTax;
+          ?>
+          <div class="cart-summary-section">
+            <p>Koszyk: <span id="subtotal"><?= $totalPriceForItems ?> zł</span></p>
+            <p>Zniżka: <span id="discount"><?= $discount ?></span></p>
+            <p>Dostawa: <span id="delivery"><?= $delivery ?> zł</span></p>
+            <p>Podatek: <span id="tax"><?= $vatTax ?> zł</span></p>
           </div>
 
           <hr>
 
           <div class="cart-summary-section">
-            <p>Koszyk: <span id="subtotal">2300 zł</span></p>
-            <p>Zniżka: <span id="discount">0 zł</span></p>
-            <p>Dostawa: <span id="delivery">20 zł</span></p>
-            <p>Podatek: <span id="tax">0 zł</span></p>
-          </div>
-
-          <hr>
-
-          <div class="cart-summary-section">
-            <p>Łączna kwota: <span id="total-amount">2320 zł</span></p>
+            <p>Łączna kwota: <span id="total-amount"><?= $totalAmount ?> zł</span></p>
           </div>
 
         </div>
