@@ -48,6 +48,19 @@ WHERE instrumenty.id IN ($idList)
     mysqli_free_result($result);
   }
 
+  $totalBuy = 0;
+  $totalRent = 0;
+
+  foreach ($cartItems['buy'] as $item) {
+    $totalBuy += $item['cena'] * $item['quantity'];
+  }
+  unset($item);
+
+  foreach ($cartItems['rent'] as $item) {
+    $totalRent += $item['cena'] * $item['quantity'];
+  }
+  unset($item);
+
   mysqli_close($connection);
 ?>
 <!doctype html>
@@ -106,7 +119,7 @@ WHERE instrumenty.id IN ($idList)
       <div class="cart-items">
         <h2>Koszyk</h2>
 
-        <div class="cart-section" id="buy-section">
+        <div class="cart-section <?= $totalBuy > 0 ? 'visible' : '' ?>" id="buy-section">
           <h3>Kupno</h3>
           <ul>
             <?php
@@ -141,7 +154,7 @@ WHERE instrumenty.id IN ($idList)
           </ul>
         </div>
 
-        <div class="cart-section" id="rent-section">
+        <div class="cart-section <?= $totalRent > 0 ? 'visible' : '' ?>" id="rent-section">
           <h3>Wypożyczenie</h3>
           <ul>
             <?php
@@ -186,20 +199,6 @@ WHERE instrumenty.id IN ($idList)
             <input class="promo-code-input" id="promo-code" placeholder="Kod promocyjny" type="text" maxlength="16">
           </div>
 
-          <?php
-            $totalBuy = 0;
-            $totalRent = 0;
-
-            foreach ($cartItems['buy'] as $item) {
-              $totalBuy += $item['cena'] * $item['quantity'];
-            }
-            unset($item);
-
-            foreach ($cartItems['rent'] as $item) {
-              $totalRent += $item['cena'] * $item['quantity'];
-            }
-            unset($item);
-          ?>
           <div class="cart-summary-section">
             <p>Kupno: <span id="total-buy"><?= $totalBuy ?> zł</span></p>
             <p>Wypożyczenie: <span id="total-rent"><?= $totalRent ?> zł</span></p>
