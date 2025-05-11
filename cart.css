@@ -282,9 +282,8 @@ ul {
   text-transform: uppercase;
   color: var(--button-text-color);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background-color: var(--form-button-bg);
-  gap: var(--spacing-xs);
 }
 
 .checkout-button:hover {
