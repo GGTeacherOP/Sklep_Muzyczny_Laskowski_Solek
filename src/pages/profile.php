@@ -2,7 +2,9 @@
   /** @var mysqli $connection */
   include '../includes/db_config.php';
 
-  session_start();
+  if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+  }
 
   $errors = array(
     'email' => '',
