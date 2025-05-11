@@ -1,6 +1,7 @@
 <?php
   /** @var mysqli $connection */
-  include '../includes/db_config.php';
+  include_once '../includes/db_config.php';
+  include_once '../includes/format_price.php';
 
   if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -88,12 +89,6 @@ WHERE instrumenty.id IN ($idList)
 
   foreach ($cartItems['rent'] as $item) {
     $totalRent += $item['cena'] * $item['quantity'];
-  }
-
-  function formatPrice(float $price, int $quantity = 1) : string
-  {
-    $total = $price * $quantity;
-    return number_format($total, 2, ',', ' ') . ' zł';
   }
 
   function renderCartItem(array $product, string $type = 'buy') : string

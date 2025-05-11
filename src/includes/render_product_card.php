@@ -1,6 +1,10 @@
 <?php
+  include_once '../includes/format_price.php';
+
   function renderProductCard($product, $type)
   {
+    $price = formatPrice($product['cena']);
+
     return "
     <article class=\"product-card\">
       <div class=\"product-image\">
@@ -9,7 +13,7 @@
       </div>
       <div class=\"product-info\">
         <h3 class=\"product-name\">{$product['nazwa']}</h3>
-        <p class=\"product-price\">{$product['cena']} PLN</p>
+        <p class=\"product-price\">{$price}</p>
         <form method=\"post\" action=\"home.php\">
           <input type=\"hidden\" name=\"product_id\" value=\"{$product['id']}\">
           <input type=\"hidden\" name=\"product_type\" value=\"{$type}\">
@@ -21,5 +25,4 @@
     </article>
     ";
   }
-
 ?>
