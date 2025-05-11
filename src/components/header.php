@@ -27,17 +27,12 @@
       <span>Główna</span>
     </button>
     <?php
-      $totalItems = 0;
-      if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $productType => $products) {
-          $totalItems += count($products);
-        }
-      }
+      include_once '../includes/cart_actions.php';
     ?>
     <button aria-label="Koszyk" class="tray-item <?= $active_class($cart_page) ?>" title="Przejdź do koszyka"
             type="button">
       <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-      <span>Koszyk (<?= $totalItems ?>)</span>
+      <span>Koszyk (<?= getTotalItemsInCart() ?>)</span>
     </button>
     <button aria-label="Profil użytkownika" class="tray-item <?= $active_class($profile_page) ?>"
             title="Przejdź do swojego profilu" type="button">

@@ -1,11 +1,11 @@
 <?php
   /** @var mysqli $connection */
-  include '../includes/db_config.php';
-  include '../includes/cart_actions.php';
-  include '../includes/fetch_popular_products.php';
-  include '../includes/fetch_product_categories.php';
-  include '../includes/render_product_card.php';
-  include '../includes/render_category_card.php';
+  include_once '../includes/db_config.php';
+  include_once '../includes/cart_actions.php';
+  include_once '../includes/fetch_popular_products.php';
+  include_once '../includes/fetch_product_categories.php';
+  include_once '../includes/render_product_card.php';
+  include_once '../includes/render_category_card.php';
 
   if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
