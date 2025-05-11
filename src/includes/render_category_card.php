@@ -1,5 +1,5 @@
 <?php
-  function renderCategoryCard($category)
+  function renderCategoryCard(array $category) : string
   {
     return "
     <div aria-label=\"Wybierz typ {$category['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">

@@ -1,6 +1,8 @@
 <?php
   /** @var mysqli $connection */
   include_once '../includes/db_config.php';
+  include_once '../includes/render_cart_item.php';
+  include_once '../includes/cart_actions.php';
   include_once '../includes/format_price.php';
 
   if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -91,89 +93,9 @@ WHERE instrumenty.id IN ($idList)
     $totalRent += $item['cena'] * $item['quantity'];
   }
 
-  function renderCartItem(array $product, string $type = 'buy') : string
-  {
-    $productId = $product['id'];
-    $name = htmlspecialchars($product['nazwa']);
-    $category = htmlspecialchars($product['nazwa_kategorii']);
-    $imageUrl = htmlspecialchars($product['url']);
-    $altText = htmlspecialchars($product['alt_text']);
-    $quantity = intval($product['quantity']);
-    $price = formatPrice($product['cena'], $quantity);
-
-    return "
-    <li class=\"cart-item\">
-      <img alt=\"{$altText}\" src=\"{$imageUrl}\">
-      <div class=\"cart-item-details\">
-        <div class=\"cart-item-product-details\">
-          <div class=\"cart-item-text\">
-            <div class=\"cart-item-name\">{$name}</div>
-            <div class=\"cart-item-category\">{$category}</div>
-          </div>
-          
-          <form method=\"POST\" action=\"cart.php\" class=\"quantity-form\">
-            <input type=\"hidden\" name=\"product_id\" value=\"{$productId}\">
-            <input type=\"hidden\" name=\"type\" value=\"{$type}\">
-            <div class=\"cart-item-quantity\">
-              <button type=\"submit\" name=\"update_quantity\" value=\"{$quantity}\" class=\"quantity-button\" onclick=\"this.form.quantity.value = Math.max(1, this.form.quantity.value - 1)\">
-                <i class=\"fa-solid fa-minus\"></i>
-              </button>
-              <input class=\"quantity-input\" name=\"quantity\" min=\"1\" type=\"number\" value=\"{$quantity}\">
-              <button type=\"submit\" name=\"update_quantity\" value=\"{$quantity}\" class=\"quantity-button\" onclick=\"this.form.quantity.value = parseInt(this.form.quantity.value) + 1\">
-                <i class=\"fa-solid fa-plus\"></i>
-              </button>
-            </div>
-          </form>
-          
-          <div class=\"cart-item-price\">{$price}</div>
-        </div>
-
-        <form method=\"POST\" action=\"cart.php\" class=\"remove-item-form\">
-          <input type=\"hidden\" name=\"product_id\" value=\"{$productId}\">
-          <input type=\"hidden\" name=\"type\" value=\"{$type}\">
-          <button type=\"submit\" name=\"remove\" class=\"remove-button\">
-            <i class=\"fa-solid fa-trash\"></i>
-          </button>
-        </form>
-      </div>
-    </li>
-    ";
-  }
-
   if ($userId) {
     syncCartWithDatabase($connection, $userId, $cartItems);
   }
-
-  function syncCartWithDatabase(mysqli $connection, int $userId, array &$cartItems) : void
-  {
-    $query = "SELECT id FROM koszyk WHERE klient_id = $userId";
-    $result = mysqli_query($connection, $query);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-      $cartId = mysqli_fetch_assoc($result)['id'];
-      mysqli_free_result($result);
-    } else {
-      $query = "INSERT INTO koszyk (klient_id) VALUES ($userId)";
-      mysqli_query($connection, $query);
-      $cartId = mysqli_insert_id($connection);
-    }
-
-    mysqli_query($connection, "DELETE FROM koszyk_szczegoly WHERE koszyk_id = $cartId");
-
-    foreach (['buy', 'rent'] as $type) {
-      foreach ($cartItems[$type] as $productId => $product) {
-        $quantity = intval($product['quantity']);
-        $price = floatval($product['cena']);
-
-        $query = "
-                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena)
-                VALUES ($cartId, $productId, '$type', $quantity, $price)
-            ";
-        mysqli_query($connection, $query);
-      }
-    }
-  }
-
 ?>
 <!doctype html>
 <html lang="pl">

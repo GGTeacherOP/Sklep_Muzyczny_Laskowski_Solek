@@ -1,5 +1,5 @@
 <?php
-  function getPopularProducts($connection, $type = 'buy', $limit = 10)
+  function getPopularProducts(mysqli $connection, string $type = 'buy', int $limit = 10) : mysqli_result|false
   {
     if ($type === 'buy') {
       $sql = "
@@ -41,5 +41,4 @@
 
     return mysqli_query($connection, $sql);
   }
-
 ?>

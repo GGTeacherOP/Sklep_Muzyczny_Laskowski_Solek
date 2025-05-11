@@ -1,7 +1,7 @@
 <?php
   include_once '../includes/format_price.php';
 
-  function renderProductCard($product, $type)
+  function renderProductCard(array $product, string $type) : string
   {
     $price = formatPrice($product['cena']);
 
