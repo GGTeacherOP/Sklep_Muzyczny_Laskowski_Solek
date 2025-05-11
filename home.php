@@ -1,8 +1,47 @@
 <?php
+  session_start();
+
   $server_name = "localhost";
   $user_name = "root";
   $password = "";
-  $databse_name = "sm";
+  $database_name = "sm";
+
+  $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
+  if (!$connection) {
+    die("Połączenie nieudane: " . mysqli_connect_error());
+  }
+
+  if (isset($_POST['add_to_cart'])) {
+    $productId = $_POST['product_id'];
+    $productType = $_POST['product_type'];
+    $quantity = 1;
+
+    if (!isset($_SESSION['cart'])) {
+      $_SESSION['cart'] = [
+        'buy' => [],
+        'rent' => [],
+      ];
+    }
+
+    if (!isset($_SESSION['cart'][$productType][$productId])) {
+      $_SESSION['cart'][$productType][$productId] = [
+        'product_id' => $productId,
+        'quantity' => 0,
+      ];
+    }
+
+    $_SESSION['cart'][$productType][$productId]['quantity'] += $quantity;
+
+    header("Location: home.php");
+    exit();
+  }
+
+  $totalItems = 0;
+  if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $productType => $products) {
+      $totalItems += count($products);
+    }
+  }
 ?>
 <!doctype html>
 <html lang="pl">
@@ -38,7 +77,7 @@
     <nav class="tray">
       <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
         <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk</span>
+        <span>Koszyk (<?= $totalItems ?>)</span>
       </button>
       <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
         <i aria-hidden="true" class="fa-solid fa-user"></i>
@@ -63,7 +102,7 @@
     </div>
     <div class="instrument-types-list fade-in">
       <?php
-        $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+        $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
         if (!$connection) {
           die("Połączenie nieudane: " . mysqli_connect_error());
         }
@@ -91,7 +130,7 @@ FROM kategorie_instrumentow;
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
           if (!$connection) {
             die("Połączenie nieudane: " . mysqli_connect_error());
           }
@@ -113,23 +152,26 @@ LIMIT 10;
 ";
           $result = mysqli_query($connection, $sql);
 
-          while ($row = mysqli_fetch_array($result)) {
+          while ($row = mysqli_fetch_assoc($result)) {
             echo "
               <article class=\"product-card\">
                 <div class=\"product-image\">
-                  <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
-                  <span class=\"category-badge\">$row[nazwa_kategorii]</span>\
+                  <img alt=\"{$row['alt_text']}\" src=\"{$row['url']}\">
+                  <span class=\"category-badge\">{$row['nazwa_kategorii']}</span>
                 </div>
                 <div class=\"product-info\">
-                  <h3 class=\"product-name\">$row[nazwa]</h3>
-                  <p class=\"product-price\">$row[cena]</p>
-                  <div class=\"product-actions\">
-                    <button class=\"product-action-btn more-info-btn\">Więcej <i class=\"fas fa-arrow-right\"></i></button>
-                    <button class=\"product-action-btn buy-product-btn\">Kup <i class=\"fas fa-shopping-cart\"></i></button>
-                  </div>
+                  <h3 class=\"product-name\">{$row['nazwa']}</h3>
+                  <p class=\"product-price\">{$row['cena']} PLN</p>
+                  <form method=\"post\" action=\"home.php\">
+                    <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
+                    <input type=\"hidden\" name=\"product_type\" value=\"buy\">
+                    <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
+                      Kup <i class=\"fa-solid fa-cart-plus\"></i>
+                    </button>
+                  </form>
                 </div>
               </article>
-              ";
+            ";
           }
 
           mysqli_close($connection);
@@ -141,7 +183,7 @@ LIMIT 10;
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
           if (!$connection) {
             die("Połączenie nieudane: " . mysqli_connect_error());
           }
@@ -161,23 +203,26 @@ LIMIT 10;
 ";
           $result = mysqli_query($connection, $sql);
 
-          while ($row = mysqli_fetch_array($result)) {
+          while ($row = mysqli_fetch_assoc($result)) {
             echo "
               <article class=\"product-card\">
                 <div class=\"product-image\">
-                  <img alt=\"$row[alt_text]\" src=\"$row[nazwa]\">
-                  <span class=\"category-badge\">$row[nazwa_kategorii]</span>\
+                  <img alt=\"{$row['alt_text']}\" src=\"{$row['url']}\">
+                  <span class=\"category-badge\">{$row['nazwa_kategorii']}</span>
                 </div>
                 <div class=\"product-info\">
-                  <h3 class=\"product-name\">$row[nazwa]</h3>
-                  <p class=\"product-price\">$row[cena]</p>
-                  <div class=\"product-actions\">
-                    <button class=\"product-action-btn more-info-btn\">Więcej <i class=\"fas fa-arrow-right\"></i></button>
-                    <button class=\"product-action-btn buy-product-btn\">Kup <i class=\"fas fa-shopping-cart\"></i></button>
-                  </div>
+                  <h3 class=\"product-name\">{$row['nazwa']}</h3>
+                  <p class=\"product-price\">{$row['cena']} PLN</p>
+                  <form method=\"post\" action=\"home.php\">
+                    <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
+                    <input type=\"hidden\" name=\"product_type\" value=\"rent\">
+                    <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
+                      Wypożycz <i class=\"fa-solid fa-cart-plus\"></i>
+                    </button>
+                    </form>
                 </div>
               </article>
-              ";
+            ";
           }
 
           mysqli_close($connection);
