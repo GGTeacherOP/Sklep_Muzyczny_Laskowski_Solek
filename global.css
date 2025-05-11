@@ -101,9 +101,9 @@ button:active {
 }
 
 button:focus-visible {
+  transition: 0s;
   outline: 1px dashed var(--highlight-color);
   outline-offset: 2px;
-  transition: 0s;
 }
 
 a {
@@ -192,8 +192,8 @@ main {
 }
 
 .active_subpage {
-  background-color: #DCDCDC;
   color: var(--price-color);
+  background-color: #DCDCDC;
 }
 
 footer {

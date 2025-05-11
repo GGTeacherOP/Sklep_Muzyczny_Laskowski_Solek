@@ -1,4 +1,13 @@
 <?php
+  session_start();
+
+  $totalItems = 0;
+  if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $productType => $products) {
+      $totalItems += count($products);
+    }
+  }
+
   $server_name = "localhost";
   $user_name = "root";
   $password = "";
@@ -41,8 +50,8 @@
 
       if ($user = mysqli_fetch_assoc($result)) {
         if ($password === $user['haslo']) {
-          session_start();
           $_SESSION['user_id'] = $user['id'];
+          loadUserCart($connection, $user['id']);
           header("Location: home.php");
           exit();
         } else {
@@ -76,6 +85,7 @@
           session_start();
           $_SESSION['user_id'] = $employee['uzytkownik_id'];
           $_SESSION['employee_id'] = $employee['id'];
+          loadUserCart($connection, $employee['uzytkownik_id']);
           header("Location: home.php");
           exit();
         } else {
@@ -123,7 +133,7 @@
 
         if (mysqli_stmt_execute($user_stmt)) {
           $user_id = mysqli_insert_id($connection);
-          
+
           $client_query = "INSERT INTO klienci (uzytkownik_id) VALUES (?)";
           $client_stmt = mysqli_prepare($connection, $client_query);
           mysqli_stmt_bind_param($client_stmt, 'i', $user_id);
@@ -148,6 +158,33 @@
 
     mysqli_close($connection);
   }
+
+  function loadUserCart(mysqli $connection, int $userId) : void
+  {
+    $_SESSION['cart'] = $_SESSION['cart'] ?? ["buy" => [], "rent" => []];
+
+    $query = "
+        SELECT ks.instrument_id, ks.typ, ks.ilosc, i.cena
+        FROM koszyk_szczegoly ks
+        JOIN instrumenty i ON ks.instrument_id = i.id
+        WHERE ks.koszyk_id = (SELECT id FROM koszyk WHERE klient_id = $userId)
+    ";
+    $result = mysqli_query($connection, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        $productId = intval($row['instrument_id']);
+        $type = $row['typ'];
+        $quantity = intval($row['ilosc']);
+
+        $_SESSION['cart'][$type][$productId] = [
+          'quantity' => $quantity,
+        ];
+      }
+      mysqli_free_result($result);
+    }
+  }
+
 
   $active_form = !empty($values['employee_id']) ? 'employee' : (!empty($values['register_email']) ? 'register' : 'login');
 ?>
@@ -182,7 +219,7 @@
     <nav class="tray">
       <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
         <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk</span>
+        <span>Koszyk (<?= $totalItems ?>)</span>
       </button>
       <button aria-label="Profil użytkownika - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
               title="Przejdź do swojego profilu" type="button">
@@ -199,14 +236,19 @@
   <div class="login-container">
     <div class="login-tabs">
       <button class="login-tab <?= $active_form === 'login' ? 'active' : '' ?>" data-tab="login">Logowanie</button>
-      <button class="login-tab <?= $active_form === 'register' ? 'active' : '' ?>" data-tab="register">Rejestracja</button>
-      <button class="login-tab <?= $active_form === 'employee' ? 'active' : '' ?>" data-tab="employee">Panel Pracownika</button>
+      <button class="login-tab <?= $active_form === 'register' ? 'active' : '' ?>" data-tab="register">Rejestracja
+      </button>
+      <button class="login-tab <?= $active_form === 'employee' ? 'active' : '' ?>" data-tab="employee">Panel
+        Pracownika
+      </button>
     </div>
 
-    <form class="login-form <?= $active_form === 'login' ? 'active' : '' ?>" id="loginForm" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
+    <form class="login-form <?= $active_form === 'login' ? 'active' : '' ?>" id="loginForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="loginEmail">Email</label>
-        <input class="form-input" id="loginEmail" name="loginEmail" required type="email" value="<?= $values['email'] ?>">
+        <input class="form-input" id="loginEmail" name="loginEmail" required type="email"
+               value="<?= $values['email'] ?>">
         <?php if (!empty($errors['email'])): ?>
           <p class="form-error"><?= $errors['email'] ?></p>
         <?php endif; ?>
@@ -222,17 +264,20 @@
       <a class="form-link" href="#">Zapomniałeś hasła?</a>
     </form>
 
-    <form class="login-form <?= $active_form === 'register' ? 'active' : '' ?>" id="registerForm" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
+    <form class="login-form <?= $active_form === 'register' ? 'active' : '' ?>" id="registerForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="registerName">Nazwa użytkownika</label>
-        <input class="form-input" id="registerName" name="username" required type="text" value="<?= $values['register_username'] ?>">
+        <input class="form-input" id="registerName" name="username" required type="text"
+               value="<?= $values['register_username'] ?>">
         <?php if (!empty($errors['register_username'])): ?>
           <p class="form-error"><?= $errors['register_username'] ?></p>
         <?php endif; ?>
       </div>
       <div class="form-group">
         <label class="form-label" for="registerEmail">Email</label>
-        <input class="form-input" id="registerEmail" name="email" required type="email" value="<?= $values['register_email'] ?>">
+        <input class="form-input" id="registerEmail" name="email" required type="email"
+               value="<?= $values['register_email'] ?>">
         <?php if (!empty($errors['register_email'])): ?>
           <p class="form-error"><?= $errors['register_email'] ?></p>
         <?php endif; ?>
@@ -251,10 +296,12 @@
       <button class="form-button" type="submit">Zarejestruj się</button>
     </form>
 
-    <form class="login-form <?= $active_form === 'employee' ? 'active' : '' ?>" id="employeeForm" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
+    <form class="login-form <?= $active_form === 'employee' ? 'active' : '' ?>" id="employeeForm" method="POST"
+          action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
       <div class="form-group">
         <label class="form-label" for="employeeId">ID Pracownika</label>
-        <input class="form-input" id="employeeId" name="employeeId" required type="text" value="<?= $values['employee_id'] ?>">
+        <input class="form-input" id="employeeId" name="employeeId" required type="text"
+               value="<?= $values['employee_id'] ?>">
         <?php if (!empty($errors['employee'])): ?>
           <p class="form-error"><?= $errors['employee'] ?></p>
         <?php endif; ?>
