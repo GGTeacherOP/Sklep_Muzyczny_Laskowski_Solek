@@ -78,9 +78,9 @@
 }
 
 .instrument-card:focus-visible {
+  transition: 0s;
   outline: 1px dashed var(--highlight-color);
   outline-offset: 2px;
-  transition: 0s;
 }
 
 .instrument-card:hover .instrument-name {

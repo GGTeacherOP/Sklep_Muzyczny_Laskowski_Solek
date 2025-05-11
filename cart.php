@@ -11,6 +11,32 @@
     die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
   }
 
+  $promoCode = $_SESSION['promo_code'] ?? NULL;
+  $currentDate = date('Y-m-d H:i:s');
+
+  $discount = 0;
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['promo_code'])) {
+    $promoCode = mysqli_real_escape_string($connection, $_POST['promo_code']);
+    $_SESSION['promo_code'] = $promoCode;
+  }
+
+  if (!empty($promoCode)) {
+    $query = "
+        SELECT znizka FROM kody_promocyjne
+        WHERE kod = '$promoCode' 
+          AND aktywna = 1
+          AND data_rozpoczecia <= '$currentDate'
+          AND data_zakonczenia >= '$currentDate'
+    ";
+    $result = mysqli_query($connection, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+      $promo = mysqli_fetch_assoc($result);
+      $discount = $promo['znizka'];
+    }
+    mysqli_free_result($result);
+  }
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
     $productId = intval($_POST['product_id']);
     $type = $_POST['type'];
@@ -68,12 +94,14 @@ WHERE instrumenty.id IN ($idList)
     $totalRent += $item['cena'] * $item['quantity'];
   }
 
-  function formatPrice(float $price, int $quantity = 1): string {
+  function formatPrice(float $price, int $quantity = 1) : string
+  {
     $total = $price * $quantity;
     return number_format($total, 2, ',', ' ') . ' zł';
   }
 
-  function renderCartItem(array $product, string $type = 'buy'): string {
+  function renderCartItem(array $product, string $type = 'buy') : string
+  {
     $productId = $product['id'];
     $name = htmlspecialchars($product['nazwa']);
     $category = htmlspecialchars($product['nazwa_kategorii']);
@@ -210,9 +238,15 @@ WHERE instrumenty.id IN ($idList)
         <div class="cart-summary-inner">
           <h2>Podsumowanie</h2>
 
-          <div class="promo-code-container">
-            <input class="promo-code-input" id="promo-code" placeholder="Kod promocyjny" type="text" maxlength="16">
-          </div>
+          <form method="POST" action="cart.php">
+            <div class="promo-code-container">
+              <input class="promo-code-input" name="promo_code" id="promo-code" placeholder="Kod promocyjny" type="text"
+                     maxlength="16" value="<?= htmlspecialchars($promoCode) ?>">
+              <button class="promo-code-apply" type="submit">
+                <i class="fa-solid fa-check"></i>
+              </button>
+            </div>
+          </form>
 
           <div class="cart-summary-section">
             <p>Kupno: <span id="total-buy"><?= formatPrice($totalBuy) ?></span></p>
@@ -223,15 +257,15 @@ WHERE instrumenty.id IN ($idList)
 
           <?php
             $totalPriceForItems = $totalBuy + $totalRent;
-            $discount = 0;
+            $discountAmount = $totalPriceForItems * ($discount / 100);
             $delivery = min($totalPriceForItems / 100, 20);
             $vatTax = round($totalPriceForItems * 0.23, 2);
-            $totalAmount = $totalPriceForItems - $discount + $delivery + $vatTax;
+            $totalAmount = $totalPriceForItems - $discountAmount + $delivery + $vatTax;
           ?>
 
           <div class="cart-summary-section">
             <p>Koszyk: <span id="subtotal"><?= formatPrice($totalPriceForItems) ?></span></p>
-            <p>Zniżka: <span id="discount"><?= formatPrice($discount) ?></span></p>
+            <p>Zniżka: <span id="discount"><?= formatPrice($discountAmount) ?></span></p>
             <p>Dostawa: <span id="delivery"><?= formatPrice($delivery) ?></span></p>
             <p>Podatek: <span id="tax"><?= formatPrice($vatTax) ?></span></p>
           </div>

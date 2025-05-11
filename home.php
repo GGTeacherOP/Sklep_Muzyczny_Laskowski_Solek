@@ -19,14 +19,14 @@
     if (!isset($_SESSION['cart'])) {
       $_SESSION['cart'] = [
         'buy' => [],
-        'rent' => []
+        'rent' => [],
       ];
     }
 
     if (!isset($_SESSION['cart'][$productType][$productId])) {
       $_SESSION['cart'][$productType][$productId] = [
         'product_id' => $productId,
-        'quantity' => 0
+        'quantity' => 0,
       ];
     }
 
