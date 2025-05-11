@@ -11,6 +11,8 @@
     die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
   }
 
+  $userId = $_SESSION['user_id'] ?? NULL;
+
   $promoCode = $_SESSION['promo_code'] ?? NULL;
   $currentDate = date('Y-m-d H:i:s');
 
@@ -147,6 +149,41 @@ WHERE instrumenty.id IN ($idList)
       </div>
     </li>
     ";
+  }
+
+  if ($userId) {
+    syncCartWithDatabase($connection, $userId, $cartItems);
+  }
+
+  function syncCartWithDatabase(mysqli $connection, int $userId, array &$cartItems) : void
+  {
+    $query = "SELECT id FROM koszyk WHERE klient_id = $userId";
+    $result = mysqli_query($connection, $query);
+    $cartId = NULL;
+
+    if ($result && mysqli_num_rows($result) > 0) {
+      $cartId = mysqli_fetch_assoc($result)['id'];
+      mysqli_free_result($result);
+    } else {
+      $query = "INSERT INTO koszyk (klient_id) VALUES ($userId)";
+      mysqli_query($connection, $query);
+      $cartId = mysqli_insert_id($connection);
+    }
+
+    mysqli_query($connection, "DELETE FROM koszyk_szczegoly WHERE koszyk_id = $cartId");
+
+    foreach (['buy', 'rent'] as $type) {
+      foreach ($cartItems[$type] as $productId => $product) {
+        $quantity = intval($product['quantity']);
+        $price = floatval($product['cena']);
+
+        $query = "
+                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena)
+                VALUES ($cartId, $productId, '$type', $quantity, $price)
+            ";
+        mysqli_query($connection, $query);
+      }
+    }
   }
 
   mysqli_close($connection);
