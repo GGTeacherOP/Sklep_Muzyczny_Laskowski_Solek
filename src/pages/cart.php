@@ -1,18 +1,10 @@
 <?php
+  /** @var mysqli $connection */
+  include '../includes/db_config.php';
+
   session_start();
 
-  $server_name = "localhost";
-  $user_name = "root";
-  $password = "";
-  $database_name = "sm";
-
-  $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-  if (!$connection) {
-    die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
-  }
-
   $userId = $_SESSION['user_id'] ?? NULL;
-
   $promoCode = $_SESSION['promo_code'] ?? NULL;
   $currentDate = date('Y-m-d H:i:s');
 
@@ -186,7 +178,6 @@ WHERE instrumenty.id IN ($idList)
     }
   }
 
-  mysqli_close($connection);
 ?>
 <!doctype html>
 <html lang="pl">
@@ -198,40 +189,13 @@ WHERE instrumenty.id IN ($idList)
   <meta content="Koszyk użytkownika sklepu muzycznego" name="description">
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
-  <link href="cart.css" rel="stylesheet">
-  <script defer src="cart.js"></script>
-  <script src="_header.js" type="module"></script>
+  <link href="../assets/css/cart.css" rel="stylesheet">
+  <script src="../assets/js/header.js" type="module"></script>
   <title>Koszyk - Sklep Muzyczny</title>
 </head>
 <body>
 <main class="fade-in">
-  <header class="header">
-    <div class="logo">
-      <img alt="Logo Sklepu Muzycznego" src="assets/images/logo_sklepu.png">
-    </div>
-    <form class="search-bar" role="search">
-      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..."
-             type="text">
-      <button aria-label="Wyszukaj" class="search-button" type="button">
-        <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </form>
-    <nav class="tray">
-      <button aria-label="Koszyk - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
-              title="Przejdź do koszyka" type="button">
-        <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk (<?= $totalItems ?>)</span>
-      </button>
-      <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
-        <i aria-hidden="true" class="fa-solid fa-user"></i>
-        <span>Profil</span>
-      </button>
-      <button aria-label="Strona główna" class="tray-item" title="Przejdź do strony głównej" type="button">
-        <i aria-hidden="true" class="fa-solid fa-home"></i>
-        <span>Główna</span>
-      </button>
-    </nav>
-  </header>
+  <?php include '../components/header.php'; ?>
 
   <section class="cart-container-empty <?= $totalItems === 0 ? 'active' : '' ?>">
     <i class="fa-solid fa-box-open empty-cart-icon"></i>
@@ -319,5 +283,6 @@ WHERE instrumenty.id IN ($idList)
     </section>
   </section>
 </main>
+<?php mysqli_close($connection); ?>
 </body>
 </html>

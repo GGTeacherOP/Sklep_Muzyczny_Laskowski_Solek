@@ -12,9 +12,7 @@ export function redirectTo(path) {
 
       const cleanPath = path.startsWith('/') ? path.substring(1) : path;
 
-      const fullPath = `${basePath}/${cleanPath}`;
-
-      window.location.href = fullPath;
+      window.location.href = `${basePath}/${cleanPath}`;
     }
     catch (error) {
       console.error('Błąd przekierowania:', error);

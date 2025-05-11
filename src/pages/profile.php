@@ -1,17 +1,8 @@
 <?php
+  /** @var mysqli $connection */
+  include '../includes/db_config.php';
+
   session_start();
-
-  $totalItems = 0;
-  if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $productType => $products) {
-      $totalItems += count($products);
-    }
-  }
-
-  $server_name = "localhost";
-  $user_name = "root";
-  $password = "";
-  $database_name = "sm";
 
   $errors = array(
     'email' => '',
@@ -31,12 +22,6 @@
   );
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-
-    if (!$connection) {
-      die("Połączenie nieudane: " . mysqli_connect_error());
-    }
-
     if (!empty($_POST['loginEmail'])) {
       $email = $_POST['loginEmail'];
       $password = $_POST['loginPassword'];
@@ -155,8 +140,6 @@
         mysqli_stmt_close($user_stmt);
       }
     }
-
-    mysqli_close($connection);
   }
 
   function loadUserCart(mysqli $connection, int $userId) : void
@@ -185,7 +168,6 @@
     }
   }
 
-
   $active_form = !empty($values['employee_id']) ? 'employee' : (!empty($values['register_email']) ? 'register' : 'login');
 ?>
 <!DOCTYPE html>
@@ -198,40 +180,14 @@
   <meta content="Panel logowania do sklepu muzycznego" name="description">
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
-  <link href="profile.css" rel="stylesheet">
-  <script type="module" src="_header.js"></script>
-  <script src="profile.js" defer></script>
+  <link href="../assets/css/profile.css" rel="stylesheet">
+  <script type="module" src="../assets/js/header.js"></script>
+  <script src="../assets/js/profile.js" defer></script>
   <title>Logowanie - Sklep Muzyczny</title>
 </head>
 <body>
 <main class="fade-in">
-  <header class="header">
-    <div class="logo">
-      <img alt="Logo Sklepu Muzycznego" src="assets/images/logo_sklepu.png">
-    </div>
-    <form class="search-bar" role="search">
-      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..."
-             type="text">
-      <button aria-label="Wyszukaj" class="search-button" type="button">
-        <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </form>
-    <nav class="tray">
-      <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
-        <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk (<?= $totalItems ?>)</span>
-      </button>
-      <button aria-label="Profil użytkownika - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
-              title="Przejdź do swojego profilu" type="button">
-        <i aria-hidden="true" class="fa-solid fa-user"></i>
-        <span>Profil</span>
-      </button>
-      <button aria-label="Strona główna" class="tray-item" title="Przejdź do strony głównej" type="button">
-        <i aria-hidden="true" class="fa-solid fa-home"></i>
-        <span>Główna</span>
-      </button>
-    </nav>
-  </header>
+  <?php include '../components/header.php'; ?>
 
   <div class="login-container">
     <div class="login-tabs">
@@ -318,5 +274,6 @@
   </div>
 
 </main>
+<?php mysqli_close($connection); ?>
 </body>
 </html>

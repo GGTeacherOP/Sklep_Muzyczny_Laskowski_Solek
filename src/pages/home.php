@@ -1,15 +1,8 @@
 <?php
+  /** @var mysqli $connection */
+  include '../includes/db_config.php';
+
   session_start();
-
-  $server_name = "localhost";
-  $user_name = "root";
-  $password = "";
-  $database_name = "sm";
-
-  $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-  if (!$connection) {
-    die("Połączenie nieudane: " . mysqli_connect_error());
-  }
 
   if (isset($_POST['add_to_cart'])) {
     $productId = $_POST['product_id'];
@@ -56,40 +49,14 @@
     name="description">
   <meta content="index, follow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
-  <link href="home.css" rel="stylesheet">
-  <script type="module" src="_header.js"></script>
-  <script type="module" src="home.js"></script>
+  <link href="../assets/css/home.css" rel="stylesheet">
+  <script type="module" src="../assets/js/header.js"></script>
+  <script type="module" src="../assets/js/home.js"></script>
   <title>Sklep Muzyczny</title>
 </head>
 <body>
 <main class="fade-in">
-  <header class="header">
-    <div class="logo">
-      <img alt="Logo Sklepu Muzycznego" src="assets/images/logo_sklepu.png">
-    </div>
-    <form class="search-bar" role="search">
-      <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..."
-             type="text">
-      <button aria-label="Wyszukaj" class="search-button" type="button">
-        <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </form>
-    <nav class="tray">
-      <button aria-label="Koszyk" class="tray-item" title="Przejdź do koszyka" type="button">
-        <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
-        <span>Koszyk (<?= $totalItems ?>)</span>
-      </button>
-      <button aria-label="Profil użytkownika" class="tray-item" title="Przejdź do swojego profilu" type="button">
-        <i aria-hidden="true" class="fa-solid fa-user"></i>
-        <span>Profil</span>
-      </button>
-      <button aria-label="Strona główna - aktualnie wyświetlana podstrona" class="tray-item active_subpage"
-              title="Przejdź do strony głównej" type="button">
-        <i aria-hidden="true" class="fa-solid fa-home"></i>
-        <span>Główna</span>
-      </button>
-    </nav>
-  </header>
+  <?php include '../components/header.php'; ?>
 
   <section class="instrument-types fade-in">
     <div class="instrument-types-header">
@@ -102,11 +69,6 @@
     </div>
     <div class="instrument-types-list fade-in">
       <?php
-        $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-        if (!$connection) {
-          die("Połączenie nieudane: " . mysqli_connect_error());
-        }
-
         $sql = "
 SELECT kategorie_instrumentow.nazwa 
 FROM kategorie_instrumentow;
@@ -120,8 +82,6 @@ FROM kategorie_instrumentow;
               <span class=\"instrument-name\">{$row['nazwa']}</span>
             </div>";
         }
-
-        mysqli_close($connection);
       ?>
     </div>
   </section>
@@ -130,11 +90,6 @@ FROM kategorie_instrumentow;
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-          if (!$connection) {
-            die("Połączenie nieudane: " . mysqli_connect_error());
-          }
-
           $sql = "
 SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
 FROM instrumenty
@@ -173,8 +128,6 @@ LIMIT 10;
               </article>
             ";
           }
-
-          mysqli_close($connection);
         ?>
       </div>
     </div>
@@ -183,11 +136,6 @@ LIMIT 10;
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
         <?php
-          $connection = mysqli_connect($server_name, $user_name, $password, $database_name);
-          if (!$connection) {
-            die("Połączenie nieudane: " . mysqli_connect_error());
-          }
-
           $sql = "
 SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
 FROM instrumenty
@@ -224,54 +172,12 @@ LIMIT 10;
               </article>
             ";
           }
-
-          mysqli_close($connection);
         ?>
       </div>
     </div>
   </section>
 </main>
-<footer class="fade-in">
-  <div class="footer-container">
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-store"></i> O Nas</h3>
-      <p>Sklep muzyczny z instrumentami, akcesoriami i sprzętem nagłośnieniowym. Profesjonalne doradztwo!</p>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-link"></i> Linki</h3>
-      <ul class="footer-list">
-        <li><a class="footer-list-el" href="home.php"><i class="fas fa-home"></i> Strona główna</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-guitar"></i> Instrumenty</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-volume-up"></i> Nagłośnienie</a></li>
-        <li><a class="footer-list-el" href="mailto:sklepmuzyczny@example.com"><i class="fas fa-envelope"></i>
-            Kontakt</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-address-card"></i> Kontakt</h3>
-      <ul class="footer-list">
-        <li><i class="fas fa-envelope"></i> sklepmuzyczny@example.com</li>
-        <li><i class="fas fa-phone"></i> +48 111 222 333</li>
-        <li><i class="fas fa-map-marker-alt"></i> Kazimierza Jagiellończyka 3 Mielec</li>
-      </ul>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-share-alt"></i> Social Media</h3>
-      <ul class="footer-list">
-        <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-        <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
-        <li><a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-        <li><a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <i class="far fa-copyright"></i> 2025 SklepMuzik
-  </div>
-</footer>
+<?php mysqli_close($connection); ?>
+<?php include '../components/footer.php'; ?>
 </body>
 </html>
