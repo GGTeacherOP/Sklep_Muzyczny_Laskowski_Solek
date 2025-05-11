@@ -1,33 +1,25 @@
 <?php
   /** @var mysqli $connection */
   include '../includes/db_config.php';
+  include '../includes/cart_actions.php';
+  include '../includes/fetch_popular_products.php';
+  include '../includes/fetch_product_categories.php';
+  include '../includes/render_product_card.php';
+  include '../includes/render_category_card.php';
 
-  session_start();
+  if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+  }
 
   if (isset($_POST['add_to_cart'])) {
-    $productId = $_POST['product_id'];
-    $productType = $_POST['product_type'];
-    $quantity = 1;
-
-    if (!isset($_SESSION['cart'])) {
-      $_SESSION['cart'] = [
-        'buy' => [],
-        'rent' => [],
-      ];
-    }
-
-    if (!isset($_SESSION['cart'][$productType][$productId])) {
-      $_SESSION['cart'][$productType][$productId] = [
-        'product_id' => $productId,
-        'quantity' => 0,
-      ];
-    }
-
-    $_SESSION['cart'][$productType][$productId]['quantity'] += $quantity;
-
+    addToCart($_POST['product_id'], $_POST['product_type']);
     header("Location: home.php");
     exit();
   }
+
+  $popularBuyProducts = getPopularProducts($connection, 'buy');
+  $popularRentProducts = getPopularProducts($connection, 'rent');
+  $productCategories = getProductCategories($connection);
 ?>
 <!doctype html>
 <html lang="pl">
@@ -61,111 +53,27 @@
       </div>
     </div>
     <div class="instrument-types-list fade-in">
-      <?php
-        $sql = "
-SELECT kategorie_instrumentow.nazwa 
-FROM kategorie_instrumentow;
-";
-        $result = mysqli_query($connection, $sql);
-
-        while ($row = mysqli_fetch_array($result)) {
-          echo "
-            <div aria-label=\"Wybierz typ {$row['nazwa']}\" class=\"instrument-card fade-in\" role=\"button\" tabindex=\"1\">
-              <div aria-hidden=\"true\" class=\"instrument-icon\"></div>
-              <span class=\"instrument-name\">{$row['nazwa']}</span>
-            </div>";
-        }
-      ?>
+      <?php while ($category = mysqli_fetch_assoc($productCategories)) {
+        echo renderCategoryCard($category);
+      } ?>
     </div>
   </section>
   <section class="popular-products fade-in">
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
-        <?php
-          $sql = "
-SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
-FROM instrumenty
-JOIN zamowienie_szczegoly
-ON instrumenty.id = zamowienie_szczegoly.instrument_id
-JOIN instrument_zdjecia
-ON instrumenty.id = instrument_zdjecia.instrument_id AND instrument_zdjecia.kolejnosc = 1
-JOIN kategorie_instrumentow
-ON instrumenty.kategoria_id = kategorie_instrumentow.id
-JOIN zamowienia
-ON zamowienie_szczegoly.zamowienie_id = zamowienia.id AND zamowienia.status NOT LIKE 'anulowane'
-GROUP BY zamowienie_szczegoly.instrument_id
-ORDER BY COUNT(zamowienie_szczegoly.instrument_id) DESC
-LIMIT 10;
-";
-          $result = mysqli_query($connection, $sql);
-
-          while ($row = mysqli_fetch_assoc($result)) {
-            echo "
-              <article class=\"product-card\">
-                <div class=\"product-image\">
-                  <img alt=\"{$row['alt_text']}\" src=\"{$row['url']}\">
-                  <span class=\"category-badge\">{$row['nazwa_kategorii']}</span>
-                </div>
-                <div class=\"product-info\">
-                  <h3 class=\"product-name\">{$row['nazwa']}</h3>
-                  <p class=\"product-price\">{$row['cena']} PLN</p>
-                  <form method=\"post\" action=\"home.php\">
-                    <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
-                    <input type=\"hidden\" name=\"product_type\" value=\"buy\">
-                    <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
-                      Kup <i class=\"fa-solid fa-cart-plus\"></i>
-                    </button>
-                  </form>
-                </div>
-              </article>
-            ";
-          }
-        ?>
+        <?php while ($product = mysqli_fetch_assoc($popularBuyProducts)) {
+          echo renderProductCard($product, 'buy');
+        } ?>
       </div>
     </div>
 
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Wypożyczane</h2>
       <div class="products-grid">
-        <?php
-          $sql = "
-SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
-FROM instrumenty
-JOIN wypozyczenia
-ON instrumenty.id = wypozyczenia.instrument_id AND wypozyczenia.status NOT IN ('anulowane', 'uszkodzone')
-JOIN instrument_zdjecia
-ON instrumenty.id = instrument_zdjecia.instrument_id AND instrument_zdjecia.kolejnosc = 1
-JOIN kategorie_instrumentow
-ON instrumenty.kategoria_id = kategorie_instrumentow.id
-GROUP BY wypozyczenia.instrument_id
-ORDER BY COUNT(wypozyczenia.instrument_id) DESC
-LIMIT 10;
-";
-          $result = mysqli_query($connection, $sql);
-
-          while ($row = mysqli_fetch_assoc($result)) {
-            echo "
-              <article class=\"product-card\">
-                <div class=\"product-image\">
-                  <img alt=\"{$row['alt_text']}\" src=\"{$row['url']}\">
-                  <span class=\"category-badge\">{$row['nazwa_kategorii']}</span>
-                </div>
-                <div class=\"product-info\">
-                  <h3 class=\"product-name\">{$row['nazwa']}</h3>
-                  <p class=\"product-price\">{$row['cena']} PLN</p>
-                  <form method=\"post\" action=\"home.php\">
-                    <input type=\"hidden\" name=\"product_id\" value=\"{$row['id']}\">
-                    <input type=\"hidden\" name=\"product_type\" value=\"rent\">
-                    <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
-                      Wypożycz <i class=\"fa-solid fa-cart-plus\"></i>
-                    </button>
-                    </form>
-                </div>
-              </article>
-            ";
-          }
-        ?>
+        <?php while ($product = mysqli_fetch_assoc($popularRentProducts)) {
+          echo renderProductCard($product, 'rent');
+        } ?>
       </div>
     </div>
   </section>
