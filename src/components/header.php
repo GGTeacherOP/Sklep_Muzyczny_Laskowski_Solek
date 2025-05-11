@@ -1,3 +1,15 @@
+<?php
+  include_once '../includes/cart_actions.php';
+
+  $current_page = basename($_SERVER['PHP_SELF']);
+  $home_page = 'home.php';
+  $cart_page = 'cart.php';
+  $profile_page = 'profile.php';
+
+  $active_class = function ($page) use ($current_page) {
+    return $current_page === $page ? 'active_subpage' : '';
+  };
+?>
 <header class="header">
   <div class="logo">
     <img alt="Logo Sklepu Muzycznego" src="src/assets/images/logo_sklepu.png">
@@ -9,26 +21,11 @@
     </button>
   </form>
   <nav class="tray">
-    <?php
-      $current_page = basename($_SERVER['PHP_SELF']);
-
-      $home_page = 'home.php';
-      $cart_page = 'cart.php';
-      $profile_page = 'profile.php';
-
-      $active_class = function ($page) use ($current_page) {
-        return $current_page === $page ? 'active_subpage' : '';
-      };
-    ?>
-
     <button aria-label="Strona główna" class="tray-item <?= $active_class($home_page) ?>"
             title="Przejdź do strony głównej" type="button">
       <i aria-hidden="true" class="fa-solid fa-home"></i>
       <span>Główna</span>
     </button>
-    <?php
-      include_once '../includes/cart_actions.php';
-    ?>
     <button aria-label="Koszyk" class="tray-item <?= $active_class($cart_page) ?>" title="Przejdź do koszyka"
             type="button">
       <i aria-hidden="true" class="fa-solid fa-cart-shopping"></i>
