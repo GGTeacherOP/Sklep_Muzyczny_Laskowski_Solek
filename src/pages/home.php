@@ -28,13 +28,6 @@
     header("Location: home.php");
     exit();
   }
-
-  $totalItems = 0;
-  if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $productType => $products) {
-      $totalItems += count($products);
-    }
-  }
 ?>
 <!doctype html>
 <html lang="pl">

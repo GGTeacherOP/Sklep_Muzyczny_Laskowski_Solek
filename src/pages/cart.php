@@ -151,7 +151,6 @@ WHERE instrumenty.id IN ($idList)
   {
     $query = "SELECT id FROM koszyk WHERE klient_id = $userId";
     $result = mysqli_query($connection, $query);
-    $cartId = NULL;
 
     if ($result && mysqli_num_rows($result) > 0) {
       $cartId = mysqli_fetch_assoc($result)['id'];
