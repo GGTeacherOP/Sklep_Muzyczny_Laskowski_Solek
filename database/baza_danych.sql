@@ -207,7 +207,7 @@ CREATE TABLE `koszyk_szczegoly` (
   `instrument_id` int(11) NOT NULL,
   `ilosc` int(11) NOT NULL DEFAULT 1 CHECK (`ilosc` > 0),
   `cena` decimal(10,2) NOT NULL CHECK (`cena` > 0),
-  `typ` enum('kupno','wypozyczenie') NOT NULL DEFAULT 'kupno',
+  `typ` enum('buy','rent') NOT NULL DEFAULT 'buy',
   `okres_wypozyczenia` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -216,11 +216,11 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
-(2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
-(3, 3, 3, 1, 3999.99, 'kupno', '2025-05-08'),
-(4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
-(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08');
+(1, 1, 1, 1, 1499.99, 'buy', '2025-05-08'),
+(2, 2, 2, 1, 2499.99, 'buy', '2025-05-08'),
+(3, 3, 3, 1, 3999.99, 'buy', '2025-05-08'),
+(4, 4, 4, 1, 1899.99, 'rent', '2025-05-31'),
+(5, 5, 5, 1, 799.99, 'buy', '2025-05-08');
 
 -- --------------------------------------------------------
 
