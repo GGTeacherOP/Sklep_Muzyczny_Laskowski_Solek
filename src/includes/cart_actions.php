@@ -1,4 +1,53 @@
 <?php
+  function initializeCart(): void {
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [
+            'buy' => [],
+            'rent' => [],
+        ];
+    }
+  }
+
+  function loadUserCart(mysqli $connection, int $userId): void {
+    initializeCart();
+
+    $query = "SELECT id FROM koszyk WHERE klient_id = ?";
+    $stmt = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $cartId = mysqli_fetch_assoc($result)['id'];
+        mysqli_free_result($result);
+
+        $query = "
+            SELECT ks.instrument_id, ks.typ, ks.ilosc, i.cena
+            FROM koszyk_szczegoly ks
+            JOIN instrumenty i ON ks.instrument_id = i.id
+            WHERE ks.koszyk_id = ?
+        ";
+        $stmt = mysqli_prepare($connection, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $cartId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $productId = intval($row['instrument_id']);
+                $type = $row['typ'];
+                $quantity = intval($row['ilosc']);
+
+                $_SESSION['cart'][$type][$productId] = [
+                    'quantity' => $quantity,
+                    'cena' => floatval($row['cena'])
+                ];
+            }
+        }
+        mysqli_free_result($result);
+    }
+  } 
+
   function addToCart(int $productId, string $productType, int $quantity = 1) : void
   {
     if (!isset($_SESSION['cart'])) {

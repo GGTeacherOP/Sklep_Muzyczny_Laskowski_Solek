@@ -1,8 +1,8 @@
 <?php
   /** @var mysqli $connection */
-  include_once '../includes/db_config.php';
-  include_once '../includes/session_config.php';
-  include_once '../includes/render_cart_item.php';
+  include_once '../includes/config/db_config.php';
+  include_once '../includes/config/session_config.php';
+  include_once '../includes/render/render_cart_item.php';
   include_once '../includes/cart_actions.php';
   include_once '../includes/format_price.php';
 
