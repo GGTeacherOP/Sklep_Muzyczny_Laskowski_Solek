@@ -19,20 +19,20 @@
   $username = $employee['nazwa_uzytkownika'];
 
   $pages = [
-    'produkty' => ['pracownik', 'manager', 'wlasciciel'],
-    'kategorie' => ['pracownik', 'manager', 'wlasciciel'],
-    'producenci' => ['pracownik', 'manager', 'wlasciciel'],
-    'oceny' => ['pracownik', 'manager', 'wlasciciel'],
-    'zamowienia' => ['manager', 'wlasciciel'],
-    'promocje' => ['manager', 'wlasciciel'],
-    'pracownicy' => ['wlasciciel'],
-    'klienci' => ['wlasciciel']
+    'products' => ['pracownik', 'manager', 'wlasciciel'],
+    'categories' => ['pracownik', 'manager', 'wlasciciel'],
+    'brands' => ['pracownik', 'manager', 'wlasciciel'],
+    'reviews' => ['pracownik', 'manager', 'wlasciciel'],
+    'orders' => ['manager', 'wlasciciel'],
+    'promotions' => ['manager', 'wlasciciel'],
+    'employees' => ['wlasciciel'],
+    'clients' => ['wlasciciel']
   ];
 
-  $page = $_GET['view'] ?? 'produkty';
+  $page = $_GET['view'] ?? 'products';
 
   if (!isset($pages[$page]) || !in_array($role, $pages[$page])) {
-    header('Location: panel.php?view=produkty');
+    header('Location: panel.php?view=products');
     exit();
   }
 
@@ -68,19 +68,19 @@
 
   <nav>
     <ul>
-      <li><a href="?view=produkty">Produkty</a></li>
-      <li><a href="?view=kategorie">Kategorie</a></li>
-      <li><a href="?view=producenci">Producenci</a></li>
-      <li><a href="?view=oceny">Oceny</a></li>
+      <li><a href="?view=products">Produkty</a></li>
+      <li><a href="?view=categories">Kategorie</a></li>
+      <li><a href="?view=brands">Producenci</a></li>
+      <li><a href="?view=reviews">Oceny</a></li>
 
       <?php if (in_array($role, ['manager', 'wlasciciel'])) : ?>
-        <li><a href="?view=zamowienia">Zamówienia</a></li>
-        <li><a href="?view=promocje">Kody Promocyjne</a></li>
+        <li><a href="?view=orders">Zamówienia</a></li>
+        <li><a href="?view=promotions">Kody Promocyjne</a></li>
       <?php endif; ?>
 
       <?php if ($role === 'wlasciciel') : ?>
-        <li><a href="?view=pracownicy">Pracownicy</a></li>
-        <li><a href="?view=klienci">Klienci</a></li>
+        <li><a href="?view=employees">Pracownicy</a></li>
+        <li><a href="?view=clients">Klienci</a></li>
       <?php endif; ?>
     </ul>
   </nav>
