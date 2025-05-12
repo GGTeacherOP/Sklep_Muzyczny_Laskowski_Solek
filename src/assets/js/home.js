@@ -1,4 +1,4 @@
-import { redirectTo } from './_header.js';
+import { redirectTo } from '../js/header.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const instrumentTypesList = document.querySelector('.instrument-types-list');
