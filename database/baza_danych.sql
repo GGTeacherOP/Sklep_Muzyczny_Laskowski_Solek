@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 12, 2025 at 07:42 PM
+-- Generation Time: Maj 12, 2025 at 08:30 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -322,7 +322,6 @@ CREATE TABLE `widok_opinie_instrumenty` (
 ,`nazwa_uzytkownika` varchar(255)
 ,`komentarz` text
 ,`data_oceny` datetime
-,`data_edycji` datetime
 ,`ocena` int(11)
 );
 
@@ -482,7 +481,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `widok_opinie_instrumenty`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_opinie_instrumenty`  AS SELECT `instrumenty`.`nazwa` AS `instrument`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `instrument_oceny`.`komentarz` AS `komentarz`, `instrument_oceny`.`data_oceny` AS `data_oceny`, `instrument_oceny`.`data_edycji` AS `data_edycji`, `instrument_oceny`.`ocena` AS `ocena` FROM (((((`klienci` left join `uzytkownicy` on(`klienci`.`uzytkownik_id` = `uzytkownicy`.`id`)) join `zamowienia` on(`klienci`.`id` = `zamowienia`.`klient_id`)) join `zamowienie_szczegoly` on(`zamowienia`.`id` = `zamowienie_szczegoly`.`zamowienie_id`)) left join `instrumenty` on(`zamowienie_szczegoly`.`instrument_id` = `instrumenty`.`id`)) join `instrument_oceny` on(`instrumenty`.`id` = `instrument_oceny`.`instrument_id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_opinie_instrumenty`  AS SELECT `instrumenty`.`nazwa` AS `instrument`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `instrument_oceny`.`komentarz` AS `komentarz`, `instrument_oceny`.`data_oceny` AS `data_oceny`, `instrument_oceny`.`ocena` AS `ocena` FROM (((((`klienci` left join `uzytkownicy` on(`klienci`.`uzytkownik_id` = `uzytkownicy`.`id`)) join `zamowienia` on(`klienci`.`id` = `zamowienia`.`klient_id`)) join `zamowienie_szczegoly` on(`zamowienia`.`id` = `zamowienie_szczegoly`.`zamowienie_id`)) left join `instrumenty` on(`zamowienie_szczegoly`.`instrument_id` = `instrumenty`.`id`)) join `instrument_oceny` on(`instrumenty`.`id` = `instrument_oceny`.`instrument_id`)) ;
 
 -- --------------------------------------------------------
 
