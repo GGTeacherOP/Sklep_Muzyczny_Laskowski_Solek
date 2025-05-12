@@ -2,6 +2,18 @@
   /** @var mysqli $connection */
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
+
+  if (!isset($_SESSION['employee_id'])) {
+    header('Location: home.php');
+    exit();
+  }
+
+  $employee_id = $_SESSION['employee_id'];
+
+  $sql = "SELECT * FROM pracownicy WHERE identyfikator LIKE '$employee_id';";
+  $result = mysqli_query($connection, $sql);
+  $employee = mysqli_fetch_assoc($result);
+  mysqli_free_result($result);
 ?>
 <!doctype html>
 <html lang="pl">

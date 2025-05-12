@@ -20,7 +20,7 @@ function handleEmployeeLogin(mysqli $connection, array &$errors, array &$values)
     if ($employee = mysqli_fetch_assoc($result)) {
         if ($employee_password === $employee['haslo']) {
             $_SESSION['user_id'] = $employee['uzytkownik_id'];
-            $_SESSION['employee_id'] = $employee['id'];
+            $_SESSION['employee_id'] = $employee['identyfikator'];;
             loadUserCart($connection, $employee['uzytkownik_id']);
             header("Location: home.php");
             exit();
