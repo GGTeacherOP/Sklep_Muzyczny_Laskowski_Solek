@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 12, 2025 at 10:34 PM
+-- Generation Time: Maj 12, 2025 at 11:02 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -186,18 +186,17 @@ CREATE TABLE `kody_promocyjne` (
   `kod` varchar(16) NOT NULL,
   `znizka` decimal(5,2) NOT NULL CHECK (`znizka` > 0 and `znizka` <= 100),
   `data_rozpoczecia` datetime NOT NULL,
-  `data_zakonczenia` datetime NOT NULL,
-  `aktywna` tinyint(1) NOT NULL DEFAULT 1
+  `data_zakonczenia` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kody_promocyjne`
 --
 
-INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_zakonczenia`, `aktywna`) VALUES
-(1, 'WIOSNA2025', 15.00, '2025-03-01 00:00:00', '2025-06-30 00:00:00', 1),
-(2, 'BLACKFRIDAY', 30.00, '2025-11-27 00:00:00', '2025-11-29 00:00:00', 1),
-(3, 'XMAS2025', 10.00, '2025-12-20 00:00:00', '2025-12-25 00:00:00', 1);
+INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_zakonczenia`) VALUES
+(1, 'WIOSNA2025', 15.00, '2025-03-01 00:00:00', '2025-06-30 00:00:00'),
+(2, 'BLACKFRIDAY', 30.00, '2025-11-27 00:00:00', '2025-11-29 00:00:00'),
+(3, 'XMAS2025', 10.00, '2025-12-20 00:00:00', '2025-12-25 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -357,12 +356,6 @@ INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_re
 -- (See below for the actual view)
 --
 CREATE TABLE `widok_kody_promocyjne` (
-`kod_id` int(11)
-,`kod` varchar(16)
-,`znizka` decimal(5,2)
-,`data_rozpoczecia` datetime
-,`data_zakonczenia` datetime
-,`status` varchar(10)
 );
 
 -- --------------------------------------------------------
