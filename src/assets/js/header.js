@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cart: document.querySelector('.tray-item[aria-label="Koszyk"]'),
     profile: document.querySelector('.tray-item[aria-label="Profil użytkownika"]'),
     home: document.querySelector('.tray-item[aria-label="Strona główna"]'),
+    pannel: document.querySelector('.tray-item[aria-label="Panel admina"]'),
   };
 
   if (trayItems.cart) {
@@ -42,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (trayItems.home) {
     trayItems.home.addEventListener('click', () => redirectTo('/home.php'));
+  }
+
+  if (trayItems.pannel)
+  {
+    trayItems.pannel.addEventListener('click', () => redirectTo('/pannel.php'));
   }
 
   /**
