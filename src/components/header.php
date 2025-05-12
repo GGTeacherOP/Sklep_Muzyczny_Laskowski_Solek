@@ -5,7 +5,7 @@
   $home_page = 'home.php';
   $cart_page = 'cart.php';
   $profile_page = 'profile.php';
-  $admin_page = 'pannel.php';
+  $admin_page = 'panel.php';
 
   $active_class = function ($page) use ($current_page) {
     return $current_page === $page ? 'active_subpage' : '';

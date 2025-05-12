@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (trayItems.pannel)
   {
-    trayItems.pannel.addEventListener('click', () => redirectTo('/pannel.php'));
+    trayItems.pannel.addEventListener('click', () => redirectTo('/panel.php'));
   }
 
   /**
