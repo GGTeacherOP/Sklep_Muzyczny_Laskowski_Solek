@@ -8,42 +8,28 @@
 
   $userId = $_SESSION['user_id'] ?? NULL;
   $promoCode = $_SESSION['promo_code'] ?? NULL;
-  $currentDate = date('Y-m-d H:i:s');
 
-  $discount = 0;
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['promo_code'])) {
     $promoCode = mysqli_real_escape_string($connection, $_POST['promo_code']);
     $_SESSION['promo_code'] = $promoCode;
   }
 
+  $discount = 0;
   if (!empty($promoCode)) {
-    $query = "
-        SELECT znizka FROM kody_promocyjne
-        WHERE kod = '$promoCode' 
-          AND aktywna = 1
-          AND data_rozpoczecia <= '$currentDate'
-          AND data_zakonczenia >= '$currentDate'
-    ";
-    $result = mysqli_query($connection, $query);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-      $promo = mysqli_fetch_assoc($result);
-      $discount = $promo['znizka'];
-    }
-    mysqli_free_result($result);
+    $discount = getPromoDiscount($connection, $promoCode);
   }
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
     $productId = intval($_POST['product_id']);
     $type = $_POST['type'];
-    unset($_SESSION['cart'][$type][$productId]);
+    removeFromCart($productId, $type);
   }
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
     $productId = intval($_POST['product_id']);
     $type = $_POST['type'];
     $quantity = max(1, intval($_POST['quantity']));
-    $_SESSION['cart'][$type][$productId]['quantity'] = $quantity;
+    updateCartQuantity($productId, $type, $quantity);
   }
 
   $cartItems = ["buy" => [], "rent" => []];
@@ -51,32 +37,15 @@
 
   $productIds = array_unique(array_merge(
     array_keys($_SESSION['cart']['buy'] ?? []),
-    array_keys($_SESSION['cart']['rent'] ?? [])
+    array_keys($_SESSION['cart']['rent'] ?? []),
   ));
+
+  $cartItems = ["buy" => [], "rent" => []];
+  $totalItems = 0;
 
   if (!empty($productIds)) {
     $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
-
-    $idList = implode(",", array_map('intval', $productIds));
-    $sql = "
-SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
-FROM instrumenty
-JOIN instrument_zdjecia ON instrumenty.id = instrument_zdjecia.instrument_id
-JOIN kategorie_instrumentow ON instrumenty.kategoria_id = kategorie_instrumentow.id
-WHERE instrumenty.id IN ($idList)
-";
-    $result = mysqli_query($connection, $sql);
-
-    while ($row = mysqli_fetch_assoc($result)) {
-      $productId = $row['id'];
-      foreach (['buy', 'rent'] as $type) {
-        if (isset($_SESSION['cart'][$type][$productId])) {
-          $row['quantity'] = $_SESSION['cart'][$type][$productId]['quantity'];
-          $cartItems[$type][$productId] = $row;
-        }
-      }
-    }
-    mysqli_free_result($result);
+    getCartItemsFromDatabase($connection, $productIds, $cartItems); // New function call
   }
 
   $totalBuy = 0;
@@ -132,7 +101,6 @@ WHERE instrumenty.id IN ($idList)
               }
               unset($product);
             ?>
-
           </ul>
         </div>
 
@@ -172,11 +140,13 @@ WHERE instrumenty.id IN ($idList)
           <hr>
 
           <?php
-            $totalPriceForItems = $totalBuy + $totalRent;
-            $discountAmount = $totalPriceForItems * ($discount / 100);
-            $delivery = min($totalPriceForItems / 100, 20);
-            $vatTax = round($totalPriceForItems * 0.23, 2);
-            $totalAmount = $totalPriceForItems - $discountAmount + $delivery + $vatTax;
+            $calculations = calculateTotalAmount($totalBuy, $totalRent, $discount);
+
+            $totalPriceForItems = $calculations['totalPriceForItems'];
+            $discountAmount = $calculations['discountAmount'];
+            $delivery = $calculations['delivery'];
+            $vatTax = $calculations['vatTax'];
+            $totalAmount = $calculations['totalAmount'];
           ?>
 
           <div class="cart-summary-section">

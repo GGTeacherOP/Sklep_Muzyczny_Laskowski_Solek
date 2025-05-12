@@ -212,19 +212,19 @@ main {
   justify-content: space-between;
   margin: 0 auto;
   justify-content: center;
+  margin-inline: var(--spacing-sm);
 }
 
 .footer-section {
   flex: 1;
   min-width: 200px;
-  margin: 0 var(--spacing-sm);
   text-align: left;
 }
 
 .footer-title {
   font-size: var(--font-lg);
   color: var(--highlight-color);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 }
 
 .footer-links {

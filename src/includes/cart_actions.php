@@ -58,4 +58,80 @@
     }
     return $totalItems;
   }
+
+  function getPromoDiscount(mysqli $connection, string $promoCode) : float
+  {
+    $currentDate = date('Y-m-d H:i:s');
+    $query = "
+        SELECT znizka FROM kody_promocyjne
+        WHERE kod = '$promoCode' 
+          AND aktywna = 1
+          AND data_rozpoczecia <= '$currentDate'
+          AND data_zakonczenia >= '$currentDate'
+    ";
+    $result = mysqli_query($connection, $query);
+    $discount = 0;
+    if ($result && mysqli_num_rows($result) > 0) {
+      $promo = mysqli_fetch_assoc($result);
+      $discount = $promo['znizka'];
+    }
+    mysqli_free_result($result);
+    return $discount;
+  }
+
+  function removeFromCart(int $productId, string $type) : void
+  {
+    unset($_SESSION['cart'][$type][$productId]);
+  }
+
+  function updateCartQuantity(int $productId, string $type, int $quantity) : void
+  {
+    $_SESSION['cart'][$type][$productId]['quantity'] = max(1, $quantity);
+  }
+
+  function calculateTotalAmount($totalBuy, $totalRent, $discount) {
+    $totalPriceForItems = $totalBuy + $totalRent;
+    $discountAmount = $totalPriceForItems * ($discount / 100);
+    $delivery = min($totalPriceForItems / 100, 20);
+    $vatTax = round($totalPriceForItems * 0.23, 2);
+    $totalAmount = $totalPriceForItems - $discountAmount + $delivery + $vatTax;
+  
+    return [
+      'totalPriceForItems' => $totalPriceForItems,
+      'discountAmount' => $discountAmount,
+      'delivery' => $delivery,
+      'vatTax' => $vatTax,
+      'totalAmount' => $totalAmount
+    ];
+  }
+  
+  function getCartItemsFromDatabase(mysqli $connection, array $productIds, array &$cartItems) : void
+  {
+      if (empty($productIds)) {
+          return;
+      }
+
+      $idList = implode(",", array_map('intval', $productIds));
+      $sql = "
+          SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa as 'nazwa_kategorii'
+          FROM instrumenty
+          JOIN instrument_zdjecia ON instrumenty.id = instrument_zdjecia.instrument_id
+          JOIN kategorie_instrumentow ON instrumenty.kategoria_id = kategorie_instrumentow.id
+          WHERE instrumenty.id IN ($idList)
+      ";
+
+      $result = mysqli_query($connection, $sql);
+
+      while ($row = mysqli_fetch_assoc($result)) {
+          $productId = $row['id'];
+          foreach (['buy', 'rent'] as $type) {
+              if (isset($_SESSION['cart'][$type][$productId])) {
+                  $row['quantity'] = $_SESSION['cart'][$type][$productId]['quantity'];
+                  $cartItems[$type][$productId] = $row;
+              }
+          }
+      }
+
+      mysqli_free_result($result);
+  }
 ?>
