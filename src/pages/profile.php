@@ -1,10 +1,7 @@
 <?php
   /** @var mysqli $connection */
-  include '../includes/db_config.php';
-
-  if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-  }
+  include_once '../includes/db_config.php';
+  include_once '../includes/session_config.php';
 
   $errors = array(
     'email' => '',

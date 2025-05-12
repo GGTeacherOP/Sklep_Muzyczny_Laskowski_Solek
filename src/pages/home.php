@@ -1,15 +1,12 @@
 <?php
   /** @var mysqli $connection */
   include_once '../includes/db_config.php';
+  include_once '../includes/session_config.php';
   include_once '../includes/cart_actions.php';
   include_once '../includes/fetch_popular_products.php';
   include_once '../includes/fetch_product_categories.php';
   include_once '../includes/render_product_card.php';
   include_once '../includes/render_category_card.php';
-
-  if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-  }
 
   if (isset($_POST['add_to_cart'])) {
     addToCart($_POST['product_id'], $_POST['product_type']);

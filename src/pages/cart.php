@@ -1,13 +1,10 @@
 <?php
   /** @var mysqli $connection */
   include_once '../includes/db_config.php';
+  include_once '../includes/session_config.php';
   include_once '../includes/render_cart_item.php';
   include_once '../includes/cart_actions.php';
   include_once '../includes/format_price.php';
-
-  if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-  }
 
   $userId = $_SESSION['user_id'] ?? NULL;
   $promoCode = $_SESSION['promo_code'] ?? NULL;
