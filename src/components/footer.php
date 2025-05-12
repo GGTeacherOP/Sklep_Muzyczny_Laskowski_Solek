@@ -1,42 +1,47 @@
-<footer class="fade-in">
+<footer class="footer">
   <div class="footer-container">
+    <!-- Sekcja Kontakt -->
     <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-store"></i> O Nas</h3>
-      <p>Sklep muzyczny z instrumentami, akcesoriami i sprzętem nagłośnieniowym. Profesjonalne doradztwo!</p>
-    </div>
-
-    <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-link"></i> Linki</h3>
-      <ul class="footer-list">
-        <li><a class="footer-list-el" href="home.php"><i class="fas fa-home"></i> Strona główna</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-guitar"></i> Instrumenty</a></li>
-        <li><a class="footer-list-el" href="#"><i class="fas fa-volume-up"></i> Nagłośnienie</a></li>
-        <li><a class="footer-list-el" href="mailto:sklepmuzyczny@example.com"><i class="fas fa-envelope"></i>
-            Kontakt</a></li>
+      <h3 class="footer-title">Kontakt</h3>
+      <ul class="footer-links">
+        <li><a href="tel:+48123456789"><i class="fa-solid fa-phone"></i> +48 123 456 789</a></li>
+        <li><a href="mailto:kontakt@sklep.pl"><i class="fa-solid fa-envelope"></i> kontakt@sklep.pl</a></li>
+        <li><a href="https://www.google.com/maps/place/Adres+Sklepu"><i class="fa-solid fa-location-pin"></i> Adres Sklepu</a></li>
       </ul>
     </div>
 
+    <!-- Sekcja Media Społecznościowe -->
     <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-address-card"></i> Kontakt</h3>
-      <ul class="footer-list">
-        <li><i class="fas fa-envelope"></i> sklepmuzyczny@example.com</li>
-        <li><i class="fas fa-phone"></i> +48 111 222 333</li>
-        <li><i class="fas fa-map-marker-alt"></i> Kazimierza Jagiellończyka 3 Mielec</li>
+      <h3 class="footer-title">Media Społecznościowe</h3>
+      <ul class="footer-links">
+        <li><a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a></li>
+        <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i> Twitter</a></li>
+        <li><a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
       </ul>
     </div>
 
+    <!-- Sekcja Pomoc -->
     <div class="footer-section">
-      <h3 class="footer-section-title"><i class="fas fa-share-alt"></i> Social Media</h3>
-      <ul class="footer-list">
-        <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-        <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
-        <li><a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-        <li><a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+      <h3 class="footer-title">Pomoc</h3>
+      <ul class="footer-links">
+        <li><a href="/faq"><i class="fa-solid fa-question-circle"></i> FAQ</a></li>
+        <li><a href="/return-policy"><i class="fa-solid fa-undo"></i> Polityka zwrotów</a></li>
+        <li><a href="/terms"><i class="fa-solid fa-file-contract"></i> Regulamin</a></li>
       </ul>
     </div>
-  </div>
 
-  <div class="footer-bottom">
-    <i class="far fa-copyright"></i> 2025-<?= date("Y") ?> SklepMuzik
+    <!-- Sekcja Informacje -->
+    <div class="footer-section">
+      <h3 class="footer-title">Informacje</h3>
+      <ul class="footer-links">
+        <li><a href="/about-us"><i class="fa-solid fa-info-circle"></i> O nas</a></li>
+        <li><a href="/privacy-policy"><i class="fa-solid fa-shield-alt"></i> Polityka prywatności</a></li>
+        <li><a href="/shipping-info"><i class="fa-solid fa-truck"></i> Informacje o wysyłce</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2025 Sklep Muzyczny. Wszelkie prawa zastrzeżone.</p>
+    </div>
   </div>
 </footer>
