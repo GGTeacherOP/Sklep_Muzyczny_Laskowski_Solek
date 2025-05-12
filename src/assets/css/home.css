@@ -230,10 +230,6 @@ html {
   animation-delay: 0.29s;
 }
 
-.popular-products {
-  margin: var(--spacing-lg) 0;
-}
-
 .popular-section {
   display: flex;
   flex-direction: column;
