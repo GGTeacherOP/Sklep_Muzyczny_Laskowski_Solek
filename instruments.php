@@ -115,6 +115,107 @@ WHERE kategorie_instrumentow.id = $instrument_type_id";
       <span class="banner-bottom-el">SKLEP MUZIK</span>
     </div>
   </section>
+
+  <section class="products-section fade-in">
+    
+    <section class="product-header">
+      <h1 class="product-title">Dostępna ilość</h1>
+      <?php
+      $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+
+      if (!$connection) {
+        die("Połączenie nieudane: " . mysqli_connect_error());
+      }
+
+      $sql = "
+SELECT COUNT(instrumenty.id)
+FROM instrumenty
+WHERE kategoria_id = $instrument_type_id
+AND instrumenty.stan_magazynowy > 0;";
+        $result = mysqli_query($connection, $sql);
+        $row = mysqli_fetch_array($result);
+        echo "<span class=\"product-count\">$row[0]</span>"
+      ?>
+    </section>
+
+    <section class="product-list">
+      <?php
+        $connection = mysqli_connect($server_name, $user_name, $password, $databse_name);
+
+        if (!$connection) {
+          die("Połączenie nieudane: " . mysqli_connect_error());
+        }
+
+        $sql = "
+        SELECT instrumenty.nazwa, instrumenty.opis, instrumenty.cena, COUNT(instrument_oceny.ocena) 'ilosc_ocen', ROUND(AVG(instrument_oceny.ocena), 1) 'srednia_ocen', 
+        instrument_zdjecia.url, instrument_zdjecia.alt_text 
+        FROM instrumenty JOIN instrument_oceny ON instrumenty.id = instrument_oceny.instrument_id 
+        JOIN instrument_zdjecia ON instrumenty.id = instrument_zdjecia.instrument_id 
+        WHERE kategoria_id = $instrument_type_id 
+        GROUP BY(instrumenty.id);";
+
+        $result = mysqli_query($connection, $sql);
+
+        while($row = mysqli_fetch_array($result)){
+          echo "
+            <div class=\"product-el\">
+
+            <div class=\"product-img\">
+              <img src=\"{$row['url']}\" alt=\"{$row['alt_text']}\">
+            </div>
+
+            <div class=\"product-info\">
+              <h2 class=\"product-name\">{$row['nazwa']}</h2>
+              <span class=\"product-desc\">{$row['opis']}</span>
+
+              <div class=\"product-rating\">
+                <span class=\"rating\">{$row['srednia_ocen']}</span>
+                <span class=\"product-rating-count\">{$row['ilosc_ocen']}</span>
+              </div>
+
+              <span class=\"product-price\">{$row['cena']}</span>
+
+              <div class=\"product-action\">
+                <button class=\"buy-product-btn\"><i class=\"fas fa-shopping-cart\"></i></button>
+                <button class=\"follow-product-btn\"><i class=\"far fa-heart\"></i></button>
+              </div>
+
+            </div>
+          </div>
+          ";
+        }
+
+        mysqli_close($connection);
+      ?>
+
+      <!-- <div class="product-el">
+
+        <div class="product-img">
+          <img src="" alt="nazwa gitary">
+        </div>
+
+        <div class="product-info">
+          <h2 class="product-name">Fender Strat</h2>
+          <span class="product-desc">Opis gitary</span>
+
+          <div class="product-rating">
+            <span class="rating">5</span>
+            <span class="product-rating-count">156</span>
+          </div>
+
+          <span class="product-price">1000</span>
+
+          <div class="product-action">
+            <button class="buy-product-btn"><i class="fas fa-shopping-cart"></i></button>
+            <button class="follow-product-btn"><i class="far fa-heart"></i></button>
+          </div>
+
+        </div>
+      </div> -->
+      
+    </section>
+  </section>
+
 </main>
 <footer class="fade-in">
   <div class="footer-container">
