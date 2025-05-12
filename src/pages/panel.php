@@ -37,10 +37,6 @@
   }
 
   $page_file = __DIR__ . "\\pannel\\$page.php";
-
-  echo "<pre>";
-  print_r($employee);
-  echo "</pre>";
 ?>
 <!doctype html>
 <html lang="pl">
@@ -68,20 +64,11 @@
 
   <nav>
     <ul>
-      <li><a href="?view=products">Produkty</a></li>
-      <li><a href="?view=categories">Kategorie</a></li>
-      <li><a href="?view=brands">Producenci</a></li>
-      <li><a href="?view=reviews">Oceny</a></li>
-
-      <?php if (in_array($role, ['manager', 'wlasciciel'])) : ?>
-        <li><a href="?view=orders">Zamówienia</a></li>
-        <li><a href="?view=promotions">Kody Promocyjne</a></li>
-      <?php endif; ?>
-
-      <?php if ($role === 'wlasciciel') : ?>
-        <li><a href="?view=employees">Pracownicy</a></li>
-        <li><a href="?view=clients">Klienci</a></li>
-      <?php endif; ?>
+      <?php foreach ($pages as $key => $roles) : ?>
+        <?php if (in_array($role, $roles)) : ?>
+          <li><a href="?view=<?php echo $key; ?>"><?php echo ucfirst($key); ?></a></li>
+        <?php endif; ?>
+      <?php endforeach; ?>
     </ul>
   </nav>
 
