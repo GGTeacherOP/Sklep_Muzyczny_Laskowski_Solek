@@ -1,5 +1,5 @@
 <?php
-  function getPopularProducts(mysqli $connection, string $type = 'buy', int $limit = 10) : mysqli_result|false
+  function getPopularProducts(mysqli $connection, string $type = 'buy', int $limit = 10) : mysqli_result
   {
     if ($type === 'buy') {
       $sql = "
