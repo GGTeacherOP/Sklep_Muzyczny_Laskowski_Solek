@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 12, 2025 at 08:30 PM
+-- Generation Time: Maj 12, 2025 at 10:34 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -20,6 +20,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `sm`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `dostawy`
+--
+
+CREATE TABLE `dostawy` (
+  `id` int(11) NOT NULL,
+  `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
+  `data_dostawy` datetime DEFAULT NULL,
+  `status` enum('oczekiwana','dostarczona','anulowana') NOT NULL DEFAULT 'oczekiwana',
+  `wartosc` decimal(10,2) NOT NULL CHECK (`wartosc` > 0),
+  `producent_id` int(11) NOT NULL,
+  `pracownik_id` int(11) NOT NULL,
+  `numer_zamowienia` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dostawy`
+--
+
+INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `wartosc`, `producent_id`, `pracownik_id`, `numer_zamowienia`) VALUES
+(1, '2025-05-10 09:15:00', '2025-05-15 14:30:00', 'dostarczona', 12500.00, 1, 3, 'DOST2025/001'),
+(2, '2025-05-12 11:20:00', NULL, 'oczekiwana', 9800.00, 2, 4, 'DOST2025/002'),
+(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 7200.00, 4, 3, 'DOST2025/003');
 
 -- --------------------------------------------------------
 
@@ -269,6 +295,34 @@ INSERT INTO `producenci` (`id`, `nazwa`) VALUES
 (6, 'Korg'),
 (5, 'Roland'),
 (1, 'Yamaha');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `szczegoly_dostawy`
+--
+
+CREATE TABLE `szczegoly_dostawy` (
+  `id` int(11) NOT NULL,
+  `dostawa_id` int(11) NOT NULL,
+  `instrument_id` int(11) NOT NULL,
+  `ilosc` int(11) NOT NULL CHECK (`ilosc` > 0),
+  `cena_zakupu` decimal(10,2) NOT NULL CHECK (`cena_zakupu` > 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `szczegoly_dostawy`
+--
+
+INSERT INTO `szczegoly_dostawy` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `cena_zakupu`) VALUES
+(1, 1, 1, 5, 1200.00),
+(2, 1, 2, 3, 2000.00),
+(3, 1, 5, 2, 600.00),
+(4, 2, 3, 2, 3500.00),
+(5, 2, 6, 1, 2800.00),
+(6, 3, 4, 4, 1800.00),
+(7, 3, 1, 2, 1200.00),
+(8, 3, 2, 1, 2000.00);
 
 -- --------------------------------------------------------
 
@@ -524,6 +578,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 --
+-- Indeksy dla tabeli `dostawy`
+--
+ALTER TABLE `dostawy`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `numer_zamowienia` (`numer_zamowienia`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `producent_id` (`producent_id`),
+  ADD KEY `pracownik_id` (`pracownik_id`);
+
+--
 -- Indeksy dla tabeli `instrumenty`
 --
 ALTER TABLE `instrumenty`
@@ -601,6 +665,14 @@ ALTER TABLE `producenci`
   ADD UNIQUE KEY `nazwa` (`nazwa`);
 
 --
+-- Indeksy dla tabeli `szczegoly_dostawy`
+--
+ALTER TABLE `szczegoly_dostawy`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dostawa_id` (`dostawa_id`),
+  ADD KEY `instrument_id` (`instrument_id`);
+
+--
 -- Indeksy dla tabeli `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
@@ -635,6 +707,12 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `dostawy`
+--
+ALTER TABLE `dostawy`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `instrumenty`
@@ -697,6 +775,12 @@ ALTER TABLE `producenci`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `szczegoly_dostawy`
+--
+ALTER TABLE `szczegoly_dostawy`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
@@ -723,6 +807,13 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `dostawy`
+--
+ALTER TABLE `dostawy`
+  ADD CONSTRAINT `dostawy_ibfk_1` FOREIGN KEY (`producent_id`) REFERENCES `producenci` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `dostawy_ibfk_2` FOREIGN KEY (`pracownik_id`) REFERENCES `pracownicy` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `instrumenty`
@@ -767,6 +858,13 @@ ALTER TABLE `koszyk_szczegoly`
 --
 ALTER TABLE `pracownicy`
   ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `szczegoly_dostawy`
+--
+ALTER TABLE `szczegoly_dostawy`
+  ADD CONSTRAINT `szczegoly_dostawy_ibfk_1` FOREIGN KEY (`dostawa_id`) REFERENCES `dostawy` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `szczegoly_dostawy_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `wypozyczenia`
