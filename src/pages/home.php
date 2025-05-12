@@ -43,6 +43,14 @@
 <main class="fade-in">
   <?php include '../components/header.php'; ?>
 
+  <section class="hero-section fade-in">
+    <div class="hero-content">
+      <h1 class="hero-title">Odkryj świat muzyki</h1>
+      <p class="hero-subtitle">Najlepsze instrumenty do kupienia i wypożyczenia – tylko u nas!</p>
+      <a href="#popular-products" class="hero-button">Zobacz produkty</a>
+    </div>
+  </section>
+
   <section class="instrument-types fade-in">
     <div class="instrument-types-header">
       <h4 class="instrument-types-title">Typy produktów</h4>
@@ -58,7 +66,7 @@
       } ?>
     </div>
   </section>
-  <section class="popular-products fade-in">
+  <section class="popular-products fade-in" id="popular-products">
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Kupowane</h2>
       <div class="products-grid">
