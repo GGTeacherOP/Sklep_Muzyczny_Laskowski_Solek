@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 12, 2025 at 11:02 PM
+-- Generation Time: Maj 10, 2025 at 01:45 AM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -20,32 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `sm`
 --
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `dostawy`
---
-
-CREATE TABLE `dostawy` (
-  `id` int(11) NOT NULL,
-  `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
-  `data_dostawy` datetime DEFAULT NULL,
-  `status` enum('oczekiwana','dostarczona','anulowana') NOT NULL DEFAULT 'oczekiwana',
-  `wartosc` decimal(10,2) NOT NULL CHECK (`wartosc` > 0),
-  `producent_id` int(11) NOT NULL,
-  `pracownik_id` int(11) NOT NULL,
-  `numer_zamowienia` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `dostawy`
---
-
-INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `wartosc`, `producent_id`, `pracownik_id`, `numer_zamowienia`) VALUES
-(1, '2025-05-10 09:15:00', '2025-05-15 14:30:00', 'dostarczona', 12500.00, 1, 3, 'DOST2025/001'),
-(2, '2025-05-12 11:20:00', NULL, 'oczekiwana', 9800.00, 2, 4, 'DOST2025/002'),
-(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 7200.00, 4, 3, 'DOST2025/003');
 
 -- --------------------------------------------------------
 
@@ -186,17 +160,18 @@ CREATE TABLE `kody_promocyjne` (
   `kod` varchar(16) NOT NULL,
   `znizka` decimal(5,2) NOT NULL CHECK (`znizka` > 0 and `znizka` <= 100),
   `data_rozpoczecia` datetime NOT NULL,
-  `data_zakonczenia` datetime NOT NULL
+  `data_zakonczenia` datetime NOT NULL,
+  `aktywna` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kody_promocyjne`
 --
 
-INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_zakonczenia`) VALUES
-(1, 'WIOSNA2025', 15.00, '2025-03-01 00:00:00', '2025-06-30 00:00:00'),
-(2, 'BLACKFRIDAY', 30.00, '2025-11-27 00:00:00', '2025-11-29 00:00:00'),
-(3, 'XMAS2025', 10.00, '2025-12-20 00:00:00', '2025-12-25 00:00:00');
+INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_zakonczenia`, `aktywna`) VALUES
+(1, 'WIOSNA2025', 15.00, '2025-03-01 00:00:00', '2025-06-30 00:00:00', 1),
+(2, 'BLACKFRIDAY', 30.00, '2025-11-27 00:00:00', '2025-11-29 00:00:00', 1),
+(3, 'XMAS2025', 10.00, '2025-12-20 00:00:00', '2025-12-25 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -232,7 +207,7 @@ CREATE TABLE `koszyk_szczegoly` (
   `instrument_id` int(11) NOT NULL,
   `ilosc` int(11) NOT NULL DEFAULT 1 CHECK (`ilosc` > 0),
   `cena` decimal(10,2) NOT NULL CHECK (`cena` > 0),
-  `typ` enum('buy','rent') NOT NULL DEFAULT 'buy',
+  `typ` enum('kupno','wypozyczenie') NOT NULL DEFAULT 'kupno',
   `okres_wypozyczenia` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -241,11 +216,11 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(1, 1, 1, 1, 1499.99, 'buy', '2025-05-08'),
-(2, 2, 2, 1, 2499.99, 'buy', '2025-05-08'),
-(3, 3, 3, 1, 3999.99, 'buy', '2025-05-08'),
-(4, 4, 4, 1, 1899.99, 'rent', '2025-05-31'),
-(5, 5, 5, 1, 799.99, 'buy', '2025-05-08');
+(1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
+(2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
+(3, 3, 3, 1, 3999.99, 'kupno', '2025-05-08'),
+(4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
+(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08');
 
 -- --------------------------------------------------------
 
@@ -298,34 +273,6 @@ INSERT INTO `producenci` (`id`, `nazwa`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `szczegoly_dostawy`
---
-
-CREATE TABLE `szczegoly_dostawy` (
-  `id` int(11) NOT NULL,
-  `dostawa_id` int(11) NOT NULL,
-  `instrument_id` int(11) NOT NULL,
-  `ilosc` int(11) NOT NULL CHECK (`ilosc` > 0),
-  `cena_zakupu` decimal(10,2) NOT NULL CHECK (`cena_zakupu` > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `szczegoly_dostawy`
---
-
-INSERT INTO `szczegoly_dostawy` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `cena_zakupu`) VALUES
-(1, 1, 1, 5, 1200.00),
-(2, 1, 2, 3, 2000.00),
-(3, 1, 5, 2, 600.00),
-(4, 2, 3, 2, 3500.00),
-(5, 2, 6, 1, 2800.00),
-(6, 3, 4, 4, 1800.00),
-(7, 3, 1, 2, 1200.00),
-(8, 3, 2, 1, 2000.00);
-
--- --------------------------------------------------------
-
---
 -- Struktura tabeli dla tabeli `uzytkownicy`
 --
 
@@ -348,89 +295,6 @@ INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_re
 (3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (4, 'Maria', 'maria.wisniewska@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik');
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_kody_promocyjne`
--- (See below for the actual view)
---
-CREATE TABLE `widok_kody_promocyjne` (
-);
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_opinie_instrumenty`
--- (See below for the actual view)
---
-CREATE TABLE `widok_opinie_instrumenty` (
-`instrument` varchar(255)
-,`nazwa_uzytkownika` varchar(255)
-,`komentarz` text
-,`data_oceny` datetime
-,`ocena` int(11)
-);
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_pracownicy`
--- (See below for the actual view)
---
-CREATE TABLE `widok_pracownicy` (
-`pracownik_id` int(11)
-,`nazwa_uzytkownika` varchar(255)
-,`email` varchar(255)
-,`stanowisko` enum('pracownik','manager','właściciel')
-,`data_zatrudnienia` datetime
-,`identyfikator` varchar(4)
-);
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_uzytkownicy_role`
--- (See below for the actual view)
---
-CREATE TABLE `widok_uzytkownicy_role` (
-`uzytkownik_id` int(11)
-,`nazwa_uzytkownika` varchar(255)
-,`email` varchar(255)
-,`typ` enum('pracownik','klient')
-);
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_wypozyczenia`
--- (See below for the actual view)
---
-CREATE TABLE `widok_wypozyczenia` (
-`id` int(11)
-,`nazwa_uzytkownika` varchar(255)
-,`instrument` varchar(255)
-,`data_wypozyczenia` datetime
-,`data_zwrotu` datetime
-,`cena_wypozyczenia` decimal(10,2)
-,`status` enum('wypożyczone','zwrócone','uszkodzone','anulowane')
-);
-
--- --------------------------------------------------------
-
---
--- Zastąpiona struktura widoku `widok_zamowienia_klientow`
--- (See below for the actual view)
---
-CREATE TABLE `widok_zamowienia_klientow` (
-`id` int(11)
-,`nazwa_uzytkownika` varchar(255)
-,`data_zamowienia` datetime
-,`status` enum('w przygotowaniu','wysłane','dostarczone','anulowane')
-,`znizka_promocyjna` decimal(10,2)
-,`wartosc` decimal(10,2)
-,`wartosc_po_znizce` decimal(10,2)
-);
 
 -- --------------------------------------------------------
 
@@ -512,73 +376,9 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 (4, 4, 4, 1, 1899.99),
 (5, 5, 5, 1, 799.99);
 
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_kody_promocyjne`
---
-DROP TABLE IF EXISTS `widok_kody_promocyjne`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_kody_promocyjne`  AS SELECT `kody_promocyjne`.`id` AS `kod_id`, `kody_promocyjne`.`kod` AS `kod`, `kody_promocyjne`.`znizka` AS `znizka`, `kody_promocyjne`.`data_rozpoczecia` AS `data_rozpoczecia`, `kody_promocyjne`.`data_zakonczenia` AS `data_zakonczenia`, CASE WHEN `kody_promocyjne`.`aktywna` = 1 THEN 'aktywna' ELSE 'nieaktywna' END AS `status` FROM `kody_promocyjne` ;
-
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_opinie_instrumenty`
---
-DROP TABLE IF EXISTS `widok_opinie_instrumenty`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_opinie_instrumenty`  AS SELECT `instrumenty`.`nazwa` AS `instrument`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `instrument_oceny`.`komentarz` AS `komentarz`, `instrument_oceny`.`data_oceny` AS `data_oceny`, `instrument_oceny`.`ocena` AS `ocena` FROM (((((`klienci` left join `uzytkownicy` on(`klienci`.`uzytkownik_id` = `uzytkownicy`.`id`)) join `zamowienia` on(`klienci`.`id` = `zamowienia`.`klient_id`)) join `zamowienie_szczegoly` on(`zamowienia`.`id` = `zamowienie_szczegoly`.`zamowienie_id`)) left join `instrumenty` on(`zamowienie_szczegoly`.`instrument_id` = `instrumenty`.`id`)) join `instrument_oceny` on(`instrumenty`.`id` = `instrument_oceny`.`instrument_id`)) ;
-
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_pracownicy`
---
-DROP TABLE IF EXISTS `widok_pracownicy`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_pracownicy`  AS SELECT `pracownicy`.`id` AS `pracownik_id`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `uzytkownicy`.`email` AS `email`, `pracownicy`.`stanowisko` AS `stanowisko`, `pracownicy`.`data_zatrudnienia` AS `data_zatrudnienia`, `pracownicy`.`identyfikator` AS `identyfikator` FROM (`pracownicy` join `uzytkownicy` on(`pracownicy`.`uzytkownik_id` = `uzytkownicy`.`id`)) ;
-
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_uzytkownicy_role`
---
-DROP TABLE IF EXISTS `widok_uzytkownicy_role`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_uzytkownicy_role`  AS SELECT `uzytkownicy`.`id` AS `uzytkownik_id`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `uzytkownicy`.`email` AS `email`, `uzytkownicy`.`typ` AS `typ` FROM `uzytkownicy` ;
-
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_wypozyczenia`
---
-DROP TABLE IF EXISTS `widok_wypozyczenia`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_wypozyczenia`  AS SELECT `wypozyczenia`.`id` AS `id`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `instrumenty`.`nazwa` AS `instrument`, `wypozyczenia`.`data_wypozyczenia` AS `data_wypozyczenia`, `wypozyczenia`.`data_zwrotu` AS `data_zwrotu`, `wypozyczenia`.`cena_wypozyczenia` AS `cena_wypozyczenia`, `wypozyczenia`.`status` AS `status` FROM (((`wypozyczenia` join `klienci` on(`wypozyczenia`.`klient_id` = `klienci`.`id`)) join `uzytkownicy` on(`klienci`.`uzytkownik_id` = `uzytkownicy`.`id`)) join `instrumenty` on(`wypozyczenia`.`instrument_id` = `instrumenty`.`id`)) ;
-
--- --------------------------------------------------------
-
---
--- Struktura widoku `widok_zamowienia_klientow`
---
-DROP TABLE IF EXISTS `widok_zamowienia_klientow`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_zamowienia_klientow`  AS SELECT `zamowienia`.`id` AS `id`, `uzytkownicy`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `zamowienia`.`data_zamowienia` AS `data_zamowienia`, `zamowienia`.`status` AS `status`, `zamowienia`.`znizka` AS `znizka_promocyjna`, `zamowienia`.`wartosc` AS `wartosc`, `zamowienia`.`wartosc_po_znizce` AS `wartosc_po_znizce` FROM ((`zamowienia` join `klienci` on(`zamowienia`.`klient_id` = `klienci`.`id`)) join `uzytkownicy` on(`klienci`.`uzytkownik_id` = `uzytkownicy`.`id`)) ;
-
 --
 -- Indeksy dla zrzutów tabel
 --
-
---
--- Indeksy dla tabeli `dostawy`
---
-ALTER TABLE `dostawy`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `numer_zamowienia` (`numer_zamowienia`),
-  ADD KEY `idx_status` (`status`),
-  ADD KEY `producent_id` (`producent_id`),
-  ADD KEY `pracownik_id` (`pracownik_id`);
 
 --
 -- Indeksy dla tabeli `instrumenty`
@@ -658,14 +458,6 @@ ALTER TABLE `producenci`
   ADD UNIQUE KEY `nazwa` (`nazwa`);
 
 --
--- Indeksy dla tabeli `szczegoly_dostawy`
---
-ALTER TABLE `szczegoly_dostawy`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `dostawa_id` (`dostawa_id`),
-  ADD KEY `instrument_id` (`instrument_id`);
-
---
 -- Indeksy dla tabeli `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
@@ -700,12 +492,6 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `dostawy`
---
-ALTER TABLE `dostawy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `instrumenty`
@@ -768,12 +554,6 @@ ALTER TABLE `producenci`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `szczegoly_dostawy`
---
-ALTER TABLE `szczegoly_dostawy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
@@ -800,13 +580,6 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `dostawy`
---
-ALTER TABLE `dostawy`
-  ADD CONSTRAINT `dostawy_ibfk_1` FOREIGN KEY (`producent_id`) REFERENCES `producenci` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `dostawy_ibfk_2` FOREIGN KEY (`pracownik_id`) REFERENCES `pracownicy` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `instrumenty`
@@ -851,13 +624,6 @@ ALTER TABLE `koszyk_szczegoly`
 --
 ALTER TABLE `pracownicy`
   ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `szczegoly_dostawy`
---
-ALTER TABLE `szczegoly_dostawy`
-  ADD CONSTRAINT `szczegoly_dostawy_ibfk_1` FOREIGN KEY (`dostawa_id`) REFERENCES `dostawy` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `szczegoly_dostawy_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `wypozyczenia`
