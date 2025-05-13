@@ -22,7 +22,7 @@
         mysqli_free_result($result);
 
         $query = "
-            SELECT ks.instrument_id, ks.typ, ks.ilosc, i.cena
+            SELECT ks.instrument_id, ks.typ, ks.ilosc, i.cena_sprzedazy
             FROM koszyk_szczegoly ks
             JOIN instrumenty i ON ks.instrument_id = i.id
             WHERE ks.koszyk_id = ?
@@ -40,7 +40,6 @@
 
                 $_SESSION['cart'][$type][$productId] = [
                     'quantity' => $quantity,
-                    'cena' => floatval($row['cena'])
                 ];
             }
         }
@@ -86,10 +85,10 @@
     foreach (['buy', 'rent'] as $type) {
       foreach ($cartItems[$type] as $productId => $product) {
         $quantity = intval($product['quantity']);
-        $price = floatval($product['cena']);
+        $price = floatval($product['cena_sprzedazy']);
 
         $query = "
-                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena)
+                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena_sprzedazy)
                 VALUES ($cartId, $productId, '$type', $quantity, $price)
             ";
         mysqli_query($connection, $query);

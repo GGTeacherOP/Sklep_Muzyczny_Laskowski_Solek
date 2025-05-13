@@ -52,11 +52,11 @@
   $totalRent = 0;
 
   foreach ($cartItems['buy'] as $item) {
-    $totalBuy += $item['cena'] * $item['quantity'];
+    $totalBuy += $item['cena_sprzedazy'] * $item['quantity'];
   }
 
   foreach ($cartItems['rent'] as $item) {
-    $totalRent += $item['cena'] * $item['quantity'];
+    $totalRent += $item['cena_sprzedazy'] * $item['quantity'];
   }
 
   if ($userId) {

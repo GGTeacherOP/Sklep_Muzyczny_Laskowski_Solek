@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 10, 2025 at 01:45 AM
+-- Generation Time: Maj 13, 2025 at 09:22 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -24,6 +24,59 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `dostawa_szczegoly`
+--
+
+CREATE TABLE `dostawa_szczegoly` (
+  `id` int(11) NOT NULL,
+  `dostawa_id` int(11) NOT NULL,
+  `instrument_id` int(11) NOT NULL,
+  `ilosc` int(11) NOT NULL CHECK (`ilosc` > 0),
+  `cena_zakupu` decimal(10,2) NOT NULL CHECK (`cena_zakupu` > 0),
+  `status` enum('oczekiwana','dostarczona','anulowana') NOT NULL DEFAULT 'oczekiwana'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dostawa_szczegoly`
+--
+
+INSERT INTO `dostawa_szczegoly` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `cena_zakupu`, `status`) VALUES
+(1, 1, 1, 5, 1200.00, 'dostarczona'),
+(2, 1, 2, 3, 2000.00, 'dostarczona'),
+(3, 1, 5, 2, 600.00, 'dostarczona'),
+(4, 2, 3, 2, 3500.00, 'oczekiwana'),
+(5, 2, 6, 1, 2800.00, 'oczekiwana'),
+(6, 3, 4, 4, 1800.00, 'oczekiwana'),
+(7, 3, 1, 2, 1200.00, 'oczekiwana'),
+(8, 3, 2, 1, 2000.00, 'oczekiwana');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `dostawy`
+--
+
+CREATE TABLE `dostawy` (
+  `id` int(11) NOT NULL,
+  `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
+  `data_dostawy` datetime DEFAULT NULL,
+  `status` enum('oczekiwana','dostarczona','anulowana') NOT NULL DEFAULT 'oczekiwana',
+  `producent_id` int(11) NOT NULL,
+  `pracownik_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dostawy`
+--
+
+INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `producent_id`, `pracownik_id`) VALUES
+(1, '2025-05-10 09:15:00', '2025-05-15 14:30:00', 'dostarczona', 1, 3),
+(2, '2025-05-12 11:20:00', NULL, 'oczekiwana', 2, 4),
+(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 4, 3);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `instrumenty`
 --
 
@@ -32,7 +85,9 @@ CREATE TABLE `instrumenty` (
   `kod_produktu` varchar(16) NOT NULL,
   `nazwa` varchar(255) NOT NULL,
   `opis` text NOT NULL,
-  `cena` decimal(10,2) NOT NULL CHECK (`cena` > 0),
+  `cena_sprzedazy` decimal(10,2) NOT NULL COMMENT 'Cena sprzedaży detalicznej',
+  `cena_kupna` decimal(10,2) NOT NULL COMMENT 'Cena zakupu od producenta',
+  `cena_wypozyczenia_dzien` decimal(10,2) NOT NULL COMMENT 'Cena wypożyczenia za dzień',
   `stan_magazynowy` int(11) NOT NULL DEFAULT 0 CHECK (`stan_magazynowy` >= 0),
   `producent_id` int(11) NOT NULL,
   `kategoria_id` int(11) NOT NULL
@@ -42,13 +97,13 @@ CREATE TABLE `instrumenty` (
 -- Dumping data for table `instrumenty`
 --
 
-INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena`, `stan_magazynowy`, `producent_id`, `kategoria_id`) VALUES
-(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 15, 1, 1),
-(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 20, 2, 1),
-(3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 10, 3, 1),
-(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 25, 4, 1),
-(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 30, 5, 4),
-(6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 5, 6, 4);
+INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedazy`, `cena_kupna`, `cena_wypozyczenia_dzien`, `stan_magazynowy`, `producent_id`, `kategoria_id`) VALUES
+(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 0.00, 0.00, 15, 1, 1),
+(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 0.00, 0.00, 20, 2, 1),
+(3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 0.00, 0.00, 10, 3, 1),
+(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 0.00, 0.00, 25, 4, 1),
+(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 0.00, 0.00, 30, 5, 4),
+(6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 0.00, 0.00, 5, 6, 4);
 
 -- --------------------------------------------------------
 
@@ -231,7 +286,7 @@ INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `ce
 CREATE TABLE `pracownicy` (
   `id` int(11) NOT NULL,
   `uzytkownik_id` int(11) NOT NULL,
-  `stanowisko` enum('pracownik','manager','właściciel') NOT NULL DEFAULT 'pracownik',
+  `stanowisko` enum('pracownik','manager','właściciel','informatyk','sekretarka') NOT NULL DEFAULT 'pracownik',
   `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
   `identyfikator` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -299,6 +354,21 @@ INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_re
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `wiadomosci`
+--
+
+CREATE TABLE `wiadomosci` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `temat` varchar(255) NOT NULL,
+  `tresc` text NOT NULL,
+  `data_wyslania` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('nowa','w_trakcie','zakonczona','archiwalna') NOT NULL DEFAULT 'nowa'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `wypozyczenia`
 --
 
@@ -334,22 +404,19 @@ CREATE TABLE `zamowienia` (
   `klient_id` int(11) NOT NULL,
   `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
   `status` enum('w przygotowaniu','wysłane','dostarczone','anulowane') NOT NULL DEFAULT 'w przygotowaniu',
-  `wartosc` decimal(10,2) NOT NULL CHECK (`wartosc` > 0),
-  `kod_promocyjny_id` int(11) DEFAULT NULL,
-  `znizka` decimal(10,2) DEFAULT 0.00 CHECK (`znizka` >= 0),
-  `wartosc_po_znizce` decimal(10,2) NOT NULL CHECK (`wartosc_po_znizce` > 0)
+  `kod_promocyjny_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `zamowienia`
 --
 
-INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `wartosc`, `kod_promocyjny_id`, `znizka`, `wartosc_po_znizce`) VALUES
-(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', 1499.99, NULL, 0.00, 1499.99),
-(2, 2, '2025-05-08 14:33:13', 'wysłane', 2499.99, NULL, 0.00, 2499.99),
-(3, 3, '2025-05-08 14:33:13', 'dostarczone', 3999.99, NULL, 0.00, 3799.99),
-(4, 4, '2025-05-08 14:33:13', 'anulowane', 1899.99, NULL, 0.00, 1899.99),
-(5, 5, '2025-05-08 14:33:13', 'wysłane', 799.99, NULL, 0.00, 719.99);
+INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`) VALUES
+(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL),
+(2, 2, '2025-05-08 14:33:13', 'wysłane', NULL),
+(3, 3, '2025-05-08 14:33:13', 'dostarczone', NULL),
+(4, 4, '2025-05-08 14:33:13', 'anulowane', NULL),
+(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL);
 
 -- --------------------------------------------------------
 
@@ -379,6 +446,24 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 --
 -- Indeksy dla zrzutów tabel
 --
+
+--
+-- Indeksy dla tabeli `dostawa_szczegoly`
+--
+ALTER TABLE `dostawa_szczegoly`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dostawa_id` (`dostawa_id`),
+  ADD KEY `instrument_id` (`instrument_id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indeksy dla tabeli `dostawy`
+--
+ALTER TABLE `dostawy`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `producent_id` (`producent_id`),
+  ADD KEY `pracownik_id` (`pracownik_id`);
 
 --
 -- Indeksy dla tabeli `instrumenty`
@@ -466,6 +551,13 @@ ALTER TABLE `uzytkownicy`
   ADD KEY `idx_email` (`email`);
 
 --
+-- Indeksy dla tabeli `wiadomosci`
+--
+ALTER TABLE `wiadomosci`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`);
+
+--
 -- Indeksy dla tabeli `wypozyczenia`
 --
 ALTER TABLE `wypozyczenia`
@@ -492,6 +584,18 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `dostawa_szczegoly`
+--
+ALTER TABLE `dostawa_szczegoly`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `dostawy`
+--
+ALTER TABLE `dostawy`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `instrumenty`
@@ -560,6 +664,12 @@ ALTER TABLE `uzytkownicy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `wiadomosci`
+--
+ALTER TABLE `wiadomosci`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `wypozyczenia`
 --
 ALTER TABLE `wypozyczenia`
@@ -580,6 +690,20 @@ ALTER TABLE `zamowienie_szczegoly`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `dostawa_szczegoly`
+--
+ALTER TABLE `dostawa_szczegoly`
+  ADD CONSTRAINT `dostawa_szczegoly_ibfk_1` FOREIGN KEY (`dostawa_id`) REFERENCES `dostawy` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `dostawa_szczegoly_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `dostawy`
+--
+ALTER TABLE `dostawy`
+  ADD CONSTRAINT `dostawy_ibfk_1` FOREIGN KEY (`producent_id`) REFERENCES `producenci` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `dostawy_ibfk_2` FOREIGN KEY (`pracownik_id`) REFERENCES `pracownicy` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `instrumenty`

@@ -7,7 +7,7 @@
     $imageUrl = htmlspecialchars($product['url']);
     $altText = htmlspecialchars($product['alt_text']);
     $quantity = intval($product['quantity']);
-    $price = formatPrice($product['cena'], $quantity);
+    $price = formatPrice($product['cena_sprzedazy'], $quantity);
 
     return "
     <li class=\"cart-item\">

@@ -3,7 +3,7 @@
 
   function renderProductCard(array $product, string $type) : string
   {
-    $price = formatPrice($product['cena']);
+    $price = formatPrice($product['cena_sprzedazy']);
 
     return "
     <article class=\"product-card\">
