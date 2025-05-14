@@ -37,9 +37,8 @@
   <title>Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <section class="hero-section fade-in">
     <div class="hero-content">
       <h1 class="hero-title">Odkryj świat muzyki</h1>

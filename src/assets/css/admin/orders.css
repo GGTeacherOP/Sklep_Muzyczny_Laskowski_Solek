@@ -1,0 +1,162 @@
+/**
+ * Style CSS dla widoku zamówień w panelu administratora
+ */
+
+/* Style dla modułu zamówień */
+
+/* Style statusów zamówień */
+.admin-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-xxs);
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.status-w-przygotowaniu {
+    background-color: var(--warning-color-light);
+    color: var(--warning-color);
+}
+
+.status-wysłane {
+    background-color: var(--info-color-light);
+    color: var(--info-color);
+}
+
+.status-dostarczone {
+    background-color: var(--success-color-light);
+    color: var(--success-color);
+}
+
+.status-anulowane {
+    background-color: var(--danger-color-light);
+    color: var(--danger-color);
+}
+
+.status-unknown {
+    background-color: var(--gray-light);
+    color: var(--text-color);
+}
+
+/* Style szczegółów zamówienia */
+.order-details-page {
+    padding: var(--spacing-md);
+}
+
+.order-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.info-group {
+    flex: 1;
+    min-width: 250px;
+    padding: var(--spacing-sm);
+    background-color: var(--surface-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.info-group h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.info-group p {
+    margin: 5px 0;
+}
+
+.order-items-table {
+    margin-bottom: var(--spacing-md);
+}
+
+.order-summary {
+    margin-left: auto;
+    width: 100%;
+    max-width: 300px;
+    padding: var(--spacing-sm);
+    background-color: var(--surface-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.order-summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs) 0;
+}
+
+.order-summary-item.discount {
+    color: var(--danger-color);
+}
+
+.order-summary-item.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+/* Style dla historii zamówień klienta */
+.client-orders {
+    margin-bottom: var(--spacing-md);
+}
+
+.client-orders-table {
+    width: 100%;
+}
+
+.order-details-container {
+    padding: var(--spacing-sm);
+    background-color: var(--surface-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.order-details-container h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-md);
+    color: var(--text-color);
+}
+
+.admin-alert {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-xxs);
+    font-weight: bold;
+}
+
+.admin-alert.info {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.admin-alert.error {
+    background-color: var(--danger-color-light);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.admin-actions.center {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+} 

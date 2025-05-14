@@ -88,7 +88,7 @@
         $price = floatval($product['cena_sprzedazy']);
 
         $query = "
-                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena_sprzedazy)
+                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena)
                 VALUES ($cartId, $productId, '$type', $quantity, $price)
             ";
         mysqli_query($connection, $query);

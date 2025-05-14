@@ -78,9 +78,8 @@
   <title>Koszyk - Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <section class="cart-container-empty <?= $totalItems === 0 ? 'active' : '' ?>">
     <i class="fa-solid fa-box-open empty-cart-icon"></i>
     <h2>Twój koszyk jest pusty</h2>

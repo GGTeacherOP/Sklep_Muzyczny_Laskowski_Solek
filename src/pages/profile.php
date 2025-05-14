@@ -49,9 +49,8 @@
   <title>Logowanie - Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <div class="login-container">
     <div class="login-tabs">
       <button class="login-tab <?= $active_form === 'login' ? 'active' : '' ?>" data-tab="login">Logowanie</button>

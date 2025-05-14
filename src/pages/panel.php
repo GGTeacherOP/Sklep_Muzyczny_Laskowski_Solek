@@ -10,33 +10,76 @@
 
   $employee_id = $_SESSION['employee_id'];
 
-  $sql = "SELECT * FROM pracownicy JOIN uzytkownicy ON pracownicy.uzytkownik_id = uzytkownicy.id WHERE identyfikator LIKE '$employee_id';";
-  $result = mysqli_query($connection, $sql);
-  $employee = mysqli_fetch_assoc($result);
-  mysqli_free_result($result);
+// Zabezpieczenie przed SQL Injection
+$stmt = $connection->prepare("SELECT * FROM pracownicy JOIN uzytkownicy ON pracownicy.uzytkownik_id = uzytkownicy.id WHERE identyfikator = ?");
+$stmt->bind_param("s", $employee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$employee = $result->fetch_assoc();
+$stmt->close();
+
+if (!$employee) {
+    session_destroy();
+    header('Location: home.php?error=invalid_employee');
+    exit();
+}
 
   $role = $employee['stanowisko'];
   $username = $employee['nazwa_uzytkownika'];
 
   $pages = [
-    'products' => ['pracownik', 'manager', 'wlasciciel'],
-    'categories' => ['pracownik', 'manager', 'wlasciciel'],
-    'brands' => ['pracownik', 'manager', 'wlasciciel'],
-    'reviews' => ['pracownik', 'manager', 'wlasciciel'],
-    'orders' => ['manager', 'wlasciciel'],
-    'promotions' => ['manager', 'wlasciciel'],
-    'employees' => ['wlasciciel'],
-    'clients' => ['wlasciciel']
+  'products' => [
+    'roles' => ['pracownik', 'manager', 'właściciel', 'informatyk'],
+    'icon' => 'fas fa-box',
+    'title' => 'Produkty'
+  ],
+  'categories' => [
+    'roles' => ['pracownik', 'manager', 'właściciel', 'informatyk'],
+    'icon' => 'fas fa-tags',
+    'title' => 'Kategorie produktów'
+  ],
+  'brands' => [
+    'roles' => ['pracownik', 'manager', 'właściciel', 'informatyk'],
+    'icon' => 'fas fa-industry',
+    'title' => 'Producenci'
+  ],
+  'reviews' => [
+    'roles' => ['manager', 'właściciel'],
+    'icon' => 'fas fa-star',
+    'title' => 'Oceny produktów'
+  ],
+  'orders' => [
+    'roles' => ['pracownik', 'manager', 'właściciel'],
+    'icon' => 'fas fa-shopping-cart',
+    'title' => 'Zamówienia'
+  ],
+  'promotions' => [
+    'roles' => ['właściciel', 'informatyk'],
+    'icon' => 'fas fa-percent',
+    'title' => 'Kody promocyjne'
+  ],
+  'employees' => [
+    'roles' => ['manager', 'właściciel'],
+    'icon' => 'fas fa-users',
+    'title' => 'Pracownicy'
+  ],
+  'clients' => [
+    'roles' => ['właściciel', 'informatyk'],
+    'icon' => 'fas fa-user-friends',
+    'title' => 'Klienci'
+  ]
   ];
 
-  $page = $_GET['view'] ?? 'products';
+$page = $_GET['view'] ?? '';
 
-  if (!isset($pages[$page]) || !in_array($role, $pages[$page])) {
-    header('Location: panel.php?view=products');
+// Sprawdzanie dostępu do wybranej strony
+if (!empty($page)) {
+  if (!isset($pages[$page]) || !in_array($role, $pages[$page]['roles'])) {
+    header('Location: panel.php');
     exit();
   }
-
   $page_file = __DIR__ . "\\pannel\\$page.php";
+}
 ?>
 <!doctype html>
 <html lang="pl">
@@ -46,43 +89,72 @@
   <meta content="Laskowski i Sołek" name="author">
   <meta content="instrumenty muzyczne, sklep muzyczny, gitary, basy, instrumenty strunowe, perkusje, sprzęt muzyczny"
         name="keywords">
-  <meta
-    content="Sklep muzyczny online oferujący szeroki wybór instrumentów: gitary, basy, perkusje i więcej. Znajdź idealny sprzęt dla siebie."
+  <meta content="Panel administratora sklepu muzycznego - zarządzaj produktami, zamówieniami i więcej."
     name="description">
-  <meta content="index, follow" name="robots">
+  <meta content="noindex, nofollow" name="robots">
   <script crossorigin="anonymous" src="https://kit.fontawesome.com/da02356be8.js"></script>
   <link href="../assets/css/panel.css" rel="stylesheet">
   <script type="module" src="../assets/js/header.js"></script>
-  <title>Panel Administratora - <?php echo ucfirst($page); ?></title>
+  <script src="../assets/js/panel.js"></script>
+  <title>Panel Administratora<?php echo $page ? ' - ' . $pages[$page]['title'] : ''; ?></title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
+  <div class="admin-panel">
+    <?php if (empty($page)): ?>
+      <div class="admin-header">
+        <div class="admin-header-top">
+        <div class="welcome-message">
+          Witaj, <?php echo htmlspecialchars($username); ?>
+        </div>
+        <div class="current-date">
+          <?php setlocale(LC_TIME, "pl_PL.UTF-8"); ?>
+          <?= strftime('%e %B, %Y') ?>
+        </div>
+        </div>
+        <div class="info-message">
+          Panel administratora Sklepu Muzycznego.
+        </div>
+      </div>
 
-  <h1>Witaj, <?php echo htmlspecialchars($username); ?>!</h1>
-  <h2>Panel Administratora (<?php echo htmlspecialchars($role); ?>)</h2>
+      <div class="admin-nav-grid">
+        <?php foreach ($pages as $key => $data): ?>
+          <?php if (in_array($role, $data['roles'])): ?>
+            <a href="?view=<?php echo $key; ?>" class="admin-nav-card">
+              <div class="admin-nav-card-icon">
+                <i class="<?php echo $data['icon']; ?>"></i>
+              </div>
+              <div class="admin-nav-card-content">
+                <h3 class="admin-nav-card-title"><?php echo $data['title']; ?></h3>
+              </div>
+            </a>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      </div>
+    <?php else: ?>
+      <!-- Widok konkretnej sekcji -->
+      <div class="admin-section-header">
+        <h2 class="admin-section-title"><?php echo $pages[$page]['title']; ?></h2>
+        <a href="panel.php" class="admin-back-button">
+          <i class="fas fa-arrow-left"></i>
+          Powrót do menu
+        </a>
+      </div>
 
-  <nav>
-    <ul>
-      <?php foreach ($pages as $key => $roles) : ?>
-        <?php if (in_array($role, $roles)) : ?>
-          <li><a href="?view=<?php echo $key; ?>"><?php echo ucfirst($key); ?></a></li>
-        <?php endif; ?>
-      <?php endforeach; ?>
-    </ul>
-  </nav>
-
-  <section>
+      <div class="admin-content">
     <?php
       if (file_exists($page_file)) {
         include $page_file;
       } else {
         echo '<p>Nie znaleziono strony.</p>';
-        echo $page_file;
       }
     ?>
-  </section>
+      </div>
+    <?php endif; ?>
+  </div>
 </main>
+
 <?php mysqli_close($connection); ?>
 <?php include '../components/footer.php'; ?>
 </body>

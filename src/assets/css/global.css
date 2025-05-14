@@ -40,9 +40,9 @@
   --font-xs: 0.8rem;
   --font-sm: 0.9rem;
   --font-md: 1rem;
-  --font-lg: 1.1rem;
-  --font-xl: 1.3rem;
-  --font-xxl: 1.4rem;
+  --font-lg: 1.2rem;
+  --font-xl: 1.4rem;
+  --font-xxl: 1.6rem;
 
   --radius-xxs: 4px;
   --radius-xs: 8px;
@@ -121,8 +121,9 @@ main {
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-sm);
   gap: var(--spacing-sm);
+  background-color: var(--secondary-bg);
 }
 
 .logo img {
@@ -138,7 +139,7 @@ main {
   height: var(--card-size-xs-sm);
   padding: 0 var(--spacing-sm);
   border-radius: var(--radius-lg);
-  background-color: var(--secondary-bg);
+  background-color: #DCDCDC;
   gap: var(--spacing-xs);
 }
 
@@ -170,7 +171,7 @@ main {
 }
 
 .tray-item {
-  font-size: var(--font-xxl);
+  font-size: var(--font-xl);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,7 +210,6 @@ main {
 .footer-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   margin: 0 auto;
   justify-content: center;
   margin-inline: var(--spacing-sm);
@@ -292,25 +292,25 @@ main {
   }
 
   .search-bar {
-    height: var(--button-height-md);
+    height: var(--button-height-lg);
     border-radius: var(--radius-md);
   }
 
   .search-input {
     font-size: var(--font-md);
-    height: var(--button-height-md);
+    height: var(--button-height-lg);
   }
 
   .search-button {
     font-size: var(--font-md);
-    height: var(--button-height-md);
+    height: var(--button-height-lg);
   }
 
   .tray-item {
     font-size: var(--font-md);
     display: flex;
     width: 100%;
-    height: var(--button-height-md);
+    height: var(--button-height-lg);
     border-radius: var(--radius-md);
     gap: var(--spacing-xs);
   }
@@ -334,17 +334,17 @@ main {
   }
 
   .search-bar {
-    height: var(--button-height-sm);
+    height: var(--button-height-md);
   }
 
   .search-input {
     font-size: var(--font-xs);
-    height: var(--button-height-sm);
+    height: var(--button-height-md);
   }
 
   .search-button {
     font-size: var(--font-xs);
-    height: var(--button-height-sm);
+    height: var(--button-height-md);
   }
 
   .tray {
@@ -355,7 +355,7 @@ main {
     font-size: var(--font-xs);
     display: flex;
     width: 100%;
-    height: var(--button-height-sm);
+    height: var(--button-height-md);
     border-radius: var(--radius-md);
     gap: var(--spacing-xxs);
   }
