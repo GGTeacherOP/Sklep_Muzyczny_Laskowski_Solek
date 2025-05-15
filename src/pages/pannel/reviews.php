@@ -52,11 +52,43 @@ if ($sort_column === 'instrument_nazwa') {
     $order_col = "io.$sort_column";
 }
 
-// Pobieranie ocen z bazy danych
+// Pobieranie listy produktów
+$products_query = "SELECT id, nazwa, kod_produktu FROM instrumenty ORDER BY nazwa";
+$products_result = $connection->query($products_query);
+$products = [];
+while ($product = $products_result->fetch_assoc()) {
+    $products[] = $product;
+}
+
+// Pobieranie wybranego produktu i filtrów
+$selected_product = isset($_GET['product_id']) ? (int)$_GET['product_id'] : null;
+$selected_rating = isset($_GET['rating']) ? (int)$_GET['rating'] : null;
+$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : null;
+$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : null;
+
+// Modyfikacja zapytania o opinie
 $query = "SELECT io.*, i.nazwa as instrument_nazwa, i.kod_produktu 
           FROM instrument_oceny io 
-          JOIN instrumenty i ON io.instrument_id = i.id 
-          ORDER BY $order_col $sort_dir";
+          JOIN instrumenty i ON io.instrument_id = i.id
+          WHERE 1=1";
+
+if ($selected_product) {
+    $query .= " AND io.instrument_id = " . $selected_product;
+}
+
+if ($selected_rating) {
+    $query .= " AND io.ocena = " . $selected_rating;
+}
+
+if ($date_from) {
+    $query .= " AND io.data_oceny >= '" . mysqli_real_escape_string($connection, $date_from) . " 00:00:00'";
+}
+
+if ($date_to) {
+    $query .= " AND io.data_oceny <= '" . mysqli_real_escape_string($connection, $date_to) . " 23:59:59'";
+}
+
+$query .= " ORDER BY $order_col $sort_dir";
 $result = $connection->query($query);
 ?>
 
@@ -65,7 +97,38 @@ $result = $connection->query($query);
     <input type="text" id="reviewSearch" class="form-input" placeholder="Szukaj ocen..." 
            onkeyup="filterTable('reviewTable', 3)">
   </div>
+  <select class="form-input" onchange="filterByProduct(this.value)">
+    <option value="">Wszystkie produkty</option>
+    <?php foreach ($products as $product): ?>
+      <option value="<?php echo $product['id']; ?>" <?php echo $selected_product == $product['id'] ? 'selected' : ''; ?>>
+        <?php echo htmlspecialchars($product['nazwa'] . ' (' . $product['kod_produktu'] . ')'); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+  <select class="form-input" onchange="filterByRating(this.value)">
+    <option value="">Wszystkie oceny</option>
+    <?php for ($i = 1; $i <= 5; $i++): ?>
+      <option value="<?php echo $i; ?>" <?php echo $selected_rating == $i ? 'selected' : ''; ?>>
+        <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i); ?>
+      </option>
+    <?php endfor; ?>
+  </select>
+  <div class="date-range">
+    <input type="date" class="form-input" id="dateFrom" name="date_from" 
+           value="<?php echo $date_from; ?>" placeholder="Od">
+    <input type="date" class="form-input" id="dateTo" name="date_to" 
+           value="<?php echo $date_to; ?>" placeholder="Do">
+    <button class="admin-button" onclick="filterByDate()">
+      <i class="fas fa-filter"></i> Filtruj
+    </button>
+  </div>
 </div>
+
+<?php if (($selected_product || $selected_rating || $date_from || $date_to) && $result->num_rows === 0): ?>
+  <div class="admin-alert info">
+    Brak opinii spełniających wybrane kryteria.
+  </div>
+<?php endif; ?>
 
 <table id="reviewTable" class="admin-table">
   <thead>
@@ -163,6 +226,44 @@ function filterTable(tableId, columnIndex) {
   }
 }
 
+function filterByProduct(productId) {
+  if (productId) {
+    window.location.href = '?view=reviews&product_id=' + productId;
+  } else {
+    window.location.href = '?view=reviews';
+  }
+}
+
+function filterByRating(rating) {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (rating) {
+    urlParams.set('rating', rating);
+  } else {
+    urlParams.delete('rating');
+  }
+  window.location.href = '?view=reviews&' + urlParams.toString();
+}
+
+function filterByDate() {
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  if (dateFrom) {
+    urlParams.set('date_from', dateFrom);
+  } else {
+    urlParams.delete('date_from');
+  }
+  
+  if (dateTo) {
+    urlParams.set('date_to', dateTo);
+  } else {
+    urlParams.delete('date_to');
+  }
+  
+  window.location.href = '?view=reviews&' + urlParams.toString();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Obsługa komunikatów
   const urlParams = new URLSearchParams(window.location.search);
@@ -188,5 +289,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .status-badge.warning {
   background-color: var(--button-edit-bg);
+}
+
+.date-range {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.date-range input[type="date"] {
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  .date-range {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .date-range input[type="date"] {
+    width: 100%;
+  }
 }
 </style>

@@ -90,13 +90,10 @@ $sql = "SELECT * FROM kody_promocyjne ORDER BY $sort_column $sort_dir";
 $promocje = mysqli_query($connection, $sql);
 ?>
 
-<div class="admin-actions">
-  <button class="admin-button success" onclick="showAddPromotionModal()">
+<div class="admin-filters">
+  <button class="admin-button success add" onclick="showAddPromotionModal()">
     <i class="fas fa-plus"></i> Dodaj kod promocyjny
   </button>
-</div>
-
-<div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="promotionSearch" class="form-input" placeholder="Szukaj kodów..." 
            onkeyup="filterTable('promotionTable', 'promotionSearch', 1)">

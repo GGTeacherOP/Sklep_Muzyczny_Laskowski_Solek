@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               // Jeśli obie operacje się powiodły, zatwierdzamy transakcję
               if ($result1 && $result2) {
                   mysqli_commit($connection);
-              } else {
+    } else {
                   mysqli_rollback($connection);
               }
           } catch (Exception $e) {
@@ -230,6 +230,9 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
     $orders = mysqli_query($connection, $sql);
     ?>
     <div class="admin-filters">
+      <button class="admin-button success add" onclick="showAddOrderModal()">
+        <i class="fas fa-plus"></i> Dodaj zamówienie
+      </button>
       <div class="admin-search">
         <input type="text" id="orderSearch" class="form-input" placeholder="Szukaj zamówień..." 
                onkeyup="filterTable('orderTable', 'orderSearch', 1)">
@@ -240,6 +243,15 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
         <option value="<?php echo $value; ?>"><?php echo $status['label']; ?></option>
         <?php endforeach; ?>
       </select>
+      <div class="date-range">
+        <input type="date" class="form-input" id="dateFrom" name="date_from" 
+               value="<?php echo isset($_GET['date_from']) ? $_GET['date_from'] : ''; ?>" placeholder="Od">
+        <input type="date" class="form-input" id="dateTo" name="date_to" 
+               value="<?php echo isset($_GET['date_to']) ? $_GET['date_to'] : ''; ?>" placeholder="Do">
+        <button class="admin-button" onclick="filterByDate()">
+          <i class="fas fa-filter"></i> Filtruj
+        </button>
+      </div>
     </div>
     
     <table id="orderTable" class="admin-table">
@@ -287,7 +299,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
             <td><?php echo number_format($order['wartosc_calkowita'], 2); ?> zł</td>
             <td>
               <div class="admin-actions">
-                <a href="?view=orders&view_details=<?php echo $order['id']; ?>" class="admin-button">
+                <a href="?view=orders&view_details=<?php echo $order['id']; ?>" class="admin-button info">
                   <i class="fas fa-eye"></i>
                 </a>
                 <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">
@@ -402,6 +414,29 @@ function filterByStatus(status) {
     } else {
       const orderStatus = rows[i].getAttribute('data-status');
       rows[i].style.display = orderStatus === status ? '' : 'none';
+    }
+  }
+}
+
+function filterByDate() {
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
+  const table = document.getElementById('orderTable');
+  const rows = table.getElementsByTagName('tr');
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const dateCell = row.getElementsByTagName('td')[2]; // Zakładając, że data jest w trzeciej kolumnie
+    if (dateCell) {
+      const orderDate = new Date(dateCell.textContent);
+      const fromDate = dateFrom ? new Date(dateFrom) : null;
+      const toDate = dateTo ? new Date(dateTo) : null;
+
+      let show = true;
+      if (fromDate && orderDate < fromDate) show = false;
+      if (toDate && orderDate > toDate) show = false;
+
+      row.style.display = show ? '' : 'none';
     }
   }
 }

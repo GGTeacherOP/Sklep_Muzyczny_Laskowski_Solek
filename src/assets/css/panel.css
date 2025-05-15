@@ -141,6 +141,7 @@ body {
   color: var(--text-color);
   font-weight: 500;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .admin-button:hover {
@@ -186,14 +187,20 @@ body {
 
 .admin-filters {
   display: flex;
-  justify-content: space-between;
+  gap: var(--spacing-sm);
   align-items: center;
-  margin-bottom: var(--spacing-md);
+  flex-wrap: nowrap;
+  margin-bottom: var(--spacing-sm);
 }
 
 .admin-search {
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   max-width: 400px;
+}
+
+.admin-filters select {
+  min-width: 150px;
 }
 
 .form-input {
@@ -459,25 +466,17 @@ textarea.form-input {
 }
 
 @media (max-width: 768px) {
-  .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxl), 1fr));
-  }
-  
-  .admin-table {
-    font-size: var(--font-sm);
-  }
-  
-  .modal-content {
-    width: 95%;
-    padding: var(--spacing-md);
-  }
-  
-  .order-info {
+  .admin-filters {
     flex-direction: column;
+    align-items: stretch;
   }
   
-  .order-summary {
+  .admin-search {
     max-width: 100%;
+  }
+  
+  .admin-filters select {
+    width: 100%;
   }
 }
 

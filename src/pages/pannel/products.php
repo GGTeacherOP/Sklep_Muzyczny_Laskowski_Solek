@@ -106,17 +106,30 @@ $sql = "SELECT i.*, p.nazwa as nazwa_producenta, k.nazwa as nazwa_kategorii
 $produkty = mysqli_query($connection, $sql);
 ?>
 
-<div class="admin-actions">
-  <button class="admin-button success" onclick="showAddModal()">
+<div class="admin-filters">
+  <button class="admin-button success add" onclick="showAddModal()">
     <i class="fas fa-plus"></i> Dodaj produkt
   </button>
-</div>
-
-<div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="productSearch" class="form-input" placeholder="Szukaj produktów..." 
            onkeyup="filterTable('productTable', 2)">
   </div>
+  <select class="form-input" onchange="filterByCategory(this.value)">
+    <option value="">Wszystkie kategorie</option>
+    <?php foreach ($kategorie_data as $kategoria) : ?>
+      <option value="<?php echo $kategoria['id']; ?>">
+        <?php echo htmlspecialchars($kategoria['nazwa']); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+  <select class="form-input" onchange="filterByBrand(this.value)">
+    <option value="">Wszyscy producenci</option>
+    <?php foreach ($producenci_data as $producent) : ?>
+      <option value="<?php echo $producent['id']; ?>">
+        <?php echo htmlspecialchars($producent['nazwa']); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
 </div>
 
 <table id="productTable" class="admin-table">
@@ -162,7 +175,7 @@ $produkty = mysqli_query($connection, $sql);
   </thead>
   <tbody>
     <?php while ($product = mysqli_fetch_assoc($produkty)) : ?>
-    <tr>
+    <tr data-category="<?php echo $product['kategoria_id']; ?>" data-brand="<?php echo $product['producent_id']; ?>">
       <td><?php echo htmlspecialchars($product['id']); ?></td>
       <td><?php echo htmlspecialchars($product['kod_produktu']); ?></td>
       <td><?php echo htmlspecialchars($product['nazwa']); ?></td>
@@ -308,6 +321,28 @@ function filterTable(tableId, columnIndex) {
       rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
     }
   }
+}
+
+function filterByCategory(categoryId) {
+  const rows = document.querySelectorAll('#productTable tbody tr');
+  rows.forEach(row => {
+    if (!categoryId || row.dataset.category === categoryId) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+function filterByBrand(brandId) {
+  const rows = document.querySelectorAll('#productTable tbody tr');
+  rows.forEach(row => {
+    if (!brandId || row.dataset.brand === brandId) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
 }
 
 // Zamykanie modalu po kliknięciu poza nim

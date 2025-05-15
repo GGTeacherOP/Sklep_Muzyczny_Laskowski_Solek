@@ -110,7 +110,7 @@ $result = $connection->query($query);
 ?>
 
 <div class="admin-actions">
-  <button class="admin-button success" onclick="showAddModal()">
+  <button class="admin-button success add" onclick="showAddModal()">
     <i class="fas fa-plus"></i> Dodaj producenta
   </button>
 </div>

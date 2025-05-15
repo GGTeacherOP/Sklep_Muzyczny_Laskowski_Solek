@@ -117,13 +117,12 @@ if ($sort_column === 'nazwa_uzytkownika' || $sort_column === 'email' || $sort_co
 $pracownicy = mysqli_query($connection, $sql);
 ?>
 
-<div class="admin-actions">
-  <button class="admin-button success" onclick="showAddEmployeeModal()">
-    <i class="fas fa-plus"></i> Dodaj pracownika
-  </button>
-</div>
-
 <div class="admin-filters">
+  <div class="admin-actions">
+    <button class="admin-button success add" onclick="showAddEmployeeModal()">
+      <i class="fas fa-plus"></i> Dodaj pracownika
+    </button>
+  </div>
   <div class="admin-search">
     <input type="text" id="employeeSearch" class="form-input" placeholder="Szukaj pracowników..." 
            onkeyup="filterTable('employeeTable', 2)">
