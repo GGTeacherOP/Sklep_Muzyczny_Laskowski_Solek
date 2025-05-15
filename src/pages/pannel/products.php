@@ -258,62 +258,6 @@ $produkty = mysqli_query($connection, $sql);
   </div>
 </div>
 
-<style>
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.4);
-  overflow: auto;
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 800px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.sort-link {
-  color: #333;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sort-link i {
-  margin-left: 5px;
-}
-
-th {
-  cursor: pointer;
-}
-</style>
-
 <script>
 function showAddModal() {
   const modal = document.getElementById('productModal');
