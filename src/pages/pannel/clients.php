@@ -149,7 +149,7 @@ $klienci = mysqli_query($connection, $sql);
         <td><?php echo $client['wartosc_zamowien'] ? number_format($client['wartosc_zamowien'], 2) . ' zł' : '0.00 zł'; ?></td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button info" onclick="showClientOrders(<?php echo $client['id']; ?>)">
+            <button class="admin-button success" onclick="showClientOrders(<?php echo $client['id']; ?>)">
               <i class="fas fa-shopping-cart"></i>
             </button>
             <button class="admin-button warning" onclick="editClient(<?php echo htmlspecialchars(json_encode($client)); ?>)">
