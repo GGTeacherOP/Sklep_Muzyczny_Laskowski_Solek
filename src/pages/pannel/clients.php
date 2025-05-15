@@ -4,10 +4,10 @@ include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 
 // Obsługa akcji
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-  $client_id = mysqli_real_escape_string($connection, $_POST['client_id']);
-  
-  switch ($_POST['action']) {
+  switch ($_POST['action']) {    
     case 'delete':
+      $client_id = mysqli_real_escape_string($connection, $_POST['client_id']);
+      
       // Najpierw usuwamy powiązane rekordy
       mysqli_query($connection, "DELETE FROM koszyk WHERE klient_id = '$client_id'");
       mysqli_query($connection, "DELETE FROM zamowienia WHERE klient_id = '$client_id'");
@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       break;
       
     case 'update':
+      $client_id = mysqli_real_escape_string($connection, $_POST['client_id']);
       $email = mysqli_real_escape_string($connection, $_POST['email']);
       $username = mysqli_real_escape_string($connection, $_POST['username']);
       
@@ -94,13 +95,10 @@ if ($sort_column === 'nazwa_uzytkownika' || $sort_column === 'email' || $sort_co
 $klienci = mysqli_query($connection, $sql);
 ?>
 
-<h2>Klienci</h2>
-<p>Przeglądaj listę klientów i ich zamówienia.</p>
-
 <div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="clientSearch" class="form-input" placeholder="Szukaj klientów..." 
-           onkeyup="filterTable('clientTable', 'clientSearch', 1)">
+           onkeyup="filterTable('clientTable', 1)">
   </div>
 </div>
 
@@ -151,10 +149,10 @@ $klienci = mysqli_query($connection, $sql);
         <td><?php echo $client['wartosc_zamowien'] ? number_format($client['wartosc_zamowien'], 2) . ' zł' : '0.00 zł'; ?></td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button" onclick="showClientOrders(<?php echo $client['id']; ?>)">
+            <button class="admin-button info" onclick="showClientOrders(<?php echo $client['id']; ?>)">
               <i class="fas fa-shopping-cart"></i>
             </button>
-            <button class="admin-button" onclick="editClient(<?php echo htmlspecialchars(json_encode($client)); ?>)">
+            <button class="admin-button warning" onclick="editClient(<?php echo htmlspecialchars(json_encode($client)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
             <button class="admin-button danger" onclick="confirmDelete(<?php echo $client['id']; ?>)">
@@ -234,7 +232,7 @@ $klienci = mysqli_query($connection, $sql);
 <script>
 function showClientOrders(clientId) {
   document.getElementById('ordersContent').innerHTML = '<p class="loading">Ładowanie zamówień...</p>';
-  showModal('ordersModal');
+  document.getElementById('ordersModal').style.display = 'block';
   
   // Pobierz zamówienia klienta przez AJAX
   fetch(`../includes/ajax/get_client_orders.php?client_id=${clientId}`)
@@ -258,28 +256,28 @@ function editClient(client) {
   document.getElementById('editClientId').value = client.id;
   document.getElementById('username').value = client.nazwa_uzytkownika;
   document.getElementById('email').value = client.email;
-  showModal('editModal');
+  document.getElementById('editModal').style.display = 'block';
 }
 
 function confirmDelete(clientId) {
   document.getElementById('delete_client_id').value = clientId;
-  showModal('deleteModal');
+  document.getElementById('deleteModal').style.display = 'block';
 }
 
 function closeOrdersModal() {
-  closeModal('ordersModal');
+  document.getElementById('ordersModal').style.display = 'none';
 }
 
 function closeEditModal() {
-  closeModal('editModal');
+  document.getElementById('editModal').style.display = 'none';
 }
 
 function closeDeleteModal() {
-  closeModal('deleteModal');
+  document.getElementById('deleteModal').style.display = 'none';
 }
 
-function filterTable(tableId, inputId, columnIndex) {
-  const input = document.getElementById(inputId);
+function filterTable(tableId, columnIndex) {
+  const input = document.getElementById('clientSearch');
   const filter = input.value.toLowerCase();
   const table = document.getElementById(tableId);
   const rows = table.getElementsByTagName('tr');
@@ -292,31 +290,19 @@ function filterTable(tableId, inputId, columnIndex) {
     }
   }
 }
+
+// Zamykanie modalu po kliknięciu poza nim
+window.onclick = function(event) {
+  const ordersModal = document.getElementById('ordersModal');
+  const editModal = document.getElementById('editModal');
+  const deleteModal = document.getElementById('deleteModal');
+  
+  if (event.target == ordersModal) {
+    closeOrdersModal();
+  } else if (event.target == editModal) {
+    closeEditModal();
+  } else if (event.target == deleteModal) {
+    closeDeleteModal();
+  }
+}
 </script>
-
-<style>
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: var(--text-color);
-}
-
-.admin-alert {
-  padding: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  border-radius: var(--radius-xxs);
-  font-weight: bold;
-}
-
-.admin-alert.info {
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
-}
-
-.admin-alert.error {
-  background-color: var(--danger-color-light);
-  color: var(--danger-color);
-  border: 1px solid var(--danger-color);
-}
-</style>

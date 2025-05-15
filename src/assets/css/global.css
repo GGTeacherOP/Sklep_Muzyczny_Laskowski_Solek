@@ -10,6 +10,8 @@
   --button-more-bg-hover: #264D99;
   --button-buy-bg: #5FBB30;
   --button-buy-bg-hover: #4D9926;
+  --button-edit-bg: #fca64d;
+  --button-edit-bg-hover: #fba149;
 
   --form-bg: var(--primary-bg);
   --form-border: #DDDDDD;

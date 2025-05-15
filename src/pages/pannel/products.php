@@ -107,7 +107,7 @@ $produkty = mysqli_query($connection, $sql);
 ?>
 
 <div class="admin-actions">
-  <button class="admin-button" onclick="showAddModal()">
+  <button class="admin-button success" onclick="showAddModal()">
     <i class="fas fa-plus"></i> Dodaj produkt
   </button>
 </div>
@@ -172,7 +172,7 @@ $produkty = mysqli_query($connection, $sql);
       <td><?php echo htmlspecialchars($product['nazwa_kategorii']); ?></td>
       <td>
         <div class="admin-actions">
-          <button class="admin-button" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
+          <button class="admin-button warning" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
             <i class="fas fa-edit"></i>
           </button>
           <form method="POST" style="display: inline;" 

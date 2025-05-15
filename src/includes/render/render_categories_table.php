@@ -14,11 +14,9 @@
 function renderCategoriesTable($categories, $sort_column, $sort_dir) {
     ob_start();
 ?>
-<h2>Kategorie</h2>
-<p>Zarządzanie kategoriami produktów. Dodawaj, edytuj i usuwaj kategorie.</p>
 
 <div class="admin-actions">
-  <button class="admin-button" onclick="showAddCategoryModal()">
+  <button class="admin-button success" onclick="showAddCategoryModal()">
     <i class="fas fa-plus"></i> Dodaj kategorię
   </button>
 </div>
@@ -59,7 +57,7 @@ function renderCategoriesTable($categories, $sort_column, $sort_dir) {
         <td><?php echo htmlspecialchars($category['liczba_instrumentow']); ?></td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button" onclick="editCategory(<?php echo htmlspecialchars(json_encode($category)); ?>)">
+            <button class="admin-button warning" onclick="editCategory(<?php echo htmlspecialchars(json_encode($category)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
             <?php if ($category['liczba_instrumentow'] == 0) : ?>

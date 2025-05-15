@@ -117,11 +117,8 @@ if ($sort_column === 'nazwa_uzytkownika' || $sort_column === 'email' || $sort_co
 $pracownicy = mysqli_query($connection, $sql);
 ?>
 
-<h2>Pracownicy</h2>
-<p>Lista pracowników z możliwością zarządzania ich uprawnieniami.</p>
-
 <div class="admin-actions">
-  <button class="admin-button" onclick="showAddEmployeeModal()">
+  <button class="admin-button success" onclick="showAddEmployeeModal()">
     <i class="fas fa-plus"></i> Dodaj pracownika
   </button>
 </div>
@@ -129,7 +126,7 @@ $pracownicy = mysqli_query($connection, $sql);
 <div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="employeeSearch" class="form-input" placeholder="Szukaj pracowników..." 
-           onkeyup="filterTable('employeeTable', 'employeeSearch', 2)">
+           onkeyup="filterTable('employeeTable', 2)">
   </div>
   <select class="form-input" onchange="filterByRole(this.value)">
     <option value="">Wszystkie stanowiska</option>
@@ -183,14 +180,14 @@ $pracownicy = mysqli_query($connection, $sql);
         <td><?php echo htmlspecialchars($employee['nazwa_uzytkownika']); ?></td>
         <td><?php echo htmlspecialchars($employee['email']); ?></td>
         <td>
-          <span class="admin-status status-<?php echo strtolower($employee['stanowisko']); ?>">
+          <span class="status-badge <?php echo strtolower($employee['stanowisko']); ?>">
             <?php echo ucfirst($employee['stanowisko']); ?>
           </span>
         </td>
         <td><?php echo date('d.m.Y', strtotime($employee['data_rejestracji'])); ?></td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button" onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)">
+            <button class="admin-button warning" onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
             <?php if ($employee['stanowisko'] !== 'właściciel') : ?>
@@ -301,7 +298,7 @@ function showAddEmployeeModal() {
   passwordField.required = true;
   passwordConfirmField.required = true;
   
-  showModal('employeeModal');
+  modal.style.display = 'block';
 }
 
 function editEmployee(employee) {
@@ -324,20 +321,20 @@ function editEmployee(employee) {
   passwordField.value = '';
   passwordConfirmField.value = '';
   
-  showModal('employeeModal');
+  modal.style.display = 'block';
 }
 
 function confirmDelete(employeeId) {
   document.getElementById('delete_employee_id').value = employeeId;
-  showModal('deleteModal');
+  document.getElementById('deleteModal').style.display = 'block';
 }
 
 function closeEmployeeModal() {
-  closeModal('employeeModal');
+  document.getElementById('employeeModal').style.display = 'none';
 }
 
 function closeDeleteModal() {
-  closeModal('deleteModal');
+  document.getElementById('deleteModal').style.display = 'none';
 }
 
 function validateForm() {
@@ -347,19 +344,19 @@ function validateForm() {
   
   // Przy dodawaniu hasło jest wymagane
   if (formAction === 'add' && (password === '' || password.length < 8)) {
-    showNotification('Hasło musi mieć co najmniej 8 znaków', 'error');
+    alert('Hasło musi mieć co najmniej 8 znaków');
     return false;
   }
   
   // Przy edycji hasło jest opcjonalne, ale jeśli podano to musi mieć 8 znaków
   if (formAction === 'update' && password !== '' && password.length < 8) {
-    showNotification('Hasło musi mieć co najmniej 8 znaków', 'error');
+    alert('Hasło musi mieć co najmniej 8 znaków');
     return false;
   }
   
   // Sprawdzenie zgodności haseł
   if (password !== '' && password !== passwordConfirm) {
-    showNotification('Hasła nie są zgodne', 'error');
+    alert('Hasła nie są zgodne');
     return false;
   }
   
@@ -375,6 +372,33 @@ function filterByRole(role) {
       row.style.display = 'none';
     }
   });
+}
+
+function filterTable(tableId, columnIndex) {
+  const input = document.getElementById('employeeSearch');
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById(tableId);
+  const rows = table.getElementsByTagName('tr');
+
+  for (let i = 1; i < rows.length; i++) {
+    const cell = rows[i].getElementsByTagName('td')[columnIndex];
+    if (cell) {
+      const text = cell.textContent || cell.innerText;
+      rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+    }
+  }
+}
+
+// Zamykanie modalu po kliknięciu poza nim
+window.onclick = function(event) {
+  const employeeModal = document.getElementById('employeeModal');
+  const deleteModal = document.getElementById('deleteModal');
+  
+  if (event.target == employeeModal) {
+    closeEmployeeModal();
+  } else if (event.target == deleteModal) {
+    closeDeleteModal();
+  }
 }
 </script>
 

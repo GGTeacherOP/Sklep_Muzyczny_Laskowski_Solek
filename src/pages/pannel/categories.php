@@ -28,7 +28,6 @@ $sort_column = $_GET['sort'] ?? DEFAULT_CATEGORY_SORT_COLUMN;
 $sort_dir = $_GET['dir'] ?? DEFAULT_CATEGORY_SORT_DIRECTION;
 
 // Dołączenie CSS i JS dla kategorii
-echo '<link rel="stylesheet" href="../assets/css/admin/categories.css">';
 echo '<script src="../assets/js/admin/utils.js"></script>';
 echo '<script src="../assets/js/admin/categories.js"></script>';
 

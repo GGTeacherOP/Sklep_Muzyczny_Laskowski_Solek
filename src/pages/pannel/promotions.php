@@ -90,11 +90,8 @@ $sql = "SELECT * FROM kody_promocyjne ORDER BY $sort_column $sort_dir";
 $promocje = mysqli_query($connection, $sql);
 ?>
 
-<h2>Kody Promocyjne</h2>
-<p>Zarządzaj kodami promocyjnymi i ofertami specjalnymi.</p>
-
 <div class="admin-actions">
-  <button class="admin-button" onclick="showAddPromotionModal()">
+  <button class="admin-button success" onclick="showAddPromotionModal()">
     <i class="fas fa-plus"></i> Dodaj kod promocyjny
   </button>
 </div>
@@ -186,7 +183,7 @@ $promocje = mysqli_query($connection, $sql);
         </td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button" onclick="editPromotion(<?php echo htmlspecialchars(json_encode($promotion)); ?>)">
+            <button class="admin-button warning" onclick="editPromotion(<?php echo htmlspecialchars(json_encode($promotion)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
             <button class="admin-button <?php echo $promotion['aktywna'] ? 'danger' : 'success'; ?>" 
@@ -390,21 +387,3 @@ document.addEventListener('DOMContentLoaded', function() {
   endDate.addEventListener('change', validateDates);
 });
 </script>
-
-<style>
-.status-active {
-  background-color: var(--button-buy-bg);
-}
-
-.status-inactive {
-  background-color: var(--error-color);
-}
-
-.status-future {
-  background-color: var(--button-more-bg);
-}
-
-.status-expired {
-  background-color: #666666;
-}
-</style>
