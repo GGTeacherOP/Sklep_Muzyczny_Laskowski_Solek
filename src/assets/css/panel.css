@@ -196,6 +196,114 @@ body {
   flex: 1;
   min-width: 200px;
   max-width: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.admin-search .form-input {
+  width: 100%;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  padding-right: 40px;
+  border-radius: var(--radius-sm);
+  outline: none;
+  border: none;
+  background-color: var(--form-input-bg);
+  color: var(--text-color);
+  font-size: var(--font-md);
+  transition: all 0.3s ease;
+}
+
+.admin-search .form-input:focus {
+  outline: none;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 2px rgba(var(--highlight-color-rgb), 0.1);
+}
+
+.admin-search::after {
+  content: '\f002';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 12px;
+  color: var(--text-color);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.admin-search .form-input:focus + .admin-search::after {
+  color: var(--highlight-color);
+  opacity: 1;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--form-border);
+  border-radius: var(--radius-xxs);
+  background-color: var(--form-input-bg);
+  color: var(--text-color);
+  font-size: var(--font-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+  border-color: var(--highlight-color);
+  background-color: var(--secondary-bg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  min-width: 200px;
+  margin-top: var(--spacing-xxs);
+  padding: var(--spacing-xs) 0;
+  background-color: var(--primary-bg);
+  border: 1px solid var(--form-border);
+  border-radius: var(--radius-xxs);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu.show {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--secondary-bg);
+  color: var(--highlight-color);
+}
+
+.dropdown-item.active {
+  background-color: var(--button-more-bg);
+  color: var(--button-text-color);
+}
+
+.dropdown-divider {
+  height: 1px;
+  margin: var(--spacing-xxs) 0;
+  background-color: var(--form-border);
 }
 
 .admin-filters select {

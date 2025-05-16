@@ -114,22 +114,36 @@ $produkty = mysqli_query($connection, $sql);
     <input type="text" id="productSearch" class="form-input" placeholder="Szukaj produktów..." 
            onkeyup="filterTable('productTable', 2)">
   </div>
-  <select class="form-input" onchange="filterByCategory(this.value)">
-    <option value="">Wszystkie kategorie</option>
-    <?php foreach ($kategorie_data as $kategoria) : ?>
-      <option value="<?php echo $kategoria['id']; ?>">
-        <?php echo htmlspecialchars($kategoria['nazwa']); ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
-  <select class="form-input" onchange="filterByBrand(this.value)">
-    <option value="">Wszyscy producenci</option>
-    <?php foreach ($producenci_data as $producent) : ?>
-      <option value="<?php echo $producent['id']; ?>">
-        <?php echo htmlspecialchars($producent['nazwa']); ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
+  <div class="dropdown">
+    <button class="dropdown-toggle" onclick="toggleDropdown('categoryDropdown')">
+      <span id="categoryDropdownText">Wybierz kategorię</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown-menu" id="categoryDropdown">
+      <a href="#" class="dropdown-item" onclick="selectCategory('', 'Wszystkie kategorie')">Wszystkie kategorie</a>
+      <div class="dropdown-divider"></div>
+      <?php foreach ($kategorie_data as $kategoria) : ?>
+        <a href="#" class="dropdown-item" onclick="selectCategory('<?php echo $kategoria['id']; ?>', '<?php echo htmlspecialchars($kategoria['nazwa']); ?>')">
+          <?php echo htmlspecialchars($kategoria['nazwa']); ?>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropdown-toggle" onclick="toggleDropdown('brandDropdown')">
+      <span id="brandDropdownText">Wybierz producenta</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="dropdown-menu" id="brandDropdown">
+      <a href="#" class="dropdown-item" onclick="selectBrand('', 'Wszyscy producenci')">Wszyscy producenci</a>
+      <div class="dropdown-divider"></div>
+      <?php foreach ($producenci_data as $producent) : ?>
+        <a href="#" class="dropdown-item" onclick="selectBrand('<?php echo $producent['id']; ?>', '<?php echo htmlspecialchars($producent['nazwa']); ?>')">
+          <?php echo htmlspecialchars($producent['nazwa']); ?>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
 </div>
 
 <table id="productTable" class="admin-table">
@@ -325,31 +339,91 @@ function filterTable(tableId, columnIndex) {
 
 function filterByCategory(categoryId) {
   const rows = document.querySelectorAll('#productTable tbody tr');
+  const brandId = document.getElementById('brandDropdownText').dataset.selectedId || '';
+  
   rows.forEach(row => {
-    if (!categoryId || row.dataset.category === categoryId) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
+    const matchesCategory = !categoryId || row.dataset.category === categoryId;
+    const matchesBrand = !brandId || row.dataset.brand === brandId;
+    row.style.display = matchesCategory && matchesBrand ? '' : 'none';
   });
 }
 
 function filterByBrand(brandId) {
   const rows = document.querySelectorAll('#productTable tbody tr');
+  const categoryId = document.getElementById('categoryDropdownText').dataset.selectedId || '';
+  
   rows.forEach(row => {
-    if (!brandId || row.dataset.brand === brandId) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
+    const matchesCategory = !categoryId || row.dataset.category === categoryId;
+    const matchesBrand = !brandId || row.dataset.brand === brandId;
+    row.style.display = matchesCategory && matchesBrand ? '' : 'none';
+  });
+}
+
+function selectCategory(categoryId, categoryName) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('categoryDropdownText');
+  button.textContent = categoryName;
+  button.dataset.selectedId = categoryId;
+  
+  // Filtruj produkty
+  filterByCategory(categoryId);
+  
+  // Ukryj dropdown
+  document.getElementById('categoryDropdown').classList.remove('show');
+}
+
+function selectBrand(brandId, brandName) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('brandDropdownText');
+  button.textContent = brandName;
+  button.dataset.selectedId = brandId;
+  
+  // Filtruj produkty
+  filterByBrand(brandId);
+  
+  // Ukryj dropdown
+  document.getElementById('brandDropdown').classList.remove('show');
+}
+
+function toggleDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle('show');
+  
+  // Zamykanie innych dropdownów
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(d => {
+    if (d.id !== dropdownId && d.classList.contains('show')) {
+      d.classList.remove('show');
     }
   });
 }
 
-// Zamykanie modalu po kliknięciu poza nim
-window.onclick = function(event) {
-  const modal = document.getElementById('productModal');
-  if (event.target == modal) {
-    closeProductModal();
+// Modyfikacja obsługi kliknięcia poza dropdownem
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-menu');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  let clickedOnDropdown = false;
+  
+  // Sprawdź czy kliknięto na dropdown lub jego zawartość
+  dropdowns.forEach(dropdown => {
+    if (dropdown.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Sprawdź czy kliknięto na przycisk dropdown
+  dropdownToggles.forEach(toggle => {
+    if (toggle.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
+  if (!clickedOnDropdown) {
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
   }
-}
+});
 </script>
