@@ -156,6 +156,5 @@ if (!empty($page)) {
 </main>
 
 <?php mysqli_close($connection); ?>
-<?php include '../components/footer.php'; ?>
 </body>
 </html>
