@@ -111,7 +111,6 @@ body {
   gap: var(--spacing-xs);
   height: var(--card-size-xs-sm);
   padding-inline: 24px;
-  background-color: var(--secondary-bg);
   border-radius: var(--radius-sm);
   color: var(--text-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -119,7 +118,7 @@ body {
 
 .admin-back-button:hover {
   color: var(--price-color);
-  background-color: #DCDCDC;
+  background-color: var(--secondary-bg);
   translate: 0 4px;
 }
 

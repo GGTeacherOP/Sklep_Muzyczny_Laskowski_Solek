@@ -109,7 +109,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
     $order_id = $_GET['view_details'];
     
     // Pobieranie szczegółów zamówienia
-    $order_sql = "SELECT z.*, u.nazwa_uzytkownika, k.imie, k.nazwisko, k.adres, k.telefon, k.email, 
+    $order_sql = "SELECT z.*, u.nazwa_uzytkownika, u.email, 
                  (SELECT SUM(zs.ilosc * zs.cena) FROM zamowienie_szczegoly zs WHERE zs.zamowienie_id = z.id) as wartosc_calkowita
                  FROM zamowienia z
                  JOIN klienci k ON z.klient_id = k.id
@@ -156,9 +156,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
             <div class="info-group">
               <h3>Informacje o kliencie</h3>
               <p><strong>Klient:</strong> <?php echo $order['nazwa_uzytkownika']; ?></p>
-              <p><strong>Imię i nazwisko:</strong> <?php echo $order['imie'] . ' ' . $order['nazwisko']; ?></p>
-              <p><strong>Adres:</strong> <?php echo $order['adres']; ?></p>
-              <p><strong>Telefon:</strong> <?php echo $order['telefon']; ?></p>
               <p><strong>Email:</strong> <?php echo $order['email']; ?></p>
             </div>
           </div>

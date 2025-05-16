@@ -6,11 +6,11 @@ include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     if (isset($_POST['review_id'])) {
-      $review_id = (int)$_POST['review_id'];
-      $stmt = $connection->prepare("DELETE FROM instrument_oceny WHERE id = ?");
-      $stmt->bind_param("i", $review_id);
-      $stmt->execute();
-      $stmt->close();
+    $review_id = (int)$_POST['review_id'];
+    $stmt = $connection->prepare("DELETE FROM instrument_oceny WHERE id = ?");
+    $stmt->bind_param("i", $review_id);
+    $stmt->execute();
+    $stmt->close();
     }
   }
 }
@@ -69,7 +69,7 @@ $date_to = isset($_GET['date_to']) ? $_GET['date_to'] : null;
 // Modyfikacja zapytania o opinie
 $query = "SELECT io.*, i.nazwa as instrument_nazwa, i.kod_produktu 
           FROM instrument_oceny io 
-          JOIN instrumenty i ON io.instrument_id = i.id
+          JOIN instrumenty i ON io.instrument_id = i.id 
           WHERE 1=1";
 
 if ($selected_product) {
@@ -131,84 +131,84 @@ $result = $connection->query($query);
 <?php endif; ?>
 
 <table id="reviewTable" class="admin-table">
-  <thead>
-    <tr>
-      <th>
-        <a href="<?php echo getSortLink('id', $sort_column, $sort_dir); ?>" class="sort-link">
-          ID <?php echo getSortIcon('id', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>
-        <a href="<?php echo getSortLink('instrument_nazwa', $sort_column, $sort_dir); ?>" class="sort-link">
-          Produkt <?php echo getSortIcon('instrument_nazwa', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>
-        <a href="<?php echo getSortLink('ocena', $sort_column, $sort_dir); ?>" class="sort-link">
-          Ocena <?php echo getSortIcon('ocena', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>
-        <a href="<?php echo getSortLink('komentarz', $sort_column, $sort_dir); ?>" class="sort-link">
-          Komentarz <?php echo getSortIcon('komentarz', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>
-        <a href="<?php echo getSortLink('data_oceny', $sort_column, $sort_dir); ?>" class="sort-link">
-          Data oceny <?php echo getSortIcon('data_oceny', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>
-        <a href="<?php echo getSortLink('czy_edytowana', $sort_column, $sort_dir); ?>" class="sort-link">
-          Edytowana <?php echo getSortIcon('czy_edytowana', $sort_column, $sort_dir); ?>
-        </a>
-      </th>
-      <th>Akcje</th>
-    </tr>
-  </thead>
-  <tbody>
+        <thead>
+            <tr>
+                <th>
+                    <a href="<?php echo getSortLink('id', $sort_column, $sort_dir); ?>" class="sort-link">
+                        ID <?php echo getSortIcon('id', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?php echo getSortLink('instrument_nazwa', $sort_column, $sort_dir); ?>" class="sort-link">
+                        Produkt <?php echo getSortIcon('instrument_nazwa', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?php echo getSortLink('ocena', $sort_column, $sort_dir); ?>" class="sort-link">
+                        Ocena <?php echo getSortIcon('ocena', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?php echo getSortLink('komentarz', $sort_column, $sort_dir); ?>" class="sort-link">
+                        Komentarz <?php echo getSortIcon('komentarz', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?php echo getSortLink('data_oceny', $sort_column, $sort_dir); ?>" class="sort-link">
+                        Data oceny <?php echo getSortIcon('data_oceny', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="<?php echo getSortLink('czy_edytowana', $sort_column, $sort_dir); ?>" class="sort-link">
+                        Edytowana <?php echo getSortIcon('czy_edytowana', $sort_column, $sort_dir); ?>
+                    </a>
+                </th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
     <?php while ($review = $result->fetch_assoc()): ?>
-      <tr>
+                <tr>
         <td><?php echo htmlspecialchars($review['id']); ?></td>
-        <td>
+                    <td>
           <?php echo htmlspecialchars($review['instrument_nazwa']); ?>
-          <br>
+                        <br>
           <small>(<?php echo htmlspecialchars($review['kod_produktu']); ?>)</small>
-        </td>
-        <td>
-          <?php
-          for ($i = 1; $i <= 5; $i++) {
+                    </td>
+                    <td>
+                        <?php
+                        for ($i = 1; $i <= 5; $i++) {
               echo $i <= $review['ocena'] ? '★' : '☆';
-          }
-          ?>
-        </td>
+                        }
+                        ?>
+                    </td>
         <td><?php echo htmlspecialchars($review['komentarz']); ?></td>
         <td><?php echo date('d.m.Y H:i', strtotime($review['data_oceny'])); ?></td>
-        <td>
+                    <td>
           <?php if ($review['czy_edytowana']): ?>
             <span class="status-badge success">Tak</span>
-            <br>
+                            <br>
             <small><?php echo date('d.m.Y H:i', strtotime($review['data_edycji'])); ?></small>
-          <?php else: ?>
+                        <?php else: ?>
             <span class="status-badge danger">Nie</span>
-          <?php endif; ?>
-        </td>
-        <td>
+                        <?php endif; ?>
+                    </td>
+                    <td>
           <div class="admin-actions">
             <form method="POST" style="display: inline;" 
                   onsubmit="return confirm('Czy na pewno chcesz usunąć tę ocenę?')">
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="review_id" value="<?php echo $review['id']; ?>">
               <button type="submit" class="admin-button danger">
-                <i class="fas fa-trash"></i>
-              </button>
+                            <i class="fas fa-trash"></i>
+                        </button>
             </form>
           </div>
-        </td>
-      </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
 
 <script>
 function filterTable(tableId, columnIndex) {
@@ -222,7 +222,7 @@ function filterTable(tableId, columnIndex) {
     if (cell) {
       const text = cell.textContent || cell.innerText;
       rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-    }
+}
   }
 }
 
@@ -265,11 +265,11 @@ function filterByDate() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Obsługa komunikatów
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('success') === 'deleted') {
-    alert('Ocena została pomyślnie usunięta.');
-  }
+    // Obsługa komunikatów
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'deleted') {
+        alert('Ocena została pomyślnie usunięta.');
+    }
 });
 </script>
 

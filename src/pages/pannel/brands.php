@@ -8,57 +8,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($_POST['action']) {
       case 'delete':
         if (isset($_POST['brand_id'])) {
-          $id = (int)$_POST['brand_id'];
+          $brand_id = mysqli_real_escape_string($connection, $_POST['brand_id']);
           
           // Sprawdzenie czy producent ma powiązane instrumenty
-          $stmt = $connection->prepare("SELECT COUNT(*) as count FROM instrumenty WHERE producent_id = ?");
-          $stmt->bind_param("i", $id);
-          $stmt->execute();
-          $result = $stmt->get_result();
-          $row = $result->fetch_assoc();
-          $stmt->close();
-      
-          if ($row['count'] > 0) {
+          $check_sql = "SELECT COUNT(*) as count FROM instrumenty WHERE producent_id = '$brand_id'";
+          $check_result = mysqli_query($connection, $check_sql);
+          $check_row = mysqli_fetch_assoc($check_result);
+          
+          if ($check_row['count'] > 0) {
             header('Location: panel.php?view=brands&error=has_products');
             exit();
           }
-      
-          $stmt = $connection->prepare("DELETE FROM producenci WHERE id = ?");
-          $stmt->bind_param("i", $id);
-          $stmt->execute();
-          $stmt->close();
+          
+          $sql = "DELETE FROM producenci WHERE id = '$brand_id'";
+          mysqli_query($connection, $sql);
+          header('Location: panel.php?view=brands&success=deleted');
+          exit();
         }
         break;
+        
       case 'add':
-        $nazwa = trim($_POST['nazwa']);
-
-        $stmt = $connection->prepare("INSERT INTO producenci (nazwa) VALUES (?)");
-        $stmt->bind_param("s", $nazwa);
+        $nazwa = mysqli_real_escape_string($connection, $_POST['nazwa']);
+        $sql = "INSERT INTO producenci (nazwa) VALUES ('$nazwa')";
         
-        if (!$stmt->execute()) {
-          if ($connection->errno == 1062) { // Kod błędu dla naruszenia UNIQUE KEY
+        if (!mysqli_query($connection, $sql)) {
+          if ($connection->errno == 1062) {
             header('Location: panel.php?view=brands&error=duplicate');
             exit();
           }
         }
-        
-        $stmt->close();
+        header('Location: panel.php?view=brands&success=added');
+        exit();
         break;
-      case 'edit':
-        $id = (int)$_POST['brand_id'];
-        $nazwa = trim($_POST['nazwa']);
-
-        $stmt = $connection->prepare("UPDATE producenci SET nazwa = ? WHERE id = ?");
-        $stmt->bind_param("si", $nazwa, $id);
         
-        if (!$stmt->execute()) {
-          if ($connection->errno == 1062) { // Kod błędu dla naruszenia UNIQUE KEY
+      case 'edit':
+        $brand_id = mysqli_real_escape_string($connection, $_POST['brand_id']);
+        $nazwa = mysqli_real_escape_string($connection, $_POST['nazwa']);
+        $sql = "UPDATE producenci SET nazwa = '$nazwa' WHERE id = '$brand_id'";
+        
+        if (!mysqli_query($connection, $sql)) {
+          if ($connection->errno == 1062) {
             header('Location: panel.php?view=brands&error=duplicate');
             exit();
           }
         }
-        
-        $stmt->close();
+        header('Location: panel.php?view=brands&success=updated');
+        exit();
         break;
     }
   }
@@ -109,13 +104,10 @@ if ($sort_column === 'liczba_produktow') {
 $result = $connection->query($query);
 ?>
 
-<div class="admin-actions">
+<div class="admin-filters">
   <button class="admin-button success add" onclick="showAddModal()">
     <i class="fas fa-plus"></i> Dodaj producenta
   </button>
-</div>
-
-<div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="brandSearch" class="form-input" placeholder="Szukaj producentów..." 
            onkeyup="filterTable('brandTable', 1)">
