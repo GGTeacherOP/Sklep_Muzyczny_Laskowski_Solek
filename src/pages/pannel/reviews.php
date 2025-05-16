@@ -60,47 +60,23 @@ while ($product = $products_result->fetch_assoc()) {
     $products[] = $product;
 }
 
-// Pobieranie wybranego produktu i filtrów
-$selected_product = isset($_GET['product_id']) ? (int)$_GET['product_id'] : null;
-$selected_rating = isset($_GET['rating']) ? (int)$_GET['rating'] : null;
-$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : null;
-$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : null;
-
-// Modyfikacja zapytania o opinie
+// Pobieranie opinii
 $query = "SELECT io.*, i.nazwa as instrument_nazwa, i.kod_produktu 
           FROM instrument_oceny io 
           JOIN instrumenty i ON io.instrument_id = i.id 
-          WHERE 1=1";
-
-if ($selected_product) {
-    $query .= " AND io.instrument_id = " . $selected_product;
-}
-
-if ($selected_rating) {
-    $query .= " AND io.ocena = " . $selected_rating;
-}
-
-if ($date_from) {
-    $query .= " AND io.data_oceny >= '" . mysqli_real_escape_string($connection, $date_from) . " 00:00:00'";
-}
-
-if ($date_to) {
-    $query .= " AND io.data_oceny <= '" . mysqli_real_escape_string($connection, $date_to) . " 23:59:59'";
-}
-
-$query .= " ORDER BY $order_col $sort_dir";
+          ORDER BY $order_col $sort_dir";
 $result = $connection->query($query);
 ?>
 
 <div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="reviewSearch" class="form-input" placeholder="Szukaj ocen..." 
-           onkeyup="filterTable('reviewTable', 3)">
+           onkeyup="filterTable('reviewTable', 1)">
   </div>
   <select class="form-input" onchange="filterByProduct(this.value)">
     <option value="">Wszystkie produkty</option>
     <?php foreach ($products as $product): ?>
-      <option value="<?php echo $product['id']; ?>" <?php echo $selected_product == $product['id'] ? 'selected' : ''; ?>>
+      <option value="<?php echo $product['id']; ?>">
         <?php echo htmlspecialchars($product['nazwa'] . ' (' . $product['kod_produktu'] . ')'); ?>
       </option>
     <?php endforeach; ?>
@@ -108,107 +84,101 @@ $result = $connection->query($query);
   <select class="form-input" onchange="filterByRating(this.value)">
     <option value="">Wszystkie oceny</option>
     <?php for ($i = 1; $i <= 5; $i++): ?>
-      <option value="<?php echo $i; ?>" <?php echo $selected_rating == $i ? 'selected' : ''; ?>>
+      <option value="<?php echo $i; ?>">
         <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i); ?>
       </option>
     <?php endfor; ?>
   </select>
   <div class="date-range">
-    <input type="date" class="form-input" id="dateFrom" name="date_from" 
-           value="<?php echo $date_from; ?>" placeholder="Od">
-    <input type="date" class="form-input" id="dateTo" name="date_to" 
-           value="<?php echo $date_to; ?>" placeholder="Do">
+    <input type="date" class="form-input" id="dateFrom" name="date_from" placeholder="Od">
+    <input type="date" class="form-input" id="dateTo" name="date_to" placeholder="Do">
     <button class="admin-button" onclick="filterByDate()">
       <i class="fas fa-filter"></i> Filtruj
     </button>
   </div>
 </div>
 
-<?php if (($selected_product || $selected_rating || $date_from || $date_to) && $result->num_rows === 0): ?>
-  <div class="admin-alert info">
-    Brak opinii spełniających wybrane kryteria.
-  </div>
-<?php endif; ?>
-
 <table id="reviewTable" class="admin-table">
-        <thead>
-            <tr>
-                <th>
-                    <a href="<?php echo getSortLink('id', $sort_column, $sort_dir); ?>" class="sort-link">
-                        ID <?php echo getSortIcon('id', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="<?php echo getSortLink('instrument_nazwa', $sort_column, $sort_dir); ?>" class="sort-link">
-                        Produkt <?php echo getSortIcon('instrument_nazwa', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="<?php echo getSortLink('ocena', $sort_column, $sort_dir); ?>" class="sort-link">
-                        Ocena <?php echo getSortIcon('ocena', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="<?php echo getSortLink('komentarz', $sort_column, $sort_dir); ?>" class="sort-link">
-                        Komentarz <?php echo getSortIcon('komentarz', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="<?php echo getSortLink('data_oceny', $sort_column, $sort_dir); ?>" class="sort-link">
-                        Data oceny <?php echo getSortIcon('data_oceny', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>
-                    <a href="<?php echo getSortLink('czy_edytowana', $sort_column, $sort_dir); ?>" class="sort-link">
-                        Edytowana <?php echo getSortIcon('czy_edytowana', $sort_column, $sort_dir); ?>
-                    </a>
-                </th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
+  <thead>
+    <tr>
+      <th>
+        <a href="<?php echo getSortLink('id', $sort_column, $sort_dir); ?>" class="sort-link">
+          ID <?php echo getSortIcon('id', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>
+        <a href="<?php echo getSortLink('instrument_nazwa', $sort_column, $sort_dir); ?>" class="sort-link">
+          Produkt <?php echo getSortIcon('instrument_nazwa', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>
+        <a href="<?php echo getSortLink('ocena', $sort_column, $sort_dir); ?>" class="sort-link">
+          Ocena <?php echo getSortIcon('ocena', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>
+        <a href="<?php echo getSortLink('komentarz', $sort_column, $sort_dir); ?>" class="sort-link">
+          Komentarz <?php echo getSortIcon('komentarz', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>
+        <a href="<?php echo getSortLink('data_oceny', $sort_column, $sort_dir); ?>" class="sort-link">
+          Data oceny <?php echo getSortIcon('data_oceny', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>
+        <a href="<?php echo getSortLink('czy_edytowana', $sort_column, $sort_dir); ?>" class="sort-link">
+          Edytowana <?php echo getSortIcon('czy_edytowana', $sort_column, $sort_dir); ?>
+        </a>
+      </th>
+      <th>Akcje</th>
+    </tr>
+  </thead>
+  <tbody>
     <?php while ($review = $result->fetch_assoc()): ?>
-                <tr>
+      <tr data-product="<?php echo $review['instrument_id']; ?>" 
+          data-rating="<?php echo $review['ocena']; ?>"
+          data-date="<?php echo date('Y-m-d', strtotime($review['data_oceny'])); ?>">
         <td><?php echo htmlspecialchars($review['id']); ?></td>
-                    <td>
+        <td>
           <?php echo htmlspecialchars($review['instrument_nazwa']); ?>
-                        <br>
+          <br>
           <small>(<?php echo htmlspecialchars($review['kod_produktu']); ?>)</small>
-                    </td>
-                    <td>
-                        <?php
-                        for ($i = 1; $i <= 5; $i++) {
-              echo $i <= $review['ocena'] ? '★' : '☆';
-                        }
-                        ?>
-                    </td>
+        </td>
+        <td>
+          <?php
+          for ($i = 1; $i <= 5; $i++) {
+            echo $i <= $review['ocena'] ? '★' : '☆';
+          }
+          ?>
+        </td>
         <td><?php echo htmlspecialchars($review['komentarz']); ?></td>
         <td><?php echo date('d.m.Y H:i', strtotime($review['data_oceny'])); ?></td>
-                    <td>
+        <td>
           <?php if ($review['czy_edytowana']): ?>
             <span class="status-badge success">Tak</span>
-                            <br>
+            <br>
             <small><?php echo date('d.m.Y H:i', strtotime($review['data_edycji'])); ?></small>
-                        <?php else: ?>
+          <?php else: ?>
             <span class="status-badge danger">Nie</span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
+          <?php endif; ?>
+        </td>
+        <td>
           <div class="admin-actions">
             <form method="POST" style="display: inline;" 
                   onsubmit="return confirm('Czy na pewno chcesz usunąć tę ocenę?')">
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="review_id" value="<?php echo $review['id']; ?>">
               <button type="submit" class="admin-button danger">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                <i class="fas fa-trash"></i>
+              </button>
             </form>
           </div>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+        </td>
+      </tr>
+    <?php endwhile; ?>
+  </tbody>
+</table>
 
 <script>
 function filterTable(tableId, columnIndex) {
@@ -222,54 +192,56 @@ function filterTable(tableId, columnIndex) {
     if (cell) {
       const text = cell.textContent || cell.innerText;
       rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-}
+    }
   }
 }
 
 function filterByProduct(productId) {
-  if (productId) {
-    window.location.href = '?view=reviews&product_id=' + productId;
-  } else {
-    window.location.href = '?view=reviews';
-  }
+  const rows = document.querySelectorAll('#reviewTable tbody tr');
+  rows.forEach(row => {
+    if (!productId || row.dataset.product === productId) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
 }
 
 function filterByRating(rating) {
-  const urlParams = new URLSearchParams(window.location.search);
-  if (rating) {
-    urlParams.set('rating', rating);
-  } else {
-    urlParams.delete('rating');
-  }
-  window.location.href = '?view=reviews&' + urlParams.toString();
+  const rows = document.querySelectorAll('#reviewTable tbody tr');
+  rows.forEach(row => {
+    if (!rating || row.dataset.rating === rating) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
 }
 
 function filterByDate() {
   const dateFrom = document.getElementById('dateFrom').value;
   const dateTo = document.getElementById('dateTo').value;
-  const urlParams = new URLSearchParams(window.location.search);
-  
-  if (dateFrom) {
-    urlParams.set('date_from', dateFrom);
-  } else {
-    urlParams.delete('date_from');
-  }
-  
-  if (dateTo) {
-    urlParams.set('date_to', dateTo);
-  } else {
-    urlParams.delete('date_to');
-  }
-  
-  window.location.href = '?view=reviews&' + urlParams.toString();
+  const rows = document.querySelectorAll('#reviewTable tbody tr');
+
+  rows.forEach(row => {
+    const reviewDate = new Date(row.dataset.date);
+    const fromDate = dateFrom ? new Date(dateFrom) : null;
+    const toDate = dateTo ? new Date(dateTo) : null;
+
+    let show = true;
+    if (fromDate && reviewDate < fromDate) show = false;
+    if (toDate && reviewDate > toDate) show = false;
+
+    row.style.display = show ? '' : 'none';
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Obsługa komunikatów
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'deleted') {
-        alert('Ocena została pomyślnie usunięta.');
-    }
+  // Obsługa komunikatów
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'deleted') {
+    alert('Ocena została pomyślnie usunięta.');
+  }
 });
 </script>
 
