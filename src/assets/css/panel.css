@@ -193,7 +193,7 @@ body {
   margin-bottom: var(--spacing-sm);
 }
 
-.admin-filters .admin-button, .admin-filters #productSearch, .admin-filters .dropdown-toggle {
+.admin-filters .admin-button, .admin-filters .form-input, .admin-filters .dropdown-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -620,4 +620,19 @@ textarea.form-input {
     max-width: 100%;
     margin-bottom: var(--spacing-xs);
   }
+}
+
+.date-input {
+  border: none !important;
+  background-color: var(--secondary-bg) !important;
+  width: fit-content;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }

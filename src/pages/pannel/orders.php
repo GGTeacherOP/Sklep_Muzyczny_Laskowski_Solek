@@ -234,21 +234,28 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
         <input type="text" id="orderSearch" class="form-input" placeholder="Szukaj zamówień..." 
                onkeyup="filterTable('orderTable', 'orderSearch', 1)">
       </div>
-      <select class="form-input" id="statusFilter" onchange="filterByStatus(this.value)">
-        <option value="">Wszystkie statusy</option>
-        <?php foreach (ORDER_STATUSES as $value => $status): ?>
-        <option value="<?php echo $value; ?>"><?php echo $status['label']; ?></option>
-        <?php endforeach; ?>
-      </select>
-      <div class="date-range">
-        <input type="date" class="form-input" id="dateFrom" name="date_from" 
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button" onclick="toggleDropdown('statusDropdown')">
+          <span id="statusDropdownText">Wszystkie statusy</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu" id="statusDropdown">
+          <li><a href="#" class="dropdown-item" onclick="selectStatus('', 'Wszystkie statusy')">Wszystkie statusy</a></li>
+          <li class="dropdown-divider"></li>
+          <?php foreach (ORDER_STATUSES as $value => $status): ?>
+            <li><a href="#" class="dropdown-item" onclick="selectStatus('<?php echo $value; ?>', '<?php echo $status['label']; ?>')">
+              <?php echo $status['label']; ?>
+            </a></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+        <input type="date" class="form-input date-input" id="dateFrom" name="date_from" 
                value="<?php echo isset($_GET['date_from']) ? $_GET['date_from'] : ''; ?>" placeholder="Od">
-        <input type="date" class="form-input" id="dateTo" name="date_to" 
+        <input type="date" class="form-input date-input" id="dateTo" name="date_to" 
                value="<?php echo isset($_GET['date_to']) ? $_GET['date_to'] : ''; ?>" placeholder="Do">
         <button class="admin-button" onclick="filterByDate()">
           <i class="fas fa-filter"></i> Filtruj
         </button>
-      </div>
     </div>
     
     <table id="orderTable" class="admin-table">
@@ -284,7 +291,8 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
       </thead>
       <tbody>
         <?php while ($order = mysqli_fetch_assoc($orders)): ?>
-          <tr data-status="<?php echo htmlspecialchars($order['status']); ?>">
+          <tr data-status="<?php echo htmlspecialchars($order['status']); ?>"
+              data-date="<?php echo date('Y-m-d', strtotime($order['data_zamowienia'])); ?>">
             <td><?php echo htmlspecialchars($order['id']); ?></td>
             <td><?php echo htmlspecialchars($order['nazwa_uzytkownika']); ?></td>
             <td><?php echo date('d.m.Y H:i', strtotime($order['data_zamowienia'])); ?></td>
@@ -391,52 +399,123 @@ function filterTable(tableId, inputId, columnIndex) {
   const filter = input.value.toLowerCase();
   const table = document.getElementById(tableId);
   const rows = table.getElementsByTagName('tr');
+  const statusFilter = document.getElementById('statusDropdownText').dataset.selectedId || '';
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
 
   for (let i = 1; i < rows.length; i++) {
-    const cell = rows[i].getElementsByTagName('td')[columnIndex];
+    const row = rows[i];
+    const cell = row.getElementsByTagName('td')[columnIndex];
     if (cell) {
       const text = cell.textContent || cell.innerText;
-      rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+      const matchesSearch = text.toLowerCase().indexOf(filter) > -1;
+      const matchesStatus = !statusFilter || row.dataset.status === statusFilter;
+      const matchesDate = filterByDateRange(row, dateFrom, dateTo);
+      
+      row.style.display = matchesSearch && matchesStatus && matchesDate ? '' : 'none';
     }
   }
 }
 
 function filterByStatus(status) {
-  const table = document.getElementById('orderTable');
-  const rows = table.getElementsByTagName('tr');
+  const rows = document.querySelectorAll('#orderTable tbody tr');
+  const searchFilter = document.getElementById('orderSearch').value.toLowerCase();
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
 
-  for (let i = 1; i < rows.length; i++) {
-    if (!status) {
-      rows[i].style.display = '';
-    } else {
-      const orderStatus = rows[i].getAttribute('data-status');
-      rows[i].style.display = orderStatus === status ? '' : 'none';
-    }
-  }
+  rows.forEach(row => {
+    const matchesStatus = !status || row.dataset.status === status;
+    const matchesSearch = !searchFilter || row.getElementsByTagName('td')[1].textContent.toLowerCase().indexOf(searchFilter) > -1;
+    const matchesDate = filterByDateRange(row, dateFrom, dateTo);
+    
+    row.style.display = matchesStatus && matchesSearch && matchesDate ? '' : 'none';
+  });
 }
 
 function filterByDate() {
+  const rows = document.querySelectorAll('#orderTable tbody tr');
+  const searchFilter = document.getElementById('orderSearch').value.toLowerCase();
+  const statusFilter = document.getElementById('statusDropdownText').dataset.selectedId || '';
   const dateFrom = document.getElementById('dateFrom').value;
   const dateTo = document.getElementById('dateTo').value;
-  const table = document.getElementById('orderTable');
-  const rows = table.getElementsByTagName('tr');
 
-  for (let i = 1; i < rows.length; i++) {
-    const row = rows[i];
-    const dateCell = row.getElementsByTagName('td')[2]; // Zakładając, że data jest w trzeciej kolumnie
-    if (dateCell) {
-      const orderDate = new Date(dateCell.textContent);
-      const fromDate = dateFrom ? new Date(dateFrom) : null;
-      const toDate = dateTo ? new Date(dateTo) : null;
-
-      let show = true;
-      if (fromDate && orderDate < fromDate) show = false;
-      if (toDate && orderDate > toDate) show = false;
-
-      row.style.display = show ? '' : 'none';
-    }
-  }
+  rows.forEach(row => {
+    const matchesSearch = !searchFilter || row.getElementsByTagName('td')[1].textContent.toLowerCase().indexOf(searchFilter) > -1;
+    const matchesStatus = !statusFilter || row.dataset.status === statusFilter;
+    const matchesDate = filterByDateRange(row, dateFrom, dateTo);
+    
+    row.style.display = matchesSearch && matchesStatus && matchesDate ? '' : 'none';
+  });
 }
+
+function filterByDateRange(row, dateFrom, dateTo) {
+  if (!dateFrom && !dateTo) return true;
+  
+  const orderDate = new Date(row.dataset.date);
+  const fromDate = dateFrom ? new Date(dateFrom) : null;
+  const toDate = dateTo ? new Date(dateTo) : null;
+  
+  let show = true;
+  if (fromDate && orderDate < fromDate) show = false;
+  if (toDate && orderDate > toDate) show = false;
+  
+  return show;
+}
+
+function selectStatus(status, statusText) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('statusDropdownText');
+  button.textContent = statusText;
+  button.dataset.selectedId = status;
+  
+  // Filtruj zamówienia
+  filterByStatus(status);
+  
+  // Ukryj dropdown
+  document.getElementById('statusDropdown').classList.remove('show');
+}
+
+function toggleDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle('show');
+  
+  // Zamykanie innych dropdownów
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(d => {
+    if (d.id !== dropdownId && d.classList.contains('show')) {
+      d.classList.remove('show');
+    }
+  });
+}
+
+// Modyfikacja obsługi kliknięcia poza dropdownem
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-menu');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  let clickedOnDropdown = false;
+  
+  // Sprawdź czy kliknięto na dropdown lub jego zawartość
+  dropdowns.forEach(dropdown => {
+    if (dropdown.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Sprawdź czy kliknięto na przycisk dropdown
+  dropdownToggles.forEach(toggle => {
+    if (toggle.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
+  if (!clickedOnDropdown) {
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+  }
+});
 
 // Zamykanie modali po kliknięciu poza nimi
 window.onclick = function(event) {

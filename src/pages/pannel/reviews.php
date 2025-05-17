@@ -73,29 +73,41 @@ $result = $connection->query($query);
     <input type="text" id="reviewSearch" class="form-input" placeholder="Szukaj ocen..." 
            onkeyup="filterTable('reviewTable', 1)">
   </div>
-  <select class="form-input" onchange="filterByProduct(this.value)">
-    <option value="">Wszystkie produkty</option>
-    <?php foreach ($products as $product): ?>
-      <option value="<?php echo $product['id']; ?>">
-        <?php echo htmlspecialchars($product['nazwa'] . ' (' . $product['kod_produktu'] . ')'); ?>
-      </option>
-    <?php endforeach; ?>
-  </select>
-  <select class="form-input" onchange="filterByRating(this.value)">
-    <option value="">Wszystkie oceny</option>
-    <?php for ($i = 1; $i <= 5; $i++): ?>
-      <option value="<?php echo $i; ?>">
-        <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i); ?>
-      </option>
-    <?php endfor; ?>
-  </select>
-  <div class="date-range">
-    <input type="date" class="form-input" id="dateFrom" name="date_from" placeholder="Od">
-    <input type="date" class="form-input" id="dateTo" name="date_to" placeholder="Do">
+  <div class="dropdown">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('productDropdown')">
+      <span id="productDropdownText">Wszystkie produkty</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <ul class="dropdown-menu" id="productDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectProduct('', 'Wszystkie produkty')">Wszystkie produkty</a></li>
+      <li class="dropdown-divider"></li>
+      <?php foreach ($products as $product): ?>
+        <li><a href="#" class="dropdown-item" onclick="selectProduct('<?php echo $product['id']; ?>', '<?php echo htmlspecialchars($product['nazwa'] . ' (' . $product['kod_produktu'] . ')'); ?>')">
+          <?php echo htmlspecialchars($product['nazwa'] . ' (' . $product['kod_produktu'] . ')'); ?>
+        </a></li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+  <div class="dropdown">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('ratingDropdown')">
+      <span id="ratingDropdownText">Wszystkie oceny</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <ul class="dropdown-menu" id="ratingDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectRating('', 'Wszystkie oceny')">Wszystkie oceny</a></li>
+      <li class="dropdown-divider"></li>
+      <?php for ($i = 1; $i <= 5; $i++): ?>
+        <li><a href="#" class="dropdown-item" onclick="selectRating('<?php echo $i; ?>', '<?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i); ?>')">
+          <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i); ?>
+        </a></li>
+      <?php endfor; ?>
+    </ul>
+  </div>
+    <input type="date" class="form-input date-input" id="dateFrom" name="date_from" placeholder="Od">
+    <input type="date" class="form-input date-input" id="dateTo" name="date_to" placeholder="Do">
     <button class="admin-button" onclick="filterByDate()">
       <i class="fas fa-filter"></i> Filtruj
     </button>
-  </div>
 </div>
 
 <table id="reviewTable" class="admin-table">
@@ -235,6 +247,74 @@ function filterByDate() {
     row.style.display = show ? '' : 'none';
   });
 }
+
+function selectProduct(productId, productName) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('productDropdownText');
+  button.textContent = productName;
+  button.dataset.selectedId = productId;
+  
+  // Filtruj oceny
+  filterByProduct(productId);
+  
+  // Ukryj dropdown
+  document.getElementById('productDropdown').classList.remove('show');
+}
+
+function selectRating(rating, ratingText) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('ratingDropdownText');
+  button.textContent = ratingText;
+  button.dataset.selectedId = rating;
+  
+  // Filtruj oceny
+  filterByRating(rating);
+  
+  // Ukryj dropdown
+  document.getElementById('ratingDropdown').classList.remove('show');
+}
+
+function toggleDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle('show');
+  
+  // Zamykanie innych dropdownów
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(d => {
+    if (d.id !== dropdownId && d.classList.contains('show')) {
+      d.classList.remove('show');
+    }
+  });
+}
+
+// Modyfikacja obsługi kliknięcia poza dropdownem
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-menu');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  let clickedOnDropdown = false;
+  
+  // Sprawdź czy kliknięto na dropdown lub jego zawartość
+  dropdowns.forEach(dropdown => {
+    if (dropdown.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Sprawdź czy kliknięto na przycisk dropdown
+  dropdownToggles.forEach(toggle => {
+    if (toggle.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
+  if (!clickedOnDropdown) {
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+  }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   // Obsługa komunikatów

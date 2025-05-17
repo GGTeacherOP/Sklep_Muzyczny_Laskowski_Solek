@@ -103,11 +103,6 @@ $klienci = mysqli_query($connection, $sql);
     <input type="text" id="clientSearch" class="form-input" placeholder="Szukaj klientów..." 
            onkeyup="filterTable('clientTable', 1)">
   </div>
-  <select class="form-input" onchange="filterByStatus(this.value)">
-    <option value="">Wszyscy klienci</option>
-    <option value="active">Aktywni</option>
-    <option value="inactive">Nieaktywni</option>
-  </select>
 </div>
 
 <table id="clientTable" class="admin-table">

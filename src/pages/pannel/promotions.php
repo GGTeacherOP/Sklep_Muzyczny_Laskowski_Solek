@@ -88,6 +88,7 @@ function getSortIcon($column, $current_sort, $current_dir) {
 // Pobranie kodów promocyjnych
 $sql = "SELECT * FROM kody_promocyjne ORDER BY $sort_column $sort_dir";
 $promocje = mysqli_query($connection, $sql);
+
 ?>
 
 <div class="admin-filters">
@@ -96,15 +97,27 @@ $promocje = mysqli_query($connection, $sql);
   </button>
   <div class="admin-search">
     <input type="text" id="promotionSearch" class="form-input" placeholder="Szukaj kodów..." 
-           onkeyup="filterTable('promotionTable', 'promotionSearch', 1)">
+           onkeyup="filterTable('promotionTable', 1)">
   </div>
-  <select class="form-input" onchange="filterByStatus(this.value)">
-    <option value="">Wszystkie</option>
-    <option value="active">Aktywne</option>
-    <option value="inactive">Nieaktywne</option>
-    <option value="future">Przyszłe</option>
-    <option value="expired">Wygasłe</option>
-  </select>
+  <div class="dropdown">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('statusDropdown')">
+      <span id="statusDropdownText">Wszystkie statusy</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <ul class="dropdown-menu" id="statusDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectStatus('', 'Wszystkie statusy')">Wszystkie statusy</a></li>
+      <li class="dropdown-divider"></li>
+      <li><a href="#" class="dropdown-item" onclick="selectStatus('active', 'Aktywne')">Aktywne</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectStatus('inactive', 'Nieaktywne')">Nieaktywne</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectStatus('future', 'Przyszłe')">Przyszłe</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectStatus('expired', 'Wygasłe')">Wygasłe</a></li>
+    </ul>
+  </div>
+  <input type="date" class="form-input date-input" id="dateFrom" name="date_from" placeholder="Od">
+  <input type="date" class="form-input date-input" id="dateTo" name="date_to" placeholder="Do">
+  <button class="admin-button" onclick="filterByDate()">
+    <i class="fas fa-filter"></i> Filtruj
+  </button>
 </div>
 
 <table id="promotionTable" class="admin-table">
@@ -145,22 +158,23 @@ $promocje = mysqli_query($connection, $sql);
   </thead>
   <tbody>
     <?php while ($promotion = mysqli_fetch_assoc($promocje)) : 
+      $startDate = new DateTime($promotion['data_rozpoczecia']);
+      $endDate = new DateTime($promotion['data_zakonczenia']);
       $now = new DateTime();
-      $start = new DateTime($promotion['data_rozpoczecia']);
-      $end = new DateTime($promotion['data_zakonczenia']);
       
-      $status = '';
-      if (!$promotion['aktywna']) {
-        $status = 'inactive';
-      } elseif ($now < $start) {
+      $status = 'inactive';
+      if ($now < $startDate) {
         $status = 'future';
-      } elseif ($now > $end) {
-        $status = 'expired';
-      } else {
+      } elseif ($now >= $startDate && $now <= $endDate) {
         $status = 'active';
+      } elseif ($now > $endDate) {
+        $status = 'expired';
       }
     ?>
-      <tr data-status="<?php echo $status; ?>">
+      <tr data-status="<?php echo $status; ?>"
+          data-startDate="<?php echo $startDate->format('Y-m-d'); ?>"
+          data-endDate="<?php echo $endDate->format('Y-m-d'); ?>"
+          onclick="showEditPromotionModal(<?php echo htmlspecialchars(json_encode($promotion)); ?>)">
         <td><?php echo htmlspecialchars($promotion['id']); ?></td>
         <td><?php echo htmlspecialchars($promotion['kod']); ?></td>
         <td><?php echo htmlspecialchars($promotion['znizka']); ?>%</td>
@@ -339,19 +353,32 @@ function toggleStatus(id, currentStatus) {
   form.submit();
 }
 
-function filterTable(tableId, inputId, columnIndex) {
+function filterTable(tableId, inputId) {
   const input = document.getElementById(inputId);
   const filter = input.value.toLowerCase();
   const table = document.getElementById(tableId);
   const rows = table.getElementsByTagName('tr');
 
   for (let i = 1; i < rows.length; i++) {
-    const cell = rows[i].getElementsByTagName('td')[columnIndex];
+    const cell = rows[i].getElementsByTagName('td')[0];
     if (cell) {
       const text = cell.textContent || cell.innerText;
       rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
     }
   }
+}
+
+function selectStatus(status, statusText) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('statusDropdownText');
+  button.textContent = statusText;
+  button.dataset.selectedId = status;
+  
+  // Filtruj kody promocyjne
+  filterByStatus(status);
+  
+  // Ukryj dropdown
+  document.getElementById('statusDropdown').classList.remove('show');
 }
 
 function filterByStatus(status) {
@@ -364,6 +391,70 @@ function filterByStatus(status) {
     }
   });
 }
+
+function filterByDate() {
+    const dateFrom = document.getElementById('dateFrom').value;
+    const dateTo = document.getElementById('dateTo').value;
+    const rows = document.querySelectorAll('#promotionTable tbody tr');
+
+    rows.forEach(row => {
+        const startDate = row.getAttribute('data-startDate');
+        const endDate = row.getAttribute('data-endDate');
+
+        let show = true;
+
+        if (dateFrom && endDate < dateFrom) {
+            show = false; // promocja kończy się przed wybranym przedziałem
+        }
+        if (dateTo && startDate > dateTo) {
+            show = false; // promocja zaczyna się po wybranym przedziale
+        }
+
+        row.style.display = show ? '' : 'none';
+    });
+}
+
+function toggleDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle('show');
+  
+  // Zamykanie innych dropdownów
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(d => {
+    if (d.id !== dropdownId && d.classList.contains('show')) {
+      d.classList.remove('show');
+    }
+  });
+}
+
+// Modyfikacja obsługi kliknięcia poza dropdownem
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-menu');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  let clickedOnDropdown = false;
+  
+  // Sprawdź czy kliknięto na dropdown lub jego zawartość
+  dropdowns.forEach(dropdown => {
+    if (dropdown.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Sprawdź czy kliknięto na przycisk dropdown
+  dropdownToggles.forEach(toggle => {
+    if (toggle.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
+  if (!clickedOnDropdown) {
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+  }
+});
 
 // Walidacja dat przy dodawaniu/edycji
 document.addEventListener('DOMContentLoaded', function() {

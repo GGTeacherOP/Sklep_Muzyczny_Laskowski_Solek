@@ -118,21 +118,26 @@ $pracownicy = mysqli_query($connection, $sql);
 ?>
 
 <div class="admin-filters">
-  <div class="admin-actions">
-    <button class="admin-button success add" onclick="showAddEmployeeModal()">
-      <i class="fas fa-plus"></i> Dodaj pracownika
-    </button>
-  </div>
+  <button class="admin-button success add" onclick="showAddEmployeeModal()">
+    <i class="fas fa-plus"></i> Dodaj pracownika
+  </button>
   <div class="admin-search">
     <input type="text" id="employeeSearch" class="form-input" placeholder="Szukaj pracowników..." 
            onkeyup="filterTable('employeeTable', 2)">
   </div>
-  <select class="form-input" onchange="filterByRole(this.value)">
-    <option value="">Wszystkie stanowiska</option>
-    <option value="pracownik">Pracownik</option>
-    <option value="manager">Manager</option>
-    <option value="właściciel">Właściciel</option>
-  </select>
+  <div class="dropdown">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('roleDropdown')">
+      <span id="roleDropdownText">Wszystkie stanowiska</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <ul class="dropdown-menu" id="roleDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectRole('', 'Wszystkie stanowiska')">Wszystkie stanowiska</a></li>
+      <li class="dropdown-divider"></li>
+      <li><a href="#" class="dropdown-item" onclick="selectRole('pracownik', 'Pracownik')">Pracownik</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectRole('manager', 'Manager')">Manager</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectRole('właściciel', 'Właściciel')">Właściciel</a></li>
+    </ul>
+  </div>
 </div>
 
 <table id="employeeTable" class="admin-table">
@@ -362,6 +367,19 @@ function validateForm() {
   return true;
 }
 
+function selectRole(role, roleText) {
+  // Aktualizuj tekst w przycisku
+  const button = document.getElementById('roleDropdownText');
+  button.textContent = roleText;
+  button.dataset.selectedId = role;
+  
+  // Filtruj pracowników
+  filterByRole(role);
+  
+  // Ukryj dropdown
+  document.getElementById('roleDropdown').classList.remove('show');
+}
+
 function filterByRole(role) {
   const rows = document.querySelectorAll('#employeeTable tbody tr');
   rows.forEach(row => {
@@ -372,6 +390,48 @@ function filterByRole(role) {
     }
   });
 }
+
+function toggleDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle('show');
+  
+  // Zamykanie innych dropdownów
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(d => {
+    if (d.id !== dropdownId && d.classList.contains('show')) {
+      d.classList.remove('show');
+    }
+  });
+}
+
+// Modyfikacja obsługi kliknięcia poza dropdownem
+document.addEventListener('click', function(event) {
+  const dropdowns = document.querySelectorAll('.dropdown-menu');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  let clickedOnDropdown = false;
+  
+  // Sprawdź czy kliknięto na dropdown lub jego zawartość
+  dropdowns.forEach(dropdown => {
+    if (dropdown.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Sprawdź czy kliknięto na przycisk dropdown
+  dropdownToggles.forEach(toggle => {
+    if (toggle.contains(event.target)) {
+      clickedOnDropdown = true;
+    }
+  });
+  
+  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
+  if (!clickedOnDropdown) {
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+  }
+});
 
 function filterTable(tableId, columnIndex) {
   const input = document.getElementById('employeeSearch');
