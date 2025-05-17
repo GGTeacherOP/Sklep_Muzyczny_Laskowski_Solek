@@ -1,7 +1,7 @@
 <?php
 /** @var mysqli $connection */
-include_once dirname(__DIR__) . '/includes/config/db_config.php';
-include_once dirname(__DIR__) . '/includes/config/session_config.php';
+include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
+include_once dirname(__DIR__, 2) . '/includes/config/session_config.php';
 
 // Sprawdź czy użytkownik jest zalogowany
 if (!isset($_SESSION['employee_id'])) {
