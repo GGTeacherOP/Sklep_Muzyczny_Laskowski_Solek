@@ -622,14 +622,27 @@ textarea.form-input {
   font-size: var(--font-sm);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.date-input {
+  border: none !important;
+  background-color: var(--secondary-bg) !important;
+  width: fit-content;
 }
 
-@keyframes slideDown {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.details-label {
+  font-weight: bold;
+}
+
+.details-value {
+  color: var(--text-color);
 }
 
 @media (max-width: 768px) {
@@ -638,12 +651,12 @@ textarea.form-input {
     align-items: stretch;
     gap: var(--spacing-xs);
   }
-  
+
   .admin-search {
     max-width: 100%;
     width: 100%;
   }
-  
+
   .dropdown {
     width: 100%;
     min-width: 100%;
@@ -706,27 +719,4 @@ textarea.form-input {
     padding: var(--spacing-md);
     width: 95%;
   }
-}
-
-.date-input {
-  border: none !important;
-  background-color: var(--secondary-bg) !important;
-  width: fit-content;
-}
-
-.date-input::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  opacity: 0.7;
-}
-
-.date-input::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
-}
-
-.details-label {
-  font-weight: bold;
-}
-
-.details-value {
-  color: var(--text-color);
 }

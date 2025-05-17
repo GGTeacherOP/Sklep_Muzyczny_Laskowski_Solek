@@ -153,6 +153,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
           </div>
           
           <h3>Pozycje zamówienia</h3>
+          <div class="admin-table-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
@@ -177,6 +178,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
               <?php endforeach; ?>
             </tbody>
           </table>
+          </div>
           
           <div class="admin-actions">
             <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">
