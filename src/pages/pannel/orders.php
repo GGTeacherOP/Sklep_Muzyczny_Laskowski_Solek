@@ -142,8 +142,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
         </div>
         
         <div class="order-details-container">
-          <h2>Szczegóły zamówienia #<?php echo $order['id']; ?></h2>
-          
           <div class="order-info">
             <div class="info-group">
               <h3>Informacje o zamówieniu</h3>
@@ -227,9 +225,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
     $orders = mysqli_query($connection, $sql);
     ?>
     <div class="admin-filters">
-      <button class="admin-button success add" onclick="showAddOrderModal()">
-        <i class="fas fa-plus"></i> Dodaj zamówienie
-      </button>
       <div class="admin-search">
         <input type="text" id="orderSearch" class="form-input" placeholder="Szukaj zamówień..." 
                onkeyup="filterTable('orderTable', 'orderSearch', 1)">
