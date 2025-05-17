@@ -115,34 +115,34 @@ $produkty = mysqli_query($connection, $sql);
            onkeyup="filterTable('productTable', 2)">
   </div>
   <div class="dropdown">
-    <button class="dropdown-toggle" onclick="toggleDropdown('categoryDropdown')">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('categoryDropdown')">
       <span id="categoryDropdownText">Wybierz kategorię</span>
       <i class="fa-solid fa-chevron-down"></i>
     </button>
-    <div class="dropdown-menu" id="categoryDropdown">
-      <a href="#" class="dropdown-item" onclick="selectCategory('', 'Wszystkie kategorie')">Wszystkie kategorie</a>
-      <div class="dropdown-divider"></div>
+    <ul class="dropdown-menu" id="categoryDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectCategory('', 'Wszystkie kategorie')">Wszystkie kategorie</a></li>
+      <li class="dropdown-divider"></li>
       <?php foreach ($kategorie_data as $kategoria) : ?>
-        <a href="#" class="dropdown-item" onclick="selectCategory('<?php echo $kategoria['id']; ?>', '<?php echo htmlspecialchars($kategoria['nazwa']); ?>')">
+        <li><a href="#" class="dropdown-item" onclick="selectCategory('<?php echo $kategoria['id']; ?>', '<?php echo htmlspecialchars($kategoria['nazwa']); ?>')">
           <?php echo htmlspecialchars($kategoria['nazwa']); ?>
-        </a>
+        </a></li>
       <?php endforeach; ?>
-    </div>
+    </ul>
   </div>
   <div class="dropdown">
-    <button class="dropdown-toggle" onclick="toggleDropdown('brandDropdown')">
+    <button class="dropdown-toggle" type="button" onclick="toggleDropdown('brandDropdown')">
       <span id="brandDropdownText">Wybierz producenta</span>
       <i class="fa-solid fa-chevron-down"></i>
     </button>
-    <div class="dropdown-menu" id="brandDropdown">
-      <a href="#" class="dropdown-item" onclick="selectBrand('', 'Wszyscy producenci')">Wszyscy producenci</a>
-      <div class="dropdown-divider"></div>
+    <ul class="dropdown-menu" id="brandDropdown">
+      <li><a href="#" class="dropdown-item" onclick="selectBrand('', 'Wszyscy producenci')">Wszyscy producenci</a></li>
+      <li class="dropdown-divider"></li>
       <?php foreach ($producenci_data as $producent) : ?>
-        <a href="#" class="dropdown-item" onclick="selectBrand('<?php echo $producent['id']; ?>', '<?php echo htmlspecialchars($producent['nazwa']); ?>')">
+        <li><a href="#" class="dropdown-item" onclick="selectBrand('<?php echo $producent['id']; ?>', '<?php echo htmlspecialchars($producent['nazwa']); ?>')">
           <?php echo htmlspecialchars($producent['nazwa']); ?>
-        </a>
+        </a></li>
       <?php endforeach; ?>
-    </div>
+    </ul>
   </div>
 </div>
 

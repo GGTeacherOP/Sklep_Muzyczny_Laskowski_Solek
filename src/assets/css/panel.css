@@ -134,11 +134,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0 var(--spacing-sm);
+  height: var(--card-size-xxs);
   border-radius: var(--radius-xxs);
   background-color: var(--secondary-bg);
   color: var(--text-color);
-  font-weight: 500;
+  font-weight: bold;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
 }
@@ -192,10 +193,17 @@ body {
   margin-bottom: var(--spacing-sm);
 }
 
+.admin-filters .admin-button, .admin-filters #productSearch, .admin-filters .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--card-size-xs-sm);
+  border-radius: var(--radius-xs);
+  font-weight: bold;
+}
+
 .admin-search {
   flex: 1;
-  min-width: 200px;
-  max-width: 400px;
   position: relative;
   display: flex;
   align-items: center;
@@ -203,21 +211,14 @@ body {
 
 .admin-search .form-input {
   width: 100%;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0 var(--spacing-sm);
   padding-right: 40px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   outline: none;
   border: none;
   background-color: var(--form-input-bg);
   color: var(--text-color);
   font-size: var(--font-md);
-  transition: all 0.3s ease;
-}
-
-.admin-search .form-input:focus {
-  outline: none;
-  border-color: var(--highlight-color);
-  box-shadow: 0 0 0 2px rgba(var(--highlight-color-rgb), 0.1);
 }
 
 .admin-search::after {
@@ -231,6 +232,12 @@ body {
   pointer-events: none;
 }
 
+.admin-search .form-input:focus {
+  outline: none;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 2px rgba(var(--highlight-color-rgb), 0.1);
+}
+
 .admin-search .form-input:focus + .admin-search::after {
   color: var(--highlight-color);
   opacity: 1;
@@ -239,6 +246,7 @@ body {
 .dropdown {
   position: relative;
   display: inline-block;
+  min-width: 200px;
 }
 
 .dropdown-toggle {
@@ -247,17 +255,16 @@ body {
   justify-content: space-between;
   gap: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--form-border);
-  border-radius: var(--radius-xxs);
-  background-color: var(--form-input-bg);
+  border: none;
+  outline: none;
+  background-color: var(--secondary-bg);
   color: var(--text-color);
   font-size: var(--font-md);
   cursor: pointer;
-  transition: all 0.3s ease;
+  width: 100%;
 }
 
 .dropdown-toggle:hover {
-  border-color: var(--highlight-color);
   background-color: var(--secondary-bg);
 }
 
@@ -267,12 +274,13 @@ body {
   left: 0;
   z-index: 1000;
   display: none;
-  min-width: 200px;
+  width: 100%;
+  min-width: fit-content;
   margin-top: var(--spacing-xxs);
   padding: var(--spacing-xs) 0;
   background-color: var(--primary-bg);
   border: 1px solid var(--form-border);
-  border-radius: var(--radius-xxs);
+  border-radius: var(--radius-xs);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -288,6 +296,10 @@ body {
   color: var(--text-color);
   text-decoration: none;
   transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  background: none;
 }
 
 .dropdown-item:hover {
@@ -304,6 +316,7 @@ body {
   height: 1px;
   margin: var(--spacing-xxs) 0;
   background-color: var(--form-border);
+  border: none;
 }
 
 .admin-filters select {
