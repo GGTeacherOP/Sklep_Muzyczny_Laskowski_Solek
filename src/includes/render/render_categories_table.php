@@ -15,19 +15,17 @@ function renderCategoriesTable($categories, $sort_column, $sort_dir) {
     ob_start();
 ?>
 
-<div class="admin-actions">
-  <button class="admin-button success" onclick="showAddCategoryModal()">
+<div class="admin-filters">
+  <button class="admin-button success add" onclick="showAddCategoryModal()">
     <i class="fas fa-plus"></i> Dodaj kategorię
   </button>
-</div>
-
-<div class="admin-filters">
   <div class="admin-search">
     <input type="text" id="categorySearch" class="form-input" placeholder="Szukaj kategorii..." 
            onkeyup="filterTable('categoryTable', 'categorySearch', 1)">
   </div>
 </div>
 
+  <div class="admin-table-wrapper">
 <table id="categoryTable" class="admin-table">
   <thead>
     <tr>
@@ -71,6 +69,7 @@ function renderCategoriesTable($categories, $sort_column, $sort_dir) {
     <?php endwhile; ?>
   </tbody>
 </table>
+  </div>
 <?php
     return ob_get_clean();
 } 
