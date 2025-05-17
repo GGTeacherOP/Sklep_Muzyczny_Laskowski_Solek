@@ -7,19 +7,19 @@
 const ORDER_STATUSES = [
     'w przygotowaniu' => [
         'label' => 'W przygotowaniu',
-        'class' => 'status-w-przygotowaniu'
+        'class' => 'status-badge warning'
     ],
     'wysłane' => [
         'label' => 'Wysłane',
-        'class' => 'status-wysłane'
+        'class' => 'status-badge info'
     ],
     'dostarczone' => [
         'label' => 'Dostarczone',
-        'class' => 'status-dostarczone'
+        'class' => 'status-badge success'
     ],
     'anulowane' => [
         'label' => 'Anulowane',
-        'class' => 'status-anulowane'
+        'class' => 'status-badge danger'
     ]
 ];
 

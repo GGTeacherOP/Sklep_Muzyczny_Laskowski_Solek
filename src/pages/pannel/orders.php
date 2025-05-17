@@ -135,12 +135,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
         
         // Wyświetlanie szczegółów zamówienia
         ?>
-        <div class="admin-actions">
-          <a href="?view=orders" class="admin-button">
-            <i class="fas fa-arrow-left"></i> Powrót do listy
-          </a>
-        </div>
-        
         <div class="order-details-container">
           <div class="order-info">
             <div class="info-group">
@@ -184,12 +178,12 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
             </tbody>
           </table>
           
-          <div class="order-summary">
-            <div class="order-summary-item total">
-              <div>Razem:</div>
-              <div><?php echo number_format($order['wartosc_calkowita'], 2); ?> zł</div>
-            </div>
-          </div>
+<!--          <div class="order-summary">-->
+<!--            <div class="order-summary-item total">-->
+<!--              <div>Razem:</div>-->
+<!--              <div>--><?php //echo number_format($order['wartosc_calkowita'], 2); ?><!-- zł</div>-->
+<!--            </div>-->
+<!--          </div>-->
           
           <div class="admin-actions">
             <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">

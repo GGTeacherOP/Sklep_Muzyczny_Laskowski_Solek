@@ -174,7 +174,6 @@ $klienci = mysqli_query($connection, $sql);
     <span class="close" onclick="closeOrdersModal()">&times;</span>
     <h2>Historia zamówień klienta</h2>
     <div id="ordersContent">
-      <!-- Tutaj będą wstawiane zamówienia klienta -->
       <p class="loading">Ładowanie zamówień...</p>
     </div>
   </div>

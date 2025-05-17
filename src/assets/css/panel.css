@@ -441,7 +441,14 @@ body {
   background-color: var(--primary-bg);
   border-radius: var(--radius-sm);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-top: var(--spacing-md);
+}
+
+.order-details-container h3 {
+ margin-bottom: var(--spacing-xs);
+}
+
+.order-details-container .admin-table tr td:last-child {
+  text-align: left;
 }
 
 .order-info {
@@ -455,9 +462,8 @@ body {
   flex: 1;
   min-width: 250px;
   padding: var(--spacing-sm);
-  background-color: var(--secondary-bg);
   border-radius: var(--radius-sm);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .info-group h3 {
@@ -515,9 +521,17 @@ body {
   margin: 5% auto;
   padding: var(--spacing-lg);
   border-radius: var(--radius-sm);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 700px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 50%;
+  max-width: fit-content;
+}
+
+.client-orders-table {
+  margin-bottom: 0;
+}
+
+#ordersModal h2 {
+  margin-bottom: var(--spacing-xs);
 }
 
 .close {

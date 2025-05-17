@@ -135,11 +135,19 @@ if (!empty($page)) {
     <?php else: ?>
       <!-- Widok konkretnej sekcji -->
       <div class="admin-section-header">
-        <h2 class="admin-section-title"><?php echo $pages[$page]['title']; ?></h2>
-        <a href="panel.php" class="admin-back-button">
-          <i class="fas fa-arrow-left"></i>
-          Powrót do menu
-        </a>
+        <?php if ($page === 'orders' && isset($_GET['view_details'])): ?>
+          <h2 class="admin-section-title">Informacje o zamówieniu #<?php echo htmlspecialchars($_GET['view_details']); ?></h2>
+          <a href="panel.php?view=orders" class="admin-back-button">
+            <i class="fas fa-arrow-left"></i>
+            Powrót do listy
+          </a>
+        <?php else: ?>
+          <h2 class="admin-section-title"><?php echo $pages[$page]['title']; ?></h2>
+          <a href="panel.php" class="admin-back-button">
+            <i class="fas fa-arrow-left"></i>
+            Powrót do menu
+          </a>
+        <?php endif; ?>
       </div>
 
       <div class="admin-content">
