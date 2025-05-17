@@ -196,7 +196,6 @@ body {
 .admin-filters .admin-button, .admin-filters .form-input, .admin-filters .dropdown-toggle {
   display: flex;
   align-items: center;
-  /*justify-content: center;*/
   height: var(--card-size-xs-sm);
   border-radius: var(--radius-xs);
   font-weight: bold;
@@ -398,15 +397,35 @@ body {
 
 /* Style dla statusu pracownika */
 .status-badge.pracownik {
-  background-color: var(--button-more-bg);
+  background-color: var(--button-buy-bg);
 }
 
 .status-badge.manager {
-  background-color: var(--button-buy-bg);
+  background-color: var(--button-more-bg);
 }
 
 .status-badge.właściciel {
   background-color: #9c27b0;
+}
+
+.status-badge.informatyk {
+  background-color: #2196f3;
+}
+
+.status-badge.sekretarka {
+  background-color: var(--button-edit-bg);
+}
+
+.status-badge.oczekiwana {
+  background-color: #ff9800;
+}
+
+.status-badge.dostarczona {
+  background-color: #4caf50;
+}
+
+.status-badge.anulowana {
+  background-color: #f44336;
 }
 
 /* Style dla klientów */
@@ -530,8 +549,12 @@ body {
   margin-bottom: 0;
 }
 
-#ordersModal h2 {
+#ordersModal h2, #detailsModal h2 {
   margin-bottom: var(--spacing-xs);
+}
+
+#detailsModal .admin-table {
+  margin-bottom: 0;
 }
 
 .close {
@@ -650,4 +673,12 @@ textarea.form-input {
 
 .date-input::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
+}
+
+.details-label {
+  font-weight: bold;
+}
+
+.details-value {
+  color: var(--text-color);
 }

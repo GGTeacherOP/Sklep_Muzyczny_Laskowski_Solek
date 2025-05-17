@@ -24,7 +24,14 @@ if (!$employee) {
     exit();
 }
 
-  $role = $employee['stanowisko'];
+  // Pobierz nazwę stanowiska
+$stmt = $connection->prepare("SELECT s.nazwa FROM stanowiska s JOIN pracownicy p ON s.id = p.stanowisko_id WHERE p.id = ?");
+$stmt->bind_param("i", $employee['id']);
+$stmt->execute();
+$stanowisko_result = $stmt->get_result();
+$stanowisko = $stanowisko_result->fetch_assoc();
+$role = $stanowisko['nazwa'];
+$stmt->close();
   $username = $employee['nazwa_uzytkownika'];
 
   $pages = [
@@ -63,10 +70,30 @@ if (!$employee) {
     'icon' => 'fas fa-users',
     'title' => 'Pracownicy'
   ],
-  'clients' => [
+  'customers' => [
     'roles' => ['właściciel', 'informatyk'],
     'icon' => 'fas fa-user-friends',
     'title' => 'Klienci'
+  ],
+  'messages' => [
+    'roles' => ['sekretarka', 'właściciel'],
+    'icon' => 'fas fa-envelope',
+    'title' => 'Wiadomości'
+  ],
+  'deliveries' => [
+    'roles' => ['pracownik', 'manager', 'właściciel'],
+    'icon' => 'fas fa-truck',
+    'title' => 'Dostawy'
+  ],
+  'finances' => [
+    'roles' => ['właściciel'],
+    'icon' => 'fas fa-chart-line',
+    'title' => 'Finanse'
+  ],
+  'positions' => [
+    'roles' => ['właściciel'],
+    'icon' => 'fas fa-user-tie',
+    'title' => 'Stanowiska'
   ]
   ];
 
@@ -78,7 +105,7 @@ if (!empty($page)) {
     header('Location: panel.php');
     exit();
   }
-  $page_file = __DIR__ . "\\pannel\\$page.php";
+  $page_file = __DIR__ . "\\panel\\$page.php";
 }
 ?>
 <!doctype html>

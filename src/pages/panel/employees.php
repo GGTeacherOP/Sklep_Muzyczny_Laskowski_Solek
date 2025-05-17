@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $user_id = mysqli_insert_id($connection);
         
         // Następnie dodajemy pracownika
-        $sql = "INSERT INTO pracownicy (uzytkownik_id, identyfikator, stanowisko) VALUES ('$user_id', '$identyfikator', '$stanowisko')";
+        $sql = "INSERT INTO pracownicy (uzytkownik_id, identyfikator, stanowisko_id) 
+                SELECT '$user_id', '$identyfikator', id FROM stanowiska WHERE nazwa = '$stanowisko'";
         mysqli_query($connection, $sql);
       }
       header('Location: panel.php?view=employees&success=added');
@@ -42,7 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       mysqli_query($connection, $sql);
       
       // Aktualizujemy dane pracownika
-      $sql = "UPDATE pracownicy SET identyfikator = '$identyfikator', stanowisko = '$stanowisko' WHERE id = '$employee_id'";
+      $sql = "UPDATE pracownicy p 
+              SET p.identyfikator = '$identyfikator', 
+                  p.stanowisko_id = (SELECT id FROM stanowiska WHERE nazwa = '$stanowisko') 
+              WHERE p.id = '$employee_id'";
       mysqli_query($connection, $sql);
       
       // Jeśli podano nowe hasło, aktualizujemy je
@@ -102,14 +106,17 @@ function getSortIcon($column, $current_sort, $current_dir) {
 }
 
 // Pobranie pracowników z dodatkowymi informacjami
-$sql = "SELECT p.*, u.nazwa_uzytkownika, u.email, u.data_rejestracji
+$sql = "SELECT p.*, u.nazwa_uzytkownika, u.email, u.data_rejestracji, s.nazwa as stanowisko, s.wynagrodzenie_miesieczne
         FROM pracownicy p
         JOIN uzytkownicy u ON p.uzytkownik_id = u.id
+        JOIN stanowiska s ON p.stanowisko_id = s.id
         ORDER BY ";
 
 // Dodanie odpowiedniego sortowania
 if ($sort_column === 'nazwa_uzytkownika' || $sort_column === 'email' || $sort_column === 'data_rejestracji') {
     $sql .= "u.$sort_column $sort_dir";
+} else if ($sort_column === 'stanowisko') {
+    $sql .= "s.nazwa $sort_dir";
 } else {
     $sql .= "p.$sort_column $sort_dir";
 }
@@ -249,11 +256,13 @@ $pracownicy = mysqli_query($connection, $sql);
       <div class="form-group">
         <label for="stanowisko" class="form-label">Stanowisko</label>
         <select id="stanowisko" name="stanowisko" class="form-input" required>
-          <option value="pracownik">Pracownik</option>
-          <option value="manager">Manager</option>
-          <option value="sekretarka">Sekretarka</option>
-          <option value="informatyk">Informatyk</option>
-          <option value="właściciel">Właściciel</option>
+          <?php
+          $stanowiska_query = mysqli_query($connection, "SELECT nazwa FROM stanowiska ORDER BY nazwa");
+          while ($stanowisko = mysqli_fetch_assoc($stanowiska_query)) {
+            echo '<option value="' . htmlspecialchars($stanowisko['nazwa']) . '">' . 
+                 ucfirst(htmlspecialchars($stanowisko['nazwa'])) . '</option>';
+          }
+          ?>
         </select>
       </div>
       
@@ -464,17 +473,3 @@ window.onclick = function(event) {
   }
 }
 </script>
-
-<style>
-.status-pracownik {
-  background-color: var(--button-more-bg);
-}
-
-.status-manager {
-  background-color: var(--button-buy-bg);
-}
-
-.status-właściciel {
-  background-color: #9c27b0;
-}
-</style>

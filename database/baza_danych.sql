@@ -286,8 +286,9 @@ INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `ce
 CREATE TABLE `pracownicy` (
   `id` int(11) NOT NULL,
   `uzytkownik_id` int(11) NOT NULL,
-  `stanowisko` enum('pracownik','manager','właściciel','informatyk','sekretarka') NOT NULL DEFAULT 'pracownik',
+  `stanowisko_id` int(11) NOT NULL,
   `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
+  `data_zwolnienia` datetime DEFAULT NULL,
   `identyfikator` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -295,12 +296,12 @@ CREATE TABLE `pracownicy` (
 -- Dumping data for table `pracownicy`
 --
 
-INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko`, `data_zatrudnienia`, `identyfikator`) VALUES
-(1, 1, 'pracownik', '2025-05-08 14:33:12', '0159'),
-(2, 2, 'manager', '2025-05-08 14:33:12', '1594'),
-(3, 3, 'właściciel', '2025-05-08 14:33:12', '7494'),
-(4, 4, 'pracownik', '2025-05-08 14:33:12', '2690'),
-(5, 5, 'manager', '2025-05-08 14:33:12', '0969');
+INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko_id`, `data_zatrudnienia`, `identyfikator`) VALUES
+(1, 1, 1, '2025-05-08 14:33:12', '0159'),
+(2, 2, 2, '2025-05-08 14:33:12', '1594'),
+(3, 3, 3, '2025-05-08 14:33:12', '7494'),
+(4, 4, 1, '2025-05-08 14:33:12', '2690'),
+(5, 5, 2, '2025-05-08 14:33:12', '0969');
 
 -- --------------------------------------------------------
 
@@ -443,6 +444,42 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 (4, 4, 4, 1, 1899.99),
 (5, 5, 5, 1, 799.99);
 
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `stanowiska`
+--
+
+CREATE TABLE `stanowiska` (
+  `id` int(11) NOT NULL,
+  `nazwa` enum('pracownik','manager','właściciel','informatyk','sekretarka') NOT NULL,
+  `wynagrodzenie_miesieczne` decimal(10,2) NOT NULL CHECK (`wynagrodzenie_miesieczne` > 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `stanowiska`
+--
+
+INSERT INTO `stanowiska` (`id`, `nazwa`, `wynagrodzenie_miesieczne`) VALUES
+(1, 'pracownik', 4000.00),
+(2, 'manager', 6000.00),
+(3, 'właściciel', 10000.00),
+(4, 'informatyk', 7000.00),
+(5, 'sekretarka', 4500.00);
+
+--
+-- Indeksy dla tabeli `stanowiska`
+--
+ALTER TABLE `stanowiska`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nazwa` (`nazwa`);
+
+--
+-- AUTO_INCREMENT for table `stanowiska`
+--
+ALTER TABLE `stanowiska`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- Indeksy dla zrzutów tabel
 --
@@ -533,7 +570,8 @@ ALTER TABLE `koszyk_szczegoly`
 ALTER TABLE `pracownicy`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `identyfikator` (`identyfikator`),
-  ADD KEY `idx_uzytkownik_id` (`uzytkownik_id`);
+  ADD KEY `idx_uzytkownik_id` (`uzytkownik_id`),
+  ADD KEY `idx_stanowisko_id` (`stanowisko_id`);
 
 --
 -- Indeksy dla tabeli `producenci`
@@ -747,7 +785,8 @@ ALTER TABLE `koszyk_szczegoly`
 -- Constraints for table `pracownicy`
 --
 ALTER TABLE `pracownicy`
-  ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pracownicy_ibfk_2` FOREIGN KEY (`stanowisko_id`) REFERENCES `stanowiska` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `wypozyczenia`
