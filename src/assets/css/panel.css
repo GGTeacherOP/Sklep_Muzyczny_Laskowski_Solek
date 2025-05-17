@@ -196,7 +196,7 @@ body {
 .admin-filters .admin-button, .admin-filters .form-input, .admin-filters .dropdown-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /*justify-content: center;*/
   height: var(--card-size-xs-sm);
   border-radius: var(--radius-xs);
   font-weight: bold;
@@ -246,7 +246,7 @@ body {
 .dropdown {
   position: relative;
   display: inline-block;
-  min-width: 200px;
+  min-width: var(--card-size-xxl);
 }
 
 .dropdown-toggle {
