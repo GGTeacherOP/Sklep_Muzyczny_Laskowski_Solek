@@ -1,5 +1,5 @@
 <?php
-  include_once '../includes/cart_actions.php';
+  include_once '../includes/helpers/cart_helpers.php';
 
   $current_page = basename($_SERVER['PHP_SELF']);
   $home_page = 'home.php';

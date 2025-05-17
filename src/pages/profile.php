@@ -2,7 +2,7 @@
   /** @var mysqli $connection */
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
-  include_once '../includes/cart_actions.php';
+  include_once '../includes/helpers/cart_helpers.php';
   include_once '../includes/auth/user_login.php';
   include_once '../includes/auth/employee_login.php';
   include_once '../includes/auth/register.php';

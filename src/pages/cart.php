@@ -3,8 +3,8 @@
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
   include_once '../includes/render/render_cart_item.php';
-  include_once '../includes/cart_actions.php';
-  include_once '../includes/format_price.php';
+  include_once '../includes/helpers/cart_helpers.php';
+  include_once '../includes/helpers/format_helpers.php';
 
   $userId = $_SESSION['user_id'] ?? NULL;
   $promoCode = $_SESSION['promo_code'] ?? NULL;
