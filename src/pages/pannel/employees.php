@@ -135,6 +135,8 @@ $pracownicy = mysqli_query($connection, $sql);
       <li class="dropdown-divider"></li>
       <li><a href="#" class="dropdown-item" onclick="selectRole('pracownik', 'Pracownik')">Pracownik</a></li>
       <li><a href="#" class="dropdown-item" onclick="selectRole('manager', 'Manager')">Manager</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectRole('sekretarka', 'Sekretarka')">Sekretarka</a></li>
+      <li><a href="#" class="dropdown-item" onclick="selectRole('informatyk', 'Informatyk')">Informatyk</a></li>
       <li><a href="#" class="dropdown-item" onclick="selectRole('właściciel', 'Właściciel')">Właściciel</a></li>
     </ul>
   </div>
@@ -249,6 +251,8 @@ $pracownicy = mysqli_query($connection, $sql);
         <select id="stanowisko" name="stanowisko" class="form-input" required>
           <option value="pracownik">Pracownik</option>
           <option value="manager">Manager</option>
+          <option value="sekretarka">Sekretarka</option>
+          <option value="informatyk">Informatyk</option>
           <option value="właściciel">Właściciel</option>
         </select>
       </div>
