@@ -286,7 +286,10 @@ body {
 
 .dropdown-menu.show {
   display: block;
-  animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown ul {
+  list-style: none;
 }
 
 .dropdown-item {
@@ -505,7 +508,6 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
-  animation: fadeIn 0.3s ease-out;
 }
 
 .modal-content {
@@ -516,7 +518,6 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 700px;
-  animation: slideDown 0.3s ease-out;
 }
 
 .close {
