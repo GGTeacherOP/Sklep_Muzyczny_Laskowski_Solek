@@ -105,6 +105,7 @@ $klienci = mysqli_query($connection, $sql);
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="clientTable" class="admin-table">
   <thead>
     <tr>
@@ -167,6 +168,7 @@ $klienci = mysqli_query($connection, $sql);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal z historią zamówień -->
 <div id="ordersModal" class="modal">

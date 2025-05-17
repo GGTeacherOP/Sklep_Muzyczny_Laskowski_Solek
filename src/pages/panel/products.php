@@ -146,6 +146,7 @@ $produkty = mysqli_query($connection, $sql);
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="productTable" class="admin-table">
   <thead>
   <tr>
@@ -216,6 +217,7 @@ $produkty = mysqli_query($connection, $sql);
   <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania/edycji produktu -->
 <div id="productModal" class="modal">

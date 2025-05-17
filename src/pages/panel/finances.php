@@ -113,6 +113,7 @@ $finanse = mysqli_query($connection, $sql);
 </div>
 
 <div class="admin-content">
+  <div class="admin-table-wrapper">
   <table id="financeTable" class="admin-table">
     <thead>
       <tr>
@@ -176,6 +177,7 @@ $finanse = mysqli_query($connection, $sql);
       <?php endwhile; ?>
     </tbody>
   </table>
+  </div>
 </div>
 
 <!-- Modal ze szczegółami -->

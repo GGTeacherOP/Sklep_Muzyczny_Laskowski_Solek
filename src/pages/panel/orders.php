@@ -178,13 +178,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
             </tbody>
           </table>
           
-<!--          <div class="order-summary">-->
-<!--            <div class="order-summary-item total">-->
-<!--              <div>Razem:</div>-->
-<!--              <div>--><?php //echo number_format($order['wartosc_calkowita'], 2); ?><!-- zł</div>-->
-<!--            </div>-->
-<!--          </div>-->
-          
           <div class="admin-actions">
             <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">
               <i class="fas fa-edit"></i> Zmień status
@@ -246,7 +239,8 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
           <i class="fas fa-filter"></i> Filtruj
         </button>
     </div>
-    
+
+<div class="admin-table-wrapper">
     <table id="orderTable" class="admin-table">
       <thead>
         <tr>
@@ -308,6 +302,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
         <?php endwhile; ?>
       </tbody>
     </table>
+</div>
     <?php
 }
 ?>

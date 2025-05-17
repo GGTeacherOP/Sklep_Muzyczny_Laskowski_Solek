@@ -114,6 +114,7 @@ $result = $connection->query($query);
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="brandTable" class="admin-table">
   <thead>
     <tr>
@@ -160,6 +161,7 @@ $result = $connection->query($query);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania/edycji producenta -->
 <div id="brandModal" class="modal">

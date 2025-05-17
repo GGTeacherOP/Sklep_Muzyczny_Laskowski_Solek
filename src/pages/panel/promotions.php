@@ -120,6 +120,7 @@ $promocje = mysqli_query($connection, $sql);
   </button>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="promotionTable" class="admin-table">
   <thead>
     <tr>
@@ -210,6 +211,7 @@ $promocje = mysqli_query($connection, $sql);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania/edycji kodu promocyjnego -->
 <div id="promotionModal" class="modal">

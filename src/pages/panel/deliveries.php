@@ -134,6 +134,7 @@ $instrumenty = mysqli_query($connection, "SELECT * FROM instrumenty ORDER BY naz
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="deliveryTable" class="admin-table">
   <thead>
     <tr>
@@ -202,6 +203,7 @@ $instrumenty = mysqli_query($connection, "SELECT * FROM instrumenty ORDER BY naz
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania dostawy -->
 <div id="deliveryModal" class="modal">

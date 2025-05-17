@@ -41,12 +41,12 @@ $stmt->close();
     'title' => 'Produkty'
   ],
   'categories' => [
-    'roles' => ['pracownik', 'manager', 'właściciel', 'informatyk'],
+    'roles' => ['manager', 'właściciel', 'informatyk'],
     'icon' => 'fas fa-tags',
     'title' => 'Kategorie produktów'
   ],
   'brands' => [
-    'roles' => ['pracownik', 'manager', 'właściciel', 'informatyk'],
+    'roles' => ['manager', 'właściciel', 'informatyk'],
     'icon' => 'fas fa-industry',
     'title' => 'Producenci'
   ],
@@ -140,9 +140,6 @@ if (!empty($page)) {
           <?= strftime('%e %B, %Y') ?>
         </div>
         </div>
-        <div class="info-message">
-          Panel administratora Sklepu Muzycznego.
-        </div>
       </div>
 
       <div class="admin-nav-grid">
@@ -178,13 +175,13 @@ if (!empty($page)) {
       </div>
 
       <div class="admin-content">
-    <?php
-      if (file_exists($page_file)) {
-        include $page_file;
-      } else {
-        echo '<p>Nie znaleziono strony.</p>';
-      }
-    ?>
+        <?php
+          if (file_exists($page_file)) {
+            include $page_file;
+          } else {
+            echo '<p>Nie znaleziono strony.</p>';
+          }
+        ?>
       </div>
     <?php endif; ?>
   </div>

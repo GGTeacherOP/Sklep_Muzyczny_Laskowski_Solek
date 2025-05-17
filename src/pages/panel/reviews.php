@@ -110,6 +110,7 @@ $result = $connection->query($query);
     </button>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="reviewTable" class="admin-table">
   <thead>
     <tr>
@@ -191,6 +192,7 @@ $result = $connection->query($query);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <script>
 function filterTable(tableId, columnIndex) {

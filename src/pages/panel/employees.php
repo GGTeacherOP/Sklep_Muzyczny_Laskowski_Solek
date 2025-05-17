@@ -149,6 +149,7 @@ $pracownicy = mysqli_query($connection, $sql);
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="employeeTable" class="admin-table">
   <thead>
     <tr>
@@ -214,6 +215,7 @@ $pracownicy = mysqli_query($connection, $sql);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania/edycji pracownika -->
 <div id="employeeModal" class="modal">

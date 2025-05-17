@@ -76,6 +76,7 @@ function formatAmount($amount) {
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="positionTable" class="admin-table">
   <thead>
     <tr>
@@ -118,6 +119,7 @@ function formatAmount($amount) {
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal dodawania/edycji stanowiska -->
 <div id="positionModal" class="modal">

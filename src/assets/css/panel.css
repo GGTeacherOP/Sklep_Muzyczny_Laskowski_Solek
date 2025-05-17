@@ -40,10 +40,6 @@ body {
   color: var(--text-color);
 }
 
-.info-message {
-  font-size: var(--font-md);
-}
-
 .admin-nav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxl), 1fr));
@@ -335,13 +331,26 @@ body {
   font-size: var(--font-md);
 }
 
+.admin-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--spacing-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: var(--radius-xxs);
-  overflow: hidden;
 }
 
 .admin-table th {
@@ -627,36 +636,75 @@ textarea.form-input {
   .admin-filters {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--spacing-xs);
   }
   
   .admin-search {
     max-width: 100%;
+    width: 100%;
   }
   
-  .admin-filters select {
+  .dropdown {
     width: 100%;
+    min-width: 100%;
+  }
+
+  .admin-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .admin-section-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .admin-back-button {
+    width: 100%;
+  }
+
+  .admin-header-top {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    text-align: center;
+  }
+
+  .admin-table {
+    min-width: 800px;
+    margin-bottom: 0;
+  }
+
+  .order-info {
+    flex-direction: column;
+  }
+
+  .info-group {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .order-summary {
+    max-width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .products-grid {
+  .admin-nav-grid {
     grid-template-columns: 1fr;
   }
-  
-  .admin-table {
-    display: block;
-    overflow-x: auto;
+
+  .admin-nav-card {
+    height: var(--card-size-xl);
   }
-  
-  .admin-filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .admin-search {
+
+  .admin-button {
     width: 100%;
-    max-width: 100%;
-    margin-bottom: var(--spacing-xs);
+  }
+
+  .modal-content {
+    margin: 2% auto;
+    padding: var(--spacing-md);
+    width: 95%;
   }
 }
 

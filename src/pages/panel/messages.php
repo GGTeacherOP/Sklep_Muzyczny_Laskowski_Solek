@@ -72,6 +72,7 @@ $wiadomosci = mysqli_query($connection, $sql);
   </div>
 </div>
 
+<div class="admin-table-wrapper">
 <table id="messageTable" class="admin-table">
   <thead>
     <tr>
@@ -140,6 +141,7 @@ $wiadomosci = mysqli_query($connection, $sql);
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
 
 <!-- Modal treści wiadomości -->
 <div id="messageModal" class="modal">
