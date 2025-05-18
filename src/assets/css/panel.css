@@ -106,7 +106,7 @@ body {
   align-items: center;
   gap: var(--spacing-xs);
   height: var(--card-size-xs-sm);
-  padding-inline: 24px;
+  padding-inline: var(--spacing-md);
   border-radius: var(--radius-sm);
   color: var(--text-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -131,7 +131,7 @@ body {
   justify-content: center;
   gap: var(--spacing-xs);
   padding: 0 var(--spacing-sm);
-  height: var(--card-size-xxs);
+  height: var(--card-size-xs-sm);
   border-radius: var(--radius-xxs);
   background-color: var(--secondary-bg);
   color: var(--text-color);
@@ -189,12 +189,14 @@ body {
   margin-bottom: var(--spacing-sm);
 }
 
-.admin-filters .admin-button, .admin-filters .form-input, .admin-filters .dropdown-toggle {
-  display: flex;
-  align-items: center;
+.admin-filters .admin-button,
+.admin-filters .form-input,
+.admin-filters .dropdown-toggle,
+.admin-search .form-input,
+.admin-back-button {
   height: var(--card-size-xs-sm);
-  border-radius: var(--radius-xs);
-  font-weight: bold;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
 }
 
 .admin-search {
@@ -208,12 +210,11 @@ body {
   width: 100%;
   padding: 0 var(--spacing-sm);
   padding-right: 40px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   outline: none;
   border: none;
   background-color: var(--form-input-bg);
   color: var(--text-color);
-  font-size: var(--font-md);
 }
 
 .admin-search::after {
@@ -249,12 +250,11 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0 var(--spacing-sm);
   border: none;
   outline: none;
   background-color: var(--secondary-bg);
   color: var(--text-color);
-  font-size: var(--font-md);
   cursor: pointer;
   width: 100%;
 }
@@ -652,6 +652,16 @@ textarea.form-input {
     gap: var(--spacing-xs);
   }
 
+  .admin-filters .admin-button,
+  .admin-filters .form-input,
+  .admin-filters .dropdown-toggle,
+  .admin-search .form-input,
+  .admin-back-button,
+  .admin-button {
+    height: var(--button-height-lg);
+    font-size: var(--font-md);
+  }
+
   .admin-search {
     max-width: 100%;
     width: 100%;
@@ -674,6 +684,13 @@ textarea.form-input {
 
   .admin-back-button {
     width: 100%;
+    height: var(--button-height-lg);
+    font-size: var(--font-md);
+  }
+
+  .admin-button {
+    height: var(--button-height-lg);
+    font-size: var(--font-md);
   }
 
   .admin-header-top {
@@ -712,11 +729,28 @@ textarea.form-input {
 
   .admin-button {
     width: 100%;
+    height: var(--button-height-md);
+    font-size: var(--font-xs);
+  }
+
+  .admin-back-button {
+    height: var(--button-height-md);
+    font-size: var(--font-xs);
   }
 
   .modal-content {
     margin: 2% auto;
     padding: var(--spacing-md);
     width: 95%;
+  }
+
+  .admin-filters .admin-button,
+  .admin-filters .form-input,
+  .admin-filters .dropdown-toggle,
+  .admin-search .form-input,
+  .admin-back-button,
+  .admin-button {
+    height: var(--button-height-md);
+    font-size: var(--font-xs);
   }
 }
