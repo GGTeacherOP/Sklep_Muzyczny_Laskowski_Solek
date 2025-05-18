@@ -113,7 +113,6 @@
     $query = "
         SELECT znizka FROM kody_promocyjne
         WHERE kod = '$promoCode' 
-          AND aktywna = 1
           AND data_rozpoczecia <= '$currentDate'
           AND data_zakonczenia >= '$currentDate'
     ";
