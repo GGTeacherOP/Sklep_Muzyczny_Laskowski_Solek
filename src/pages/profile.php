@@ -2,7 +2,7 @@
   /** @var mysqli $connection */
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
-  include_once '../includes/cart_actions.php';
+  include_once '../includes/helpers/cart_helpers.php';
   include_once '../includes/auth/user_login.php';
   include_once '../includes/auth/employee_login.php';
   include_once '../includes/auth/register.php';
@@ -49,9 +49,8 @@
   <title>Logowanie - Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <div class="login-container">
     <div class="login-tabs">
       <button class="login-tab <?= $active_form === 'login' ? 'active' : '' ?>" data-tab="login">Logowanie</button>

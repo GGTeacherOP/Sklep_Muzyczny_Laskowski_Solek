@@ -1,10 +1,11 @@
 <?php
-  include_once '../includes/cart_actions.php';
+  include_once '../includes/helpers/cart_helpers.php';
 
   $current_page = basename($_SERVER['PHP_SELF']);
   $home_page = 'home.php';
   $cart_page = 'cart.php';
   $profile_page = 'profile.php';
+  $admin_page = 'panel.php';
 
   $active_class = function ($page) use ($current_page) {
     return $current_page === $page ? 'active_subpage' : '';
@@ -36,6 +37,16 @@
       <i aria-hidden="true" class="fa-solid fa-user"></i>
       <span>Profil</span>
     </button>
+    <?php
+      if (isset($_SESSION['employee_id'])) {
+        echo "
+        <button aria-label=\"Panel admina\" class=\"tray-item {$active_class($admin_page)}\" title=\"Przejdź do panelu administratora\" type=\"button\">
+          <i aria-hidden=\"true\" class=\"fa-solid fa-toolbox\"></i>
+          <span>Panel</span>
+        </button>
+        ";
+      }
+    ?>
   </nav>
 </header>
 <?php

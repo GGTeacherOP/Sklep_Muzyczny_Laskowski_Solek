@@ -6,7 +6,7 @@
   include_once '../includes/fetch/fetch_product_categories.php';
   include_once '../includes/render/render_product_card.php';
   include_once '../includes/render/render_category_card.php';
-  include_once '../includes/cart_actions.php';
+  include_once '../includes/helpers/cart_helpers.php';
 
   if (isset($_POST['add_to_cart'])) {
     addToCart($_POST['product_id'], $_POST['product_type']);
@@ -37,9 +37,8 @@
   <title>Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <section class="hero-section fade-in">
     <div class="hero-content">
       <h1 class="hero-title">Odkryj świat muzyki</h1>

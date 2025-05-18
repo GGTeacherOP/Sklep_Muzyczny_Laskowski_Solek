@@ -3,8 +3,8 @@
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
   include_once '../includes/render/render_cart_item.php';
-  include_once '../includes/cart_actions.php';
-  include_once '../includes/format_price.php';
+  include_once '../includes/helpers/cart_helpers.php';
+  include_once '../includes/helpers/format_helpers.php';
 
   $userId = $_SESSION['user_id'] ?? NULL;
   $promoCode = $_SESSION['promo_code'] ?? NULL;
@@ -52,11 +52,11 @@
   $totalRent = 0;
 
   foreach ($cartItems['buy'] as $item) {
-    $totalBuy += $item['cena'] * $item['quantity'];
+    $totalBuy += $item['cena_sprzedazy'] * $item['quantity'];
   }
 
   foreach ($cartItems['rent'] as $item) {
-    $totalRent += $item['cena'] * $item['quantity'];
+    $totalRent += $item['cena_sprzedazy'] * $item['quantity'];
   }
 
   if ($userId) {
@@ -78,9 +78,8 @@
   <title>Koszyk - Sklep Muzyczny</title>
 </head>
 <body>
+<?php include '../components/header.php'; ?>
 <main class="fade-in">
-  <?php include '../components/header.php'; ?>
-
   <section class="cart-container-empty <?= $totalItems === 0 ? 'active' : '' ?>">
     <i class="fa-solid fa-box-open empty-cart-icon"></i>
     <h2>Twój koszyk jest pusty</h2>
