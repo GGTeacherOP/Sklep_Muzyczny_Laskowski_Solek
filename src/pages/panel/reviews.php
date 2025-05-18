@@ -178,20 +178,35 @@ $result = $connection->query($query);
         </td>
         <td>
           <div class="admin-actions">
-            <form method="POST" style="display: inline;" 
-                  onsubmit="return confirm('Czy na pewno chcesz usunąć tę ocenę?')">
-              <input type="hidden" name="action" value="delete">
-              <input type="hidden" name="review_id" value="<?php echo $review['id']; ?>">
-              <button type="submit" class="admin-button danger">
-                <i class="fas fa-trash"></i>
-              </button>
-            </form>
+            <button class="admin-button danger" onclick="confirmDelete(<?php echo $review['id']; ?>)">
+              <i class="fas fa-trash"></i>
+            </button>
           </div>
         </td>
       </tr>
     <?php endwhile; ?>
   </tbody>
 </table>
+</div>
+
+<!-- Modal potwierdzenia usunięcia -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h2>Potwierdzenie usunięcia</h2>
+    <p>Czy na pewno chcesz usunąć tę ocenę? Tej operacji nie można cofnąć.</p>
+    <form method="POST">
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="review_id" id="delete_review_id">
+      <div class="admin-actions">
+        <button type="submit" class="admin-button danger">
+          <i class="fas fa-trash"></i> Usuń
+        </button>
+        <button type="button" class="admin-button" onclick="closeDeleteModal()">
+          <i class="fas fa-times"></i> Anuluj
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -325,44 +340,21 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('Ocena została pomyślnie usunięta.');
   }
 });
+
+function confirmDelete(reviewId) {
+  document.getElementById('delete_review_id').value = reviewId;
+  document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Obsługa zamykania modali po kliknięciu poza nimi
+window.onclick = function(event) {
+  const deleteModal = document.getElementById('deleteModal');
+  if (event.target == deleteModal) {
+    closeDeleteModal();
+  }
+}
 </script>
-
-<style>
-.status-badge {
-  display: inline-block;
-  padding: 3px 6px;
-  border-radius: var(--radius-xxs);
-  font-size: var(--font-sm);
-  color: white;
-  font-weight: 500;
-}
-
-.status-badge.success {
-  background-color: var(--button-buy-bg);
-}
-
-.status-badge.warning {
-  background-color: var(--button-edit-bg);
-}
-
-.date-range {
-  display: flex;
-  gap: var(--spacing-xs);
-  align-items: center;
-}
-
-.date-range input[type="date"] {
-  min-width: 150px;
-}
-
-@media (max-width: 768px) {
-  .date-range {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .date-range input[type="date"] {
-    width: 100%;
-  }
-}
-</style>

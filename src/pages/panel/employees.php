@@ -220,11 +220,11 @@ $pracownicy = mysqli_query($connection, $sql);
 <!-- Modal dodawania/edycji pracownika -->
 <div id="employeeModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeEmployeeModal()">&times;</span>
     <h2 id="modalTitle">Dodaj pracownika</h2>
     <form method="POST" onsubmit="return validateForm()">
       <input type="hidden" name="action" id="formAction" value="add">
       <input type="hidden" name="employee_id" id="employeeId">
+      <input type="hidden" name="stanowisko" id="selectedPosition">
       
       <div class="form-group">
         <label for="identyfikator" class="form-label">Identyfikator pracownika</label>
@@ -257,15 +257,22 @@ $pracownicy = mysqli_query($connection, $sql);
       
       <div class="form-group">
         <label for="stanowisko" class="form-label">Stanowisko</label>
-        <select id="stanowisko" name="stanowisko" class="form-input" required>
-          <?php
-          $stanowiska_query = mysqli_query($connection, "SELECT nazwa FROM stanowiska ORDER BY nazwa");
-          while ($stanowisko = mysqli_fetch_assoc($stanowiska_query)) {
-            echo '<option value="' . htmlspecialchars($stanowisko['nazwa']) . '">' . 
-                 ucfirst(htmlspecialchars($stanowisko['nazwa'])) . '</option>';
-          }
-          ?>
-        </select>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" onclick="toggleDropdown('positionDropdown')">
+            <span id="positionDropdownText">Wybierz stanowisko</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="positionDropdown">
+            <?php
+            $stanowiska_query = mysqli_query($connection, "SELECT nazwa FROM stanowiska ORDER BY nazwa");
+            while ($stanowisko = mysqli_fetch_assoc($stanowiska_query)) {
+              echo '<li><a href="#" class="dropdown-item" onclick="selectPosition(\'' . htmlspecialchars($stanowisko['nazwa']) . '\', \'' . 
+                   ucfirst(htmlspecialchars($stanowisko['nazwa'])) . '\')">' . 
+                   ucfirst(htmlspecialchars($stanowisko['nazwa'])) . '</a></li>';
+            }
+            ?>
+          </ul>
+        </div>
       </div>
       
       <div class="admin-actions">
@@ -283,7 +290,6 @@ $pracownicy = mysqli_query($connection, $sql);
 <!-- Modal potwierdzenia usunięcia -->
 <div id="deleteModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDeleteModal()">&times;</span>
     <h2>Potwierdzenie usunięcia</h2>
     <p>Czy na pewno chcesz usunąć tego pracownika? Tej operacji nie można cofnąć.</p>
     <form method="POST">
@@ -312,6 +318,7 @@ function showAddEmployeeModal() {
   modalTitle.textContent = 'Dodaj pracownika';
   document.getElementById('formAction').value = 'add';
   document.getElementById('employeeId').value = '';
+  document.getElementById('selectedPosition').value = '';
   form.reset();
   
   passwordField.required = true;
@@ -332,7 +339,8 @@ function editEmployee(employee) {
   document.getElementById('identyfikator').value = employee.identyfikator;
   document.getElementById('username').value = employee.nazwa_uzytkownika;
   document.getElementById('email').value = employee.email;
-  document.getElementById('stanowisko').value = employee.stanowisko;
+  document.getElementById('selectedPosition').value = employee.stanowisko;
+  document.getElementById('positionDropdownText').textContent = ucfirst(employee.stanowisko);
   
   // Hasło nie jest wymagane przy edycji
   passwordField.required = false;
@@ -473,5 +481,15 @@ window.onclick = function(event) {
   } else if (event.target == deleteModal) {
     closeDeleteModal();
   }
+}
+
+function selectPosition(value, text) {
+  document.getElementById('selectedPosition').value = value;
+  document.getElementById('positionDropdownText').textContent = text;
+  document.getElementById('positionDropdown').classList.remove('show');
+}
+
+function ucfirst(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 </script>

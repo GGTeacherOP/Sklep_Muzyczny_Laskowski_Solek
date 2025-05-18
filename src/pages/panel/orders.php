@@ -181,9 +181,6 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
           </div>
           
           <div class="admin-actions">
-            <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">
-              <i class="fas fa-edit"></i> Zmień status
-            </button>
             <button class="admin-button danger" onclick="confirmDelete(<?php echo $order['id']; ?>)">
               <i class="fas fa-trash"></i> Usuń zamówienie
             </button>
@@ -312,19 +309,27 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
 <!-- Modal do zmiany statusu zamówienia -->
 <div id="statusChangeModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeStatusModal()">&times;</span>
     <h2>Zmień status zamówienia</h2>
     <form method="POST">
       <input type="hidden" name="action" value="update_status">
       <input type="hidden" name="order_id" id="order_id">
+      <input type="hidden" name="status" id="selectedStatus">
       
       <div class="form-group">
         <label for="order_status" class="form-label">Status zamówienia</label>
-        <select id="order_status" name="status" class="form-input">
-          <?php foreach (ORDER_STATUSES as $status => $info): ?>
-            <option value="<?php echo $status; ?>"><?php echo $info['label']; ?></option>
-          <?php endforeach; ?>
-        </select>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" onclick="toggleDropdown('modalStatusDropdown')">
+            <span id="modalStatusDropdownText">Wybierz status</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="modalStatusDropdown">
+            <?php foreach (ORDER_STATUSES as $status => $info): ?>
+              <li><a href="#" class="dropdown-item" onclick="selectModalStatus('<?php echo $status; ?>', '<?php echo $info['label']; ?>')">
+                <?php echo $info['label']; ?>
+              </a></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
       </div>
       
       <div class="admin-actions">
@@ -363,7 +368,8 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
 <script>
 function editOrderStatus(id, status) {
   document.getElementById('order_id').value = id;
-  document.getElementById('order_status').value = status;
+  document.getElementById('selectedStatus').value = status;
+  document.getElementById('modalStatusDropdownText').textContent = ORDER_STATUSES[status].label;
   document.getElementById('statusChangeModal').style.display = 'block';
 }
 
@@ -448,16 +454,9 @@ function filterByDateRange(row, dateFrom, dateTo) {
   return show;
 }
 
-function selectStatus(status, statusText) {
-  // Aktualizuj tekst w przycisku
-  const button = document.getElementById('statusDropdownText');
-  button.textContent = statusText;
-  button.dataset.selectedId = status;
-  
-  // Filtruj zamówienia
-  filterByStatus(status);
-  
-  // Ukryj dropdown
+function selectStatus(status, label) {
+  document.getElementById('selectedStatus').value = status;
+  document.getElementById('statusDropdownText').textContent = label;
   document.getElementById('statusDropdown').classList.remove('show');
 }
 
@@ -472,6 +471,12 @@ function toggleDropdown(dropdownId) {
       d.classList.remove('show');
     }
   });
+}
+
+function selectModalStatus(status, label) {
+  document.getElementById('selectedStatus').value = status;
+  document.getElementById('modalStatusDropdownText').textContent = label;
+  document.getElementById('modalStatusDropdown').classList.remove('show');
 }
 
 // Modyfikacja obsługi kliknięcia poza dropdownem
@@ -525,4 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('Status zamówienia został pomyślnie zaktualizowany.');
   }
 });
+
+// Dodanie stałej z informacjami o statusach dla JavaScript
+const ORDER_STATUSES = <?php echo json_encode(ORDER_STATUSES); ?>;
 </script>

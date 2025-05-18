@@ -25,12 +25,21 @@ function renderOrdersTable($orders_result, $sort_column, $sort_dir) {
         <input type="text" id="orderSearch" class="form-input" placeholder="Szukaj zamówień..." 
                 onkeyup="filterTable('orderTable', 'orderSearch', 1)">
     </div>
-    <select class="form-input" onchange="filterByStatus(this.value)">
-        <option value="">Wszystkie statusy</option>
-        <?php foreach (ORDER_STATUSES as $value => $status): ?>
-        <option value="<?php echo $value; ?>"><?php echo $status['label']; ?></option>
-        <?php endforeach; ?>
-    </select>
+    <div class="dropdown">
+        <button class="dropdown-toggle" type="button" onclick="toggleDropdown('statusDropdown')">
+            <span id="statusDropdownText">Wszystkie statusy</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu" id="statusDropdown">
+            <li><a href="#" class="dropdown-item" onclick="selectStatus('', 'Wszystkie statusy')">Wszystkie statusy</a></li>
+            <li class="dropdown-divider"></li>
+            <?php foreach (ORDER_STATUSES as $value => $status): ?>
+            <li><a href="#" class="dropdown-item" onclick="selectStatus('<?php echo $value; ?>', '<?php echo $status['label']; ?>')">
+                <?php echo $status['label']; ?>
+            </a></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 </div>
 
 <table id="orderTable" class="admin-table">

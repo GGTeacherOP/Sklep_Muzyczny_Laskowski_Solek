@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       mysqli_query($connection, "DELETE FROM klienci WHERE id = '$client_id'");
       mysqli_query($connection, "DELETE FROM uzytkownicy WHERE id = '$user_id'");
       
-      header('Location: panel.php?view=clients&success=deleted');
+      header('Location: panel.php?view=customers&success=deleted');
       exit();
       break;
       
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       // Aktualizujemy dane użytkownika
       mysqli_query($connection, "UPDATE uzytkownicy SET email = '$email', nazwa_uzytkownika = '$username' WHERE id = '$user_id'");
       
-      header('Location: panel.php?view=clients&success=updated');
+      header('Location: panel.php?view=customers&success=updated');
       exit();
       break;
   }
@@ -170,10 +170,14 @@ $klienci = mysqli_query($connection, $sql);
 <!-- Modal z historią zamówień -->
 <div id="ordersModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeOrdersModal()">&times;</span>
     <h2>Historia zamówień klienta</h2>
     <div id="ordersContent">
       <p class="loading">Ładowanie zamówień...</p>
+    </div>
+    <div class="admin-actions">
+      <button type="button" class="admin-button" onclick="closeOrdersModal()">
+        <i class="fas fa-times"></i> Zamknij
+      </button>
     </div>
   </div>
 </div>
@@ -181,20 +185,20 @@ $klienci = mysqli_query($connection, $sql);
 <!-- Modal z edycją klienta -->
 <div id="editModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeEditModal()">&times;</span>
     <h2>Edytuj dane klienta</h2>
     <form method="POST" id="editForm">
       <input type="hidden" name="action" value="update">
       <input type="hidden" name="client_id" id="editClientId">
+      <input type="hidden" name="status" id="selectedStatus">
       
       <div class="form-group">
         <label for="username" class="form-label">Nazwa użytkownika</label>
-        <input type="text" id="username" name="username" class="form-input" required>
+        <input type="text" id="editUsername" name="username" class="form-input" required>
       </div>
       
       <div class="form-group">
         <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" class="form-input" required>
+        <input type="email" id="editEmail" name="email" class="form-input" required>
       </div>
       
       <div class="admin-actions">
@@ -212,7 +216,6 @@ $klienci = mysqli_query($connection, $sql);
 <!-- Modal potwierdzenia usunięcia -->
 <div id="deleteModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDeleteModal()">&times;</span>
     <h2>Potwierdzenie usunięcia</h2>
     <p>Czy na pewno chcesz usunąć tego klienta? Ta operacja jest nieodwracalna i spowoduje usunięcie wszystkich danych klienta, w tym zamówień i historii.</p>
     <form method="POST">
@@ -253,10 +256,18 @@ function showClientOrders(clientId) {
     });
 }
 
+function selectStatus(value, text) {
+  document.getElementById('selectedStatus').value = value;
+  document.getElementById('statusDropdownText').textContent = text;
+  document.getElementById('statusDropdown').classList.remove('show');
+}
+
 function editClient(client) {
   document.getElementById('editClientId').value = client.id;
-  document.getElementById('username').value = client.nazwa_uzytkownika;
-  document.getElementById('email').value = client.email;
+  document.getElementById('editUsername').value = client.nazwa_uzytkownika;
+  document.getElementById('editEmail').value = client.email;
+  
+  // Otwórz modal
   document.getElementById('editModal').style.display = 'block';
 }
 

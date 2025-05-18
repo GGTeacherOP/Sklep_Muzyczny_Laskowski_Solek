@@ -147,14 +147,11 @@ $result = $connection->query($query);
             <button class="admin-button warning" onclick="editBrand(<?php echo htmlspecialchars(json_encode($brand)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
-            <form method="POST" style="display: inline;" 
-                  onsubmit="return confirm('Czy na pewno chcesz usunąć tego producenta?')">
-              <input type="hidden" name="action" value="delete">
-              <input type="hidden" name="brand_id" value="<?php echo $brand['id']; ?>">
-              <button type="submit" class="admin-button danger" <?php echo $brand['liczba_produktow'] > 0 ? 'disabled' : ''; ?>>
+            <?php if ($brand['liczba_produktow'] == 0): ?>
+              <button class="admin-button danger" onclick="confirmDelete(<?php echo $brand['id']; ?>)">
                 <i class="fas fa-trash"></i>
               </button>
-            </form>
+            <?php endif; ?>
           </div>
         </td>
       </tr>
@@ -166,7 +163,6 @@ $result = $connection->query($query);
 <!-- Modal dodawania/edycji producenta -->
 <div id="brandModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeBrandModal()">&times;</span>
     <h2 id="modalTitle">Dodaj producenta</h2>
     <form method="POST">
       <input type="hidden" name="action" id="formAction" value="add">
@@ -189,6 +185,26 @@ $result = $connection->query($query);
   </div>
 </div>
 
+<!-- Modal potwierdzenia usunięcia -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h2>Potwierdzenie usunięcia</h2>
+    <p>Czy na pewno chcesz usunąć tego producenta? Tej operacji nie można cofnąć.</p>
+    <form method="POST">
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="brand_id" id="delete_brand_id">
+      <div class="admin-actions">
+        <button type="submit" class="admin-button danger">
+          <i class="fas fa-trash"></i> Usuń
+        </button>
+        <button type="button" class="admin-button" onclick="closeDeleteModal()">
+          <i class="fas fa-times"></i> Anuluj
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 function showAddModal() {
   const modal = document.getElementById('brandModal');
@@ -204,8 +220,7 @@ function showAddModal() {
 }
 
 function closeBrandModal() {
-  const modal = document.getElementById('brandModal');
-  modal.style.display = 'none';
+  document.getElementById('brandModal').style.display = 'none';
 }
 
 function editBrand(brand) {
@@ -235,11 +250,24 @@ function filterTable(tableId, columnIndex) {
   }
 }
 
-// Zamykanie modalu po kliknięciu poza nim
+function confirmDelete(brandId) {
+  document.getElementById('delete_brand_id').value = brandId;
+  document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Zamykanie modali po kliknięciu poza nimi
 window.onclick = function(event) {
-  const modal = document.getElementById('brandModal');
-  if (event.target == modal) {
+  const brandModal = document.getElementById('brandModal');
+  const deleteModal = document.getElementById('deleteModal');
+  
+  if (event.target == brandModal) {
     closeBrandModal();
+  } else if (event.target == deleteModal) {
+    closeDeleteModal();
   }
 }
 

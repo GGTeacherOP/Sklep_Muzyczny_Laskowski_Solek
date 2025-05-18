@@ -174,8 +174,7 @@ $promocje = mysqli_query($connection, $sql);
     ?>
       <tr data-status="<?php echo $status; ?>"
           data-startDate="<?php echo $startDate->format('Y-m-d'); ?>"
-          data-endDate="<?php echo $endDate->format('Y-m-d'); ?>"
-          onclick="showEditPromotionModal(<?php echo htmlspecialchars(json_encode($promotion)); ?>)">
+          data-endDate="<?php echo $endDate->format('Y-m-d'); ?>">
         <td><?php echo htmlspecialchars($promotion['id']); ?></td>
         <td><?php echo htmlspecialchars($promotion['kod']); ?></td>
         <td><?php echo htmlspecialchars($promotion['znizka']); ?>%</td>

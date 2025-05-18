@@ -116,7 +116,7 @@ $produkty = mysqli_query($connection, $sql);
   </div>
   <div class="dropdown">
     <button class="dropdown-toggle" type="button" onclick="toggleDropdown('categoryDropdown')">
-      <span id="categoryDropdownText">Wybierz kategorię</span>
+      <span id="categoryDropdownText">Wszystkie kategorię</span>
       <i class="fa-solid fa-chevron-down"></i>
     </button>
     <ul class="dropdown-menu" id="categoryDropdown">
@@ -131,7 +131,7 @@ $produkty = mysqli_query($connection, $sql);
   </div>
   <div class="dropdown">
     <button class="dropdown-toggle" type="button" onclick="toggleDropdown('brandDropdown')">
-      <span id="brandDropdownText">Wybierz producenta</span>
+      <span id="brandDropdownText">Wszyscy producenci</span>
       <i class="fa-solid fa-chevron-down"></i>
     </button>
     <ul class="dropdown-menu" id="brandDropdown">
@@ -203,14 +203,9 @@ $produkty = mysqli_query($connection, $sql);
           <button class="admin-button warning" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
             <i class="fas fa-edit"></i>
           </button>
-          <form method="POST" style="display: inline;" 
-                onsubmit="return confirm('Czy na pewno chcesz usunąć ten produkt?')">
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-            <button type="submit" class="admin-button danger">
-              <i class="fas fa-trash"></i>
-            </button>
-          </form>
+          <button class="admin-button danger" onclick="confirmDelete(<?php echo $product['id']; ?>)">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </td>
     </tr>
@@ -222,11 +217,12 @@ $produkty = mysqli_query($connection, $sql);
 <!-- Modal dodawania/edycji produktu -->
 <div id="productModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeProductModal()">&times;</span>
     <h2 id="modalTitle">Dodaj produkt</h2>
     <form method="POST">
       <input type="hidden" name="action" id="formAction" value="add">
       <input type="hidden" name="product_id" id="productId">
+      <input type="hidden" name="producent_id" id="selectedProducent">
+      <input type="hidden" name="kategoria_id" id="selectedCategory">
       
       <div class="form-group">
         <label for="kod_produktu" class="form-label">Kod produktu</label>
@@ -255,24 +251,36 @@ $produkty = mysqli_query($connection, $sql);
       
       <div class="form-group">
         <label for="producent_id" class="form-label">Producent</label>
-        <select id="producent_id" name="producent_id" class="form-input" required>
-          <?php foreach ($producenci_data as $producent) : ?>
-            <option value="<?php echo $producent['id']; ?>">
-              <?php echo htmlspecialchars($producent['nazwa']); ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" onclick="toggleDropdown('producentDropdown')">
+            <span id="producentDropdownText">Wybierz producenta</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="producentDropdown">
+            <?php foreach ($producenci_data as $producent) : ?>
+              <li><a href="#" class="dropdown-item" onclick="selectProducent('<?php echo $producent['id']; ?>', '<?php echo htmlspecialchars($producent['nazwa']); ?>')">
+                <?php echo htmlspecialchars($producent['nazwa']); ?>
+              </a></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
       </div>
       
       <div class="form-group">
         <label for="kategoria_id" class="form-label">Kategoria</label>
-        <select id="kategoria_id" name="kategoria_id" class="form-input" required>
-          <?php foreach ($kategorie_data as $kategoria) : ?>
-            <option value="<?php echo $kategoria['id']; ?>">
-              <?php echo htmlspecialchars($kategoria['nazwa']); ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" onclick="toggleDropdown('kategoriaDropdown')">
+            <span id="kategoriaDropdownText">Wybierz kategorię</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="kategoriaDropdown">
+            <?php foreach ($kategorie_data as $kategoria) : ?>
+              <li><a href="#" class="dropdown-item" onclick="selectKategoria('<?php echo $kategoria['id']; ?>', '<?php echo htmlspecialchars($kategoria['nazwa']); ?>')">
+                <?php echo htmlspecialchars($kategoria['nazwa']); ?>
+              </a></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
       </div>
       
       <div class="admin-actions">
@@ -280,6 +288,26 @@ $produkty = mysqli_query($connection, $sql);
           <i class="fas fa-save"></i> Zapisz
         </button>
         <button type="button" class="admin-button" onclick="closeProductModal()">
+          <i class="fas fa-times"></i> Anuluj
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal potwierdzenia usunięcia -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h2>Potwierdzenie usunięcia</h2>
+    <p>Czy na pewno chcesz usunąć ten produkt? Tej operacji nie można cofnąć.</p>
+    <form method="POST">
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="product_id" id="delete_product_id">
+      <div class="admin-actions">
+        <button type="submit" class="admin-button danger">
+          <i class="fas fa-trash"></i> Usuń
+        </button>
+        <button type="button" class="admin-button" onclick="closeDeleteModal()">
           <i class="fas fa-times"></i> Anuluj
         </button>
       </div>
@@ -296,6 +324,8 @@ function showAddModal() {
   modalTitle.textContent = 'Dodaj produkt';
   document.getElementById('formAction').value = 'add';
   document.getElementById('productId').value = '';
+  document.getElementById('selectedProducent').value = '';
+  document.getElementById('selectedCategory').value = '';
   form.reset();
   
   modal.style.display = 'block';
@@ -318,8 +348,12 @@ function editProduct(product) {
   document.getElementById('opis').value = product.opis;
   document.getElementById('cena_sprzedazy').value = product.cena_sprzedazy;
   document.getElementById('stan_magazynowy').value = product.stan_magazynowy;
-  document.getElementById('producent_id').value = product.producent_id;
-  document.getElementById('kategoria_id').value = product.kategoria_id;
+  document.getElementById('selectedProducent').value = product.producent_id;
+  document.getElementById('selectedCategory').value = product.kategoria_id;
+  
+  // Aktualizacja tekstu w dropdownach
+  document.getElementById('producentDropdownText').textContent = product.nazwa_producenta;
+  document.getElementById('kategoriaDropdownText').textContent = product.nazwa_kategorii;
   
   modal.style.display = 'block';
 }
@@ -387,45 +421,36 @@ function selectBrand(brandId, brandName) {
   document.getElementById('brandDropdown').classList.remove('show');
 }
 
-function toggleDropdown(dropdownId) {
-  const dropdown = document.getElementById(dropdownId);
-  dropdown.classList.toggle('show');
-  
-  // Zamykanie innych dropdownów
-  const allDropdowns = document.querySelectorAll('.dropdown-menu');
-  allDropdowns.forEach(d => {
-    if (d.id !== dropdownId && d.classList.contains('show')) {
-      d.classList.remove('show');
-    }
-  });
+function selectProducent(id, name) {
+  document.getElementById('selectedProducent').value = id;
+  document.getElementById('producentDropdownText').textContent = name;
+  document.getElementById('producentDropdown').classList.remove('show');
 }
 
-// Modyfikacja obsługi kliknięcia poza dropdownem
-document.addEventListener('click', function(event) {
-  const dropdowns = document.querySelectorAll('.dropdown-menu');
-  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+function selectKategoria(id, name) {
+  document.getElementById('selectedCategory').value = id;
+  document.getElementById('kategoriaDropdownText').textContent = name;
+  document.getElementById('kategoriaDropdown').classList.remove('show');
+}
+
+function confirmDelete(productId) {
+  document.getElementById('delete_product_id').value = productId;
+  document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Modyfikacja obsługi zamykania modali
+window.onclick = function(event) {
+  const productModal = document.getElementById('productModal');
+  const deleteModal = document.getElementById('deleteModal');
   
-  let clickedOnDropdown = false;
-  
-  // Sprawdź czy kliknięto na dropdown lub jego zawartość
-  dropdowns.forEach(dropdown => {
-    if (dropdown.contains(event.target)) {
-      clickedOnDropdown = true;
-    }
-  });
-  
-  // Sprawdź czy kliknięto na przycisk dropdown
-  dropdownToggles.forEach(toggle => {
-    if (toggle.contains(event.target)) {
-      clickedOnDropdown = true;
-    }
-  });
-  
-  // Jeśli nie kliknięto na dropdown ani jego przycisk, zamknij wszystkie dropdowny
-  if (!clickedOnDropdown) {
-    dropdowns.forEach(dropdown => {
-      dropdown.classList.remove('show');
-    });
+  if (event.target == productModal) {
+    closeProductModal();
+  } else if (event.target == deleteModal) {
+    closeDeleteModal();
   }
-});
+}
 </script>

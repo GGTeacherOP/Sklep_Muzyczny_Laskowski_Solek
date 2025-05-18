@@ -6,11 +6,16 @@ include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   switch ($_POST['action']) {
     case 'add':
-      $nazwa = mysqli_real_escape_string($connection, $_POST['nazwa']);
-      $wynagrodzenie = mysqli_real_escape_string($connection, $_POST['wynagrodzenie']);
+      if (empty($nazwa)) {
+        header('Location: panel.php?view=positions&error=empty_name');
+        exit();
+      }
       
       $sql = "INSERT INTO stanowiska (nazwa, wynagrodzenie_miesieczne) VALUES ('$nazwa', '$wynagrodzenie')";
-      mysqli_query($connection, $sql);
+      if (!mysqli_query($connection, $sql)) {
+        header('Location: panel.php?view=positions&error=db_error');
+        exit();
+      }
       header('Location: panel.php?view=positions&success=added');
       exit();
       break;
@@ -59,11 +64,6 @@ function getSortIcon($column, $current_sort, $current_dir) {
 // Pobranie stanowisk
 $sql = "SELECT * FROM stanowiska ORDER BY $sort_column $sort_dir";
 $stanowiska = mysqli_query($connection, $sql);
-
-// Funkcja formatująca kwotę
-function formatAmount($amount) {
-  return number_format($amount, 2, ',', ' ') . ' zł';
-}
 ?>
 
 <div class="admin-filters">
@@ -107,7 +107,7 @@ function formatAmount($amount) {
             <?php echo ucfirst($position['nazwa']); ?>
           </span>
         </td>
-        <td><?php echo formatAmount($position['wynagrodzenie_miesieczne']); ?></td>
+        <td><?php echo formatPrice($position['wynagrodzenie_miesieczne']); ?></td>
         <td>
           <div class="admin-actions">
             <button class="admin-button warning" onclick="editPosition(<?php echo htmlspecialchars(json_encode($position)); ?>)">
@@ -124,7 +124,6 @@ function formatAmount($amount) {
 <!-- Modal dodawania/edycji stanowiska -->
 <div id="positionModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closePositionModal()">&times;</span>
     <h2 id="modalTitle">Dodaj stanowisko</h2>
     <form method="POST" onsubmit="return validateForm()">
       <input type="hidden" name="action" id="formAction" value="add">
@@ -132,13 +131,7 @@ function formatAmount($amount) {
       
       <div class="form-group" id="nameGroup">
         <label for="nazwa" class="form-label">Nazwa stanowiska</label>
-        <select id="nazwa" name="nazwa" class="form-input" required>
-          <option value="pracownik">Pracownik</option>
-          <option value="manager">Manager</option>
-          <option value="sekretarka">Sekretarka</option>
-          <option value="informatyk">Informatyk</option>
-          <option value="właściciel">Właściciel</option>
-        </select>
+        <input type="text" id="nazwa" name="nazwa" class="form-input" required>
       </div>
       
       <div class="form-group">
@@ -146,7 +139,6 @@ function formatAmount($amount) {
         <div class="input-group">
           <input type="number" id="wynagrodzenie" name="wynagrodzenie" class="form-input" 
                  required min="0" step="0.01">
-          <span class="input-group-text">zł</span>
         </div>
       </div>
       
@@ -199,8 +191,23 @@ function closePositionModal() {
   document.getElementById('positionModal').style.display = 'none';
 }
 
+function selectPosition(value, text) {
+  document.getElementById('selectedPosition').value = value;
+  document.getElementById('positionDropdownText').textContent = text;
+  document.getElementById('positionDropdown').classList.remove('show');
+}
+
 function validateForm() {
+  const formAction = document.getElementById('formAction').value;
   const wynagrodzenie = document.getElementById('wynagrodzenie').value;
+  
+  if (formAction === 'add') {
+    const nazwa = document.getElementById('nazwa').value;
+    if (!nazwa) {
+      alert('Wprowadź nazwę stanowiska');
+      return false;
+    }
+  }
   
   if (wynagrodzenie <= 0) {
     alert('Wynagrodzenie musi być większe od 0');
@@ -234,23 +241,9 @@ window.onclick = function(event) {
 }
 </script>
 
-<style>
-.input-group {
-  display: flex;
-  align-items: center;
+<?php
+// Na początku pliku, przed jakimkolwiek wyjściem HTML
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    error_log('Otrzymane dane POST: ' . print_r($_POST, true));
 }
-
-.input-group .form-input {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.input-group-text {
-  padding: 8px 12px;
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
-  border-left: none;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-</style> 
+?> 

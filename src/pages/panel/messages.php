@@ -146,7 +146,6 @@ $wiadomosci = mysqli_query($connection, $sql);
 <!-- Modal treści wiadomości -->
 <div id="messageModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeMessageModal()">&times;</span>
     <h2>Treść wiadomości</h2>
     <div id="messageContent" class="message-content"></div>
     <div class="admin-actions">
@@ -160,7 +159,6 @@ $wiadomosci = mysqli_query($connection, $sql);
 <!-- Modal zmiany statusu -->
 <div id="statusModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeStatusModal()">&times;</span>
     <h2>Zmień status wiadomości</h2>
     <form method="POST">
       <input type="hidden" name="action" value="update_status">
@@ -259,31 +257,3 @@ window.onclick = function(event) {
   }
 }
 </script>
-
-<style>
-.message-content {
-  white-space: pre-wrap;
-  max-height: 400px;
-  overflow-y: auto;
-  padding: 15px;
-  background: var(--background-secondary);
-  border-radius: 4px;
-  margin: 10px 0;
-}
-
-.status-nowa {
-  background-color: #f44336;
-}
-
-.status-w_trakcie {
-  background-color: #ff9800;
-}
-
-.status-zakonczona {
-  background-color: #4caf50;
-}
-
-.status-archiwalna {
-  background-color: #9e9e9e;
-}
-</style> 

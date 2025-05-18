@@ -2,6 +2,7 @@
   /** @var mysqli $connection */
   include_once '../includes/config/db_config.php';
   include_once '../includes/config/session_config.php';
+  include_once '../includes/helpers/format_helpers.php';
 
   if (!isset($_SESSION['employee_id'])) {
     header('Location: home.php');
@@ -123,6 +124,7 @@ if (!empty($page)) {
   <link href="../assets/css/panel.css" rel="stylesheet">
   <script type="module" src="../assets/js/header.js"></script>
   <script src="../assets/js/panel.js"></script>
+  <script src="../assets/js/dropdowns.js" defer></script>
   <title>Panel Administratora<?php echo $page ? ' - ' . $pages[$page]['title'] : ''; ?></title>
 </head>
 <body>

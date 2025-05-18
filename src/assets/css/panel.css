@@ -239,6 +239,7 @@ body {
   opacity: 1;
 }
 
+/* Style dla dropdownów */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -251,16 +252,28 @@ body {
   justify-content: space-between;
   gap: var(--spacing-xs);
   padding: 0 var(--spacing-sm);
+  height: var(--card-size-xs-sm);
   border: none;
   outline: none;
   background-color: var(--secondary-bg);
   color: var(--text-color);
   cursor: pointer;
   width: 100%;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
 }
 
 .dropdown-toggle:hover {
-  background-color: var(--secondary-bg);
+  background-color: var(--form-input-bg);
+}
+
+.dropdown-toggle i {
+  margin-left: var(--spacing-sm);
+  transition: transform 0.2s ease;
+}
+
+.dropdown-toggle.active i {
+  transform: rotate(180deg);
 }
 
 .dropdown-menu {
@@ -275,15 +288,12 @@ body {
   padding: var(--spacing-xs) 0;
   background-color: var(--primary-bg);
   border: 1px solid var(--form-border);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-menu.show {
   display: block;
-}
-
-.dropdown ul {
   list-style: none;
 }
 
@@ -298,6 +308,7 @@ body {
   text-align: left;
   border: none;
   background: none;
+  font-size: var(--font-md);
 }
 
 .dropdown-item:hover {
@@ -314,7 +325,12 @@ body {
   height: 1px;
   margin: var(--spacing-xxs) 0;
   background-color: var(--form-border);
+}
+
+/* Nadpisanie stylów dla dropdownów w modalach */
+.modal-content .dropdown-toggle {
   border: none;
+  background-color: var(--form-input-bg);
 }
 
 .admin-filters select {
@@ -351,6 +367,7 @@ body {
   margin-bottom: var(--spacing-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: var(--radius-xxs);
+  font-size: var(--font-md);
 }
 
 .admin-table th {
@@ -554,6 +571,122 @@ body {
   max-width: fit-content;
 }
 
+.modal-content h2 {
+  margin: 0 0 var(--spacing-lg) 0;
+  color: var(--text-color);
+  font-size: var(--font-xl);
+}
+
+.modal-content p {
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-color);
+}
+
+.modal-content .admin-table, .modal-content #deliveryDetails .admin-table {
+  margin-bottom: var(--spacing-sm);
+}
+
+.modal-content .form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.modal-content .admin-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Style dla przycisków w modalach */
+.modal-content .admin-button {
+  box-shadow: none;
+  height: var(--button-height-lg);
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+}
+
+/* Zmiana koloru przycisku Anuluj w modalach */
+.modal-content .admin-button:not(.success):not(.warning):not(.info) {
+  background-color: var(--error-color);
+  color: var(--button-text-color);
+}
+
+.modal-content .admin-button:not(.success):not(.warning):not(.info):hover {
+  background-color: var(--error-color-hover);
+}
+
+/* Style dla formularzy */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-xxs);
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Style dla inputów i selectów */
+.form-input,
+select.form-input {
+  width: 100%;
+  height: var(--button-height-lg);
+  padding: 0 var(--spacing-sm);
+  border: 1px solid var(--form-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--form-input-bg);
+  font-size: var(--font-md);
+  color: var(--text-color);
+}
+
+textarea.form-input {
+  height: auto;
+  min-height: 100px;
+  padding: var(--spacing-sm);
+  resize: vertical;
+}
+
+.form-input:focus,
+select.form-input:focus {
+  outline: none;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 2px rgba(var(--highlight-color-rgb), 0.1);
+}
+
+/* Style dla inputów i selectów w modalach */
+.modal-content .form-input,
+.modal-content select.form-input {
+  width: 100%;
+  height: var(--button-height-lg);
+  padding: 0 var(--spacing-sm);
+  border: none;
+  outline: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--form-input-bg);
+  font-size: var(--font-md);
+  color: var(--text-color);
+}
+
+.modal-content textarea.form-input {
+  height: auto;
+  min-height: 100px;
+  padding: var(--spacing-sm);
+  resize: vertical;
+}
+
+.modal-content .form-input:focus,
+.modal-content select.form-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
 .client-orders-table {
   margin-bottom: 0;
 }
@@ -577,31 +710,6 @@ body {
 
 .close:hover {
   color: var(--highlight-color);
-}
-
-.form-group {
-  margin-bottom: var(--spacing-md);
-}
-
-.form-label {
-  display: block;
-  margin-bottom: var(--spacing-xs);
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-.form-input {
-  width: 100%;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--form-border);
-  border-radius: var(--radius-xxs);
-  background-color: var(--form-input-bg);
-  font-size: var(--font-md);
-}
-
-textarea.form-input {
-  min-height: 100px;
-  resize: vertical;
 }
 
 .sort-link {
@@ -645,6 +753,7 @@ textarea.form-input {
   color: var(--text-color);
 }
 
+/* Responsywne style dla urządzeń mobilnych */
 @media (max-width: 768px) {
   .admin-filters {
     flex-direction: column;
@@ -652,12 +761,19 @@ textarea.form-input {
     gap: var(--spacing-xs);
   }
 
+  .date-input {
+    width: 100%;
+  }
+
   .admin-filters .admin-button,
   .admin-filters .form-input,
   .admin-filters .dropdown-toggle,
   .admin-search .form-input,
   .admin-back-button,
-  .admin-button {
+  .admin-button,
+  .modal-content .admin-button,
+  .modal-content .form-input,
+  .modal-content select.form-input {
     height: var(--button-height-lg);
     font-size: var(--font-md);
   }
@@ -684,13 +800,6 @@ textarea.form-input {
 
   .admin-back-button {
     width: 100%;
-    height: var(--button-height-lg);
-    font-size: var(--font-md);
-  }
-
-  .admin-button {
-    height: var(--button-height-lg);
-    font-size: var(--font-md);
   }
 
   .admin-header-top {
@@ -700,8 +809,12 @@ textarea.form-input {
   }
 
   .admin-table {
-    min-width: 800px;
-    margin-bottom: 0;
+    font-size: var(--font-sm);
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: var(--spacing-xxs) var(--spacing-xs);
   }
 
   .order-info {
@@ -716,6 +829,11 @@ textarea.form-input {
   .order-summary {
     max-width: 100%;
   }
+
+  .modal-content {
+    width: 95%;
+    margin: 2% auto;
+  }
 }
 
 @media (max-width: 480px) {
@@ -727,30 +845,30 @@ textarea.form-input {
     height: var(--card-size-xl);
   }
 
-  .admin-button {
-    width: 100%;
-    height: var(--button-height-md);
-    font-size: var(--font-xs);
-  }
-
-  .admin-back-button {
-    height: var(--button-height-md);
-    font-size: var(--font-xs);
-  }
-
-  .modal-content {
-    margin: 2% auto;
-    padding: var(--spacing-md);
-    width: 95%;
-  }
-
   .admin-filters .admin-button,
   .admin-filters .form-input,
   .admin-filters .dropdown-toggle,
   .admin-search .form-input,
   .admin-back-button,
-  .admin-button {
+  .admin-button,
+  .modal-content .admin-button,
+  .modal-content .form-input,
+  .modal-content select.form-input {
     height: var(--button-height-md);
     font-size: var(--font-xs);
+  }
+
+  .modal-content {
+    padding: var(--spacing-md);
+    width: 95%;
+  }
+
+  .admin-table {
+    font-size: var(--font-xs);
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: var(--spacing-xxs) var(--spacing-xxs);
   }
 }

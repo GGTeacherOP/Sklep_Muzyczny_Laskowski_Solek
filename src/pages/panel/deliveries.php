@@ -208,7 +208,6 @@ $instrumenty = mysqli_query($connection, "SELECT * FROM instrumenty ORDER BY naz
 <!-- Modal dodawania dostawy -->
 <div id="deliveryModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDeliveryModal()">&times;</span>
     <h2>Dodaj nową dostawę</h2>
     <form method="POST" onsubmit="return validateDeliveryForm()">
       <input type="hidden" name="action" value="add">
@@ -274,28 +273,38 @@ $instrumenty = mysqli_query($connection, "SELECT * FROM instrumenty ORDER BY naz
 <!-- Modal szczegółów dostawy -->
 <div id="detailsModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeDetailsModal()">&times;</span>
     <h2>Szczegóły dostawy</h2>
     <div id="deliveryDetails"></div>
+    <div class="admin-actions">
+      <button type="button" class="admin-button" onclick="closeDetailsModal()">
+        <i class="fas fa-times"></i> Zamknij
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- Modal zmiany statusu -->
 <div id="statusModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeStatusModal()">&times;</span>
     <h2>Zmień status dostawy</h2>
     <form method="POST">
       <input type="hidden" name="action" value="update_status">
       <input type="hidden" name="dostawa_id" id="status_dostawa_id">
+      <input type="hidden" name="status" id="selectedDeliveryStatus">
       
       <div class="form-group">
         <label for="status" class="form-label">Status</label>
-        <select id="status" name="status" class="form-input" required>
-          <option value="oczekiwana">Oczekiwana</option>
-          <option value="dostarczona">Dostarczona</option>
-          <option value="anulowana">Anulowana</option>
-        </select>
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle" onclick="toggleDropdown('deliveryStatusDropdown')">
+            <span id="deliveryStatusDropdownText">Wybierz status</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="deliveryStatusDropdown">
+            <li><a href="#" class="dropdown-item" onclick="selectDeliveryStatus('oczekiwana', 'Oczekiwana')">Oczekiwana</a></li>
+            <li><a href="#" class="dropdown-item" onclick="selectDeliveryStatus('dostarczona', 'Dostarczona')">Dostarczona</a></li>
+            <li><a href="#" class="dropdown-item" onclick="selectDeliveryStatus('anulowana', 'Anulowana')">Anulowana</a></li>
+          </ul>
+        </div>
       </div>
       
       <div class="admin-actions">
@@ -411,7 +420,7 @@ function closeDetailsModal() {
 function showStatusModal(dostawaId, currentStatus) {
   const modal = document.getElementById('statusModal');
   document.getElementById('status_dostawa_id').value = dostawaId;
-  document.getElementById('status').value = currentStatus;
+  document.getElementById('selectedDeliveryStatus').value = currentStatus;
   modal.style.display = 'block';
 }
 
@@ -441,6 +450,12 @@ function filterByStatus(status) {
       row.style.display = 'none';
     }
   });
+}
+
+function selectDeliveryStatus(status, text) {
+  document.getElementById('selectedDeliveryStatus').value = status;
+  document.getElementById('deliveryStatusDropdownText').textContent = text;
+  document.getElementById('deliveryStatusDropdown').classList.remove('show');
 }
 
 // Zamykanie modali po kliknięciu poza nimi

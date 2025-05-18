@@ -28,7 +28,6 @@ function renderClientOrders($orders, $client_id) {
                 <th>Status</th>
                 <th>Ilość produktów</th>
                 <th>Wartość</th>
-                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -41,13 +40,6 @@ function renderClientOrders($orders, $client_id) {
                     </td>
                     <td><?php echo $order['liczba_produktow']; ?></td>
                     <td><?php echo number_format($order['wartosc_calkowita'], 2); ?> zł</td>
-                    <td>
-                        <div class="admin-actions">
-                            <a class="admin-button info " href="?view=orders&view_details=<?php echo $order['id']; ?>">
-                                <i class="fas fa-eye"></i>
-            </a>
-                        </div>
-                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

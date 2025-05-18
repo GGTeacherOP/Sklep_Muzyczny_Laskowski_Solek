@@ -324,18 +324,6 @@ window.onclick = function(event) {
 </script>
 
 <style>
-.finance-details {
-  margin-top: 5px;
-  font-size: 0.9em;
-  color: var(--text-secondary);
-}
-
-.finance-detail {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 20px;
-}
-
 .details-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -343,40 +331,12 @@ window.onclick = function(event) {
   margin-top: 20px;
 }
 
-.details-section {
-  background: var(--background-secondary);
-  padding: 20px;
-  border-radius: 8px;
-}
-
 .details-section h3 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: var(--text-primary);
 }
-
-.details-subsection {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.details-subsection .total {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border-color);
-}
-
-.income { color: var(--success); }
-.expenses { color: var(--danger); }
-.profit { color: var(--success); }
-.loss { color: var(--danger); }
 
 @media (max-width: 768px) {
-  .finance-detail {
-    margin-left: 10px;
-  }
-  
   .details-grid {
     grid-template-columns: 1fr;
   }
