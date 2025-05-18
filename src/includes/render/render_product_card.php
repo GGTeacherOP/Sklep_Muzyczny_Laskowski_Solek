@@ -1,9 +1,9 @@
 <?php
-  include_once '../includes/format_price.php';
+  include_once '../includes/helpers/format_helpers.php';
 
   function renderProductCard(array $product, string $type) : string
   {
-    $price = formatPrice($product['cena']);
+    $price = formatPrice($product['cena_sprzedazy']);
 
     return "
     <article class=\"product-card\">
