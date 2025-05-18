@@ -42,17 +42,17 @@ $stmt->close();
     'title' => 'Produkty'
   ],
   'categories' => [
-    'roles' => ['manager', 'właściciel', 'informatyk'],
+    'roles' => ['właściciel', 'informatyk'],
     'icon' => 'fas fa-tags',
     'title' => 'Kategorie produktów'
   ],
   'brands' => [
-    'roles' => ['manager', 'właściciel', 'informatyk'],
+    'roles' => ['właściciel', 'informatyk'],
     'icon' => 'fas fa-industry',
     'title' => 'Producenci'
   ],
   'reviews' => [
-    'roles' => ['manager', 'właściciel'],
+    'roles' => ['właściciel'],
     'icon' => 'fas fa-star',
     'title' => 'Oceny produktów'
   ],
@@ -67,7 +67,7 @@ $stmt->close();
     'title' => 'Kody promocyjne'
   ],
   'employees' => [
-    'roles' => ['manager', 'właściciel'],
+    'roles' => ['manager', 'właściciel', 'informatyk'],
     'icon' => 'fas fa-users',
     'title' => 'Pracownicy'
   ],

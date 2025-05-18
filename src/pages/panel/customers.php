@@ -156,9 +156,6 @@ $klienci = mysqli_query($connection, $sql);
             <button class="admin-button warning" onclick="editClient(<?php echo htmlspecialchars(json_encode($client)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
-            <button class="admin-button danger" onclick="confirmDelete(<?php echo $client['id']; ?>)">
-              <i class="fas fa-trash"></i>
-            </button>
           </div>
         </td>
       </tr>
@@ -213,26 +210,6 @@ $klienci = mysqli_query($connection, $sql);
   </div>
 </div>
 
-<!-- Modal potwierdzenia usunięcia -->
-<div id="deleteModal" class="modal">
-  <div class="modal-content">
-    <h2>Potwierdzenie usunięcia</h2>
-    <p>Czy na pewno chcesz usunąć tego klienta? Ta operacja jest nieodwracalna i spowoduje usunięcie wszystkich danych klienta, w tym zamówień i historii.</p>
-    <form method="POST">
-      <input type="hidden" name="action" value="delete">
-      <input type="hidden" name="client_id" id="delete_client_id">
-      <div class="admin-actions">
-        <button type="submit" class="admin-button danger">
-          <i class="fas fa-trash"></i> Usuń
-        </button>
-        <button type="button" class="admin-button" onclick="closeDeleteModal()">
-          <i class="fas fa-times"></i> Anuluj
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
 <script>
 function showClientOrders(clientId) {
   document.getElementById('ordersContent').innerHTML = '<p class="loading">Ładowanie zamówień...</p>';
@@ -269,11 +246,6 @@ function editClient(client) {
   
   // Otwórz modal
   document.getElementById('editModal').style.display = 'block';
-}
-
-function confirmDelete(clientId) {
-  document.getElementById('delete_client_id').value = clientId;
-  document.getElementById('deleteModal').style.display = 'block';
 }
 
 function closeOrdersModal() {

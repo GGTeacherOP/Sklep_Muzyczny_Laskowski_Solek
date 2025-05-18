@@ -6,32 +6,64 @@ include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   switch ($_POST['action']) {
     case 'add':
-      $identyfikator = mysqli_real_escape_string($connection, $_POST['identyfikator']);
-      $username = mysqli_real_escape_string($connection, $_POST['username']);
-      $email = mysqli_real_escape_string($connection, $_POST['email']);
-      $password = mysqli_real_escape_string($connection, $_POST['password']);
-      $stanowisko = mysqli_real_escape_string($connection, $_POST['stanowisko']);
-      
-      // Najpierw dodajemy użytkownika
-      $sql = "INSERT INTO uzytkownicy (nazwa_uzytkownika, email, haslo, typ) VALUES ('$username', '$email', '$password', 'pracownik')";
-      if (mysqli_query($connection, $sql)) {
-        $user_id = mysqli_insert_id($connection);
+      // Tylko informatyk i właściciel mogą dodawać pracowników
+      if ($role === 'informatyk' || $role === 'właściciel') {
+        $identyfikator = mysqli_real_escape_string($connection, $_POST['identyfikator']);
+        $username = mysqli_real_escape_string($connection, $_POST['username']);
+        $email = mysqli_real_escape_string($connection, $_POST['email']);
+        $password = mysqli_real_escape_string($connection, $_POST['password']);
+        $stanowisko = mysqli_real_escape_string($connection, $_POST['stanowisko']);
         
-        // Następnie dodajemy pracownika
-        $sql = "INSERT INTO pracownicy (uzytkownik_id, identyfikator, stanowisko_id) 
-                SELECT '$user_id', '$identyfikator', id FROM stanowiska WHERE nazwa = '$stanowisko'";
-        mysqli_query($connection, $sql);
+        // Najpierw dodajemy użytkownika
+        $sql = "INSERT INTO uzytkownicy (nazwa_uzytkownika, email, haslo, typ) VALUES ('$username', '$email', '$password', 'pracownik')";
+        if (mysqli_query($connection, $sql)) {
+          $user_id = mysqli_insert_id($connection);
+          
+          // Następnie dodajemy pracownika
+          $sql = "INSERT INTO pracownicy (uzytkownik_id, identyfikator, stanowisko_id) 
+                  SELECT '$user_id', '$identyfikator', id FROM stanowiska WHERE nazwa = '$stanowisko'";
+          mysqli_query($connection, $sql);
+          
+          // Dodajemy również rekord w tabeli klientów
+          $sql = "INSERT INTO klienci (uzytkownik_id) VALUES ('$user_id')";
+          mysqli_query($connection, $sql);
+        }
+        header('Location: panel.php?view=employees&success=added');
+        exit();
+      } else {
+        header('Location: panel.php?view=employees&error=permission_denied');
+        exit();
       }
-      header('Location: panel.php?view=employees&success=added');
-      exit();
       break;
       
     case 'update':
+      // Manager nie może edytować pracowników
+      if ($role === 'manager') {
+        header('Location: panel.php?view=employees&error=permission_denied');
+        exit();
+      }
+      
       $employee_id = mysqli_real_escape_string($connection, $_POST['employee_id']);
+      
+      // Sprawdź czy pracownik istnieje i jaki ma poziom dostępu
+      $stmt = $connection->prepare("SELECT p.*, s.nazwa as stanowisko FROM pracownicy p 
+                                    JOIN stanowiska s ON p.stanowisko_id = s.id 
+                                    WHERE p.id = ?");
+      $stmt->bind_param("i", $employee_id);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      $edytowany_pracownik = $result->fetch_assoc();
+      $stmt->close();
+      
+      // Informatyk nie może edytować właściciela
+      if ($role === 'informatyk' && $edytowany_pracownik['stanowisko'] === 'właściciel') {
+        header('Location: panel.php?view=employees&error=permission_denied');
+        exit();
+      }
+      
       $identyfikator = mysqli_real_escape_string($connection, $_POST['identyfikator']);
       $username = mysqli_real_escape_string($connection, $_POST['username']);
       $email = mysqli_real_escape_string($connection, $_POST['email']);
-      $stanowisko = mysqli_real_escape_string($connection, $_POST['stanowisko']);
       
       // Pobieramy ID użytkownika
       $result = mysqli_query($connection, "SELECT uzytkownik_id FROM pracownicy WHERE id = '$employee_id'");
@@ -43,10 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       mysqli_query($connection, $sql);
       
       // Aktualizujemy dane pracownika
-      $sql = "UPDATE pracownicy p 
-              SET p.identyfikator = '$identyfikator', 
-                  p.stanowisko_id = (SELECT id FROM stanowiska WHERE nazwa = '$stanowisko') 
-              WHERE p.id = '$employee_id'";
+      $sql = "UPDATE pracownicy p SET p.identyfikator = '$identyfikator'";
+      
+      // Tylko właściciel może zmieniać stanowisko
+      if ($role === 'właściciel') {
+        $stanowisko = mysqli_real_escape_string($connection, $_POST['stanowisko']);
+        $sql .= ", p.stanowisko_id = (SELECT id FROM stanowiska WHERE nazwa = '$stanowisko')";
+      }
+      
+      $sql .= " WHERE p.id = '$employee_id'";
       mysqli_query($connection, $sql);
       
       // Jeśli podano nowe hasło, aktualizujemy je
@@ -59,6 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       break;
       
     case 'delete':
+      // Tylko właściciel może usuwać pracowników
+      if ($role !== 'właściciel') {
+        header('Location: panel.php?view=employees&error=permission_denied');
+        exit();
+      }
+      
       $employee_id = mysqli_real_escape_string($connection, $_POST['employee_id']);
       
       // Pobieramy ID użytkownika
@@ -66,9 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       $user = mysqli_fetch_assoc($result);
       $user_id = $user['uzytkownik_id'];
       
-      // Usuwamy pracownika i użytkownika
-      mysqli_query($connection, "DELETE FROM pracownicy WHERE id = '$employee_id'");
-      mysqli_query($connection, "DELETE FROM uzytkownicy WHERE id = '$user_id'");
+      // Zmieniamy typ użytkownika na 'klient'
+      mysqli_query($connection, "UPDATE uzytkownicy SET typ = 'klient' WHERE id = '$user_id'");
+      
+      // Zamiast usuwać rekord, aktualizujemy datę zwolnienia na aktualną datę
+      mysqli_query($connection, "UPDATE pracownicy SET data_zwolnienia = NOW() WHERE id = '$employee_id'");
       
       header('Location: panel.php?view=employees&success=deleted');
       exit();
@@ -110,6 +155,7 @@ $sql = "SELECT p.*, u.nazwa_uzytkownika, u.email, u.data_rejestracji, s.nazwa as
         FROM pracownicy p
         JOIN uzytkownicy u ON p.uzytkownik_id = u.id
         JOIN stanowiska s ON p.stanowisko_id = s.id
+        WHERE p.data_zwolnienia IS NULL
         ORDER BY ";
 
 // Dodanie odpowiedniego sortowania
@@ -125,9 +171,11 @@ $pracownicy = mysqli_query($connection, $sql);
 ?>
 
 <div class="admin-filters">
+  <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
   <button class="admin-button success add" onclick="showAddEmployeeModal()">
     <i class="fas fa-plus"></i> Dodaj pracownika
   </button>
+  <?php endif; ?>
   <div class="admin-search">
     <input type="text" id="employeeSearch" class="form-input" placeholder="Szukaj pracowników..." 
            onkeyup="filterTable('employeeTable', 2)">
@@ -183,7 +231,9 @@ $pracownicy = mysqli_query($connection, $sql);
           Data zatrudnienia <?php echo getSortIcon('data_rejestracji', $sort_column, $sort_dir); ?>
         </a>
       </th>
+      <?php if ($role !== 'manager'): ?>
       <th>Akcje</th>
+      <?php endif; ?>
     </tr>
   </thead>
   <tbody>
@@ -199,18 +249,22 @@ $pracownicy = mysqli_query($connection, $sql);
           </span>
         </td>
         <td><?php echo date('d.m.Y', strtotime($employee['data_rejestracji'])); ?></td>
+        <?php if ($role !== 'manager'): ?>
         <td>
           <div class="admin-actions">
+            <?php if ($role === 'właściciel' || $role === 'informatyk'): ?>
             <button class="admin-button warning" onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
-            <?php if ($employee['stanowisko'] !== 'właściciel') : ?>
+            <?php if ($employee['stanowisko'] !== 'właściciel' && $role === 'właściciel') : ?>
               <button class="admin-button danger" onclick="confirmDelete(<?php echo $employee['id']; ?>)">
                 <i class="fas fa-trash"></i>
               </button>
             <?php endif; ?>
+            <?php endif; ?>
           </div>
         </td>
+        <?php endif; ?>
       </tr>
     <?php endwhile; ?>
   </tbody>
@@ -332,6 +386,18 @@ function editEmployee(employee) {
   const modalTitle = document.getElementById('modalTitle');
   const passwordField = document.getElementById('password');
   const passwordConfirmField = document.getElementById('password_confirm');
+  const positionDropdown = document.querySelector('.form-group:has(#positionDropdownText)');
+  
+  // Sprawdzanie czy użytkownik to informatyk i czy edytuje właściciela
+  const isAdmin = '<?php echo $role; ?>' === 'właściciel';
+  const isIT = '<?php echo $role; ?>' === 'informatyk';
+  const isEditingOwner = employee.stanowisko === 'właściciel';
+  
+  // Informatyk nie może edytować właściciela - ukryj formularz
+  if (isIT && isEditingOwner) {
+    alert('Nie masz uprawnień do edycji właściciela');
+    return;
+  }
   
   modalTitle.textContent = 'Edytuj pracownika';
   document.getElementById('formAction').value = 'update';
@@ -341,6 +407,11 @@ function editEmployee(employee) {
   document.getElementById('email').value = employee.email;
   document.getElementById('selectedPosition').value = employee.stanowisko;
   document.getElementById('positionDropdownText').textContent = ucfirst(employee.stanowisko);
+  
+  // Opcja zmiany stanowiska dostępna tylko dla właściciela
+  if (positionDropdown) {
+    positionDropdown.style.display = isAdmin ? 'block' : 'none';
+  }
   
   // Hasło nie jest wymagane przy edycji
   passwordField.required = false;

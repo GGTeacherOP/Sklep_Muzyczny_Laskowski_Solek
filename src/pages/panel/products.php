@@ -2,19 +2,68 @@
   /** @var mysqli $connection */
 include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 
+// Sprawdź czy zmienna $role jest ustawiona (powinna być przekazana z panel.php)
+if (!isset($role)) {
+  // Jeśli nie jest ustawiona, pobierz ją
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+  
+  if (isset($_SESSION['employee_id'])) {
+    $employee_id = $_SESSION['employee_id'];
+    
+    // Pobierz pracownika
+    $stmt = $connection->prepare("SELECT * FROM pracownicy WHERE identyfikator = ?");
+    $stmt->bind_param("s", $employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $employee = $result->fetch_assoc();
+    $stmt->close();
+    
+    if ($employee) {
+      // Pobierz nazwę stanowiska
+      $stmt = $connection->prepare("SELECT s.nazwa FROM stanowiska s JOIN pracownicy p ON s.id = p.stanowisko_id WHERE p.id = ?");
+      $stmt->bind_param("i", $employee['id']);
+      $stmt->execute();
+      $stanowisko_result = $stmt->get_result();
+      $stanowisko = $stanowisko_result->fetch_assoc();
+      $role = $stanowisko['nazwa'];
+      $stmt->close();
+    }
+  }
+}
+
 // Obsługa akcji
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['action'])) {
     switch ($_POST['action']) {
       case 'delete':
-        if (isset($_POST['product_id'])) {
-          $product_id = mysqli_real_escape_string($connection, $_POST['product_id']);
-          $sql = "DELETE FROM instrumenty WHERE id = '$product_id'";
-          mysqli_query($connection, $sql);
+        // Sprawdź uprawnienia - tylko informatyk i właściciel mogą usuwać
+        if ($role === 'informatyk' || $role === 'właściciel') {
+          if (isset($_POST['product_id'])) {
+            $product_id = mysqli_real_escape_string($connection, $_POST['product_id']);
+            $sql = "DELETE FROM instrumenty WHERE id = '$product_id'";
+            mysqli_query($connection, $sql);
+          }
         }
         break;
+        
+      case 'edit_stock':
+        // Pracownicy mogą tylko zmieniać stan magazynowy
+        if (isset($_POST['product_id'])) {
+          $product_id = mysqli_real_escape_string($connection, $_POST['product_id']);
+          $stan = mysqli_real_escape_string($connection, $_POST['stan_magazynowy']);
+          
+          $sql = "UPDATE instrumenty SET stan_magazynowy = '$stan' WHERE id = '$product_id'";
+          mysqli_query($connection, $sql);
+          header('Location: panel.php?view=products&success=updated');
+          exit();
+        }
+        break;
+        
       case 'add':
-      case 'edit':
+        // Sprawdź uprawnienia - tylko informatyk i właściciel mogą dodawać produkty
+        if ($role === 'informatyk' || $role === 'właściciel') {
         $kod = mysqli_real_escape_string($connection, $_POST['kod_produktu']);
         $nazwa = mysqli_real_escape_string($connection, $_POST['nazwa']);
         $opis = mysqli_real_escape_string($connection, $_POST['opis']);
@@ -23,11 +72,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $producent = mysqli_real_escape_string($connection, $_POST['producent_id']);
         $kategoria = mysqli_real_escape_string($connection, $_POST['kategoria_id']);
         
-        if ($_POST['action'] === 'add') {
           $sql = "INSERT INTO instrumenty (kod_produktu, nazwa, opis, cena_sprzedazy, stan_magazynowy, producent_id, kategoria_id) 
                   VALUES ('$kod', '$nazwa', '$opis', '$cena', '$stan', '$producent', '$kategoria')";
-        } else {
+          mysqli_query($connection, $sql);
+          header('Location: panel.php?view=products&success=added');
+          exit();
+        }
+        break;
+        
+      case 'edit':
+        // Sprawdź uprawnienia - tylko informatyk i właściciel mogą edytować
+        if ($role === 'informatyk' || $role === 'właściciel') {
           $id = mysqli_real_escape_string($connection, $_POST['product_id']);
+          $kod = mysqli_real_escape_string($connection, $_POST['kod_produktu']);
+          $nazwa = mysqli_real_escape_string($connection, $_POST['nazwa']);
+          $opis = mysqli_real_escape_string($connection, $_POST['opis']);
+          $cena = mysqli_real_escape_string($connection, $_POST['cena_sprzedazy']);
+          $stan = mysqli_real_escape_string($connection, $_POST['stan_magazynowy']);
+          $producent = mysqli_real_escape_string($connection, $_POST['producent_id']);
+          $kategoria = mysqli_real_escape_string($connection, $_POST['kategoria_id']);
+          
           $sql = "UPDATE instrumenty SET 
                   kod_produktu = '$kod',
                   nazwa = '$nazwa',
@@ -37,8 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   producent_id = '$producent',
                   kategoria_id = '$kategoria'
                   WHERE id = '$id'";
+          mysqli_query($connection, $sql);
+          header('Location: panel.php?view=products&success=updated');
+          exit();
         }
-        mysqli_query($connection, $sql);
         break;
     }
   }
@@ -107,9 +173,11 @@ $produkty = mysqli_query($connection, $sql);
 ?>
 
 <div class="admin-filters">
+  <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
   <button class="admin-button success add" onclick="showAddModal()">
     <i class="fas fa-plus"></i> Dodaj produkt
   </button>
+  <?php endif; ?>
   <div class="admin-search">
     <input type="text" id="productSearch" class="form-input" placeholder="Szukaj produktów..." 
            onkeyup="filterTable('productTable', 2)">
@@ -200,12 +268,20 @@ $produkty = mysqli_query($connection, $sql);
       <td><?php echo htmlspecialchars($product['nazwa_kategorii']); ?></td>
       <td>
         <div class="admin-actions">
+          <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
           <button class="admin-button warning" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="admin-button danger" onclick="confirmDelete(<?php echo $product['id']; ?>)">
-            <i class="fas fa-trash"></i>
+          <?php else: ?>
+          <button class="admin-button warning" onclick="editProductStock(<?php echo htmlspecialchars(json_encode($product)); ?>)">
+            <i class="fas fa-edit"></i>
           </button>
+          <?php endif; ?>
+          <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
+          <button class="admin-button danger" onclick="confirmDelete(<?php echo $product['id']; ?>)">
+              <i class="fas fa-trash"></i>
+            </button>
+          <?php endif; ?>
         </div>
       </td>
     </tr>
@@ -257,11 +333,11 @@ $produkty = mysqli_query($connection, $sql);
             <i class="fa-solid fa-chevron-down"></i>
           </button>
           <ul class="dropdown-menu" id="producentDropdown">
-            <?php foreach ($producenci_data as $producent) : ?>
+          <?php foreach ($producenci_data as $producent) : ?>
               <li><a href="#" class="dropdown-item" onclick="selectProducent('<?php echo $producent['id']; ?>', '<?php echo htmlspecialchars($producent['nazwa']); ?>')">
-                <?php echo htmlspecialchars($producent['nazwa']); ?>
+              <?php echo htmlspecialchars($producent['nazwa']); ?>
               </a></li>
-            <?php endforeach; ?>
+          <?php endforeach; ?>
           </ul>
         </div>
       </div>
@@ -274,11 +350,11 @@ $produkty = mysqli_query($connection, $sql);
             <i class="fa-solid fa-chevron-down"></i>
           </button>
           <ul class="dropdown-menu" id="kategoriaDropdown">
-            <?php foreach ($kategorie_data as $kategoria) : ?>
+          <?php foreach ($kategorie_data as $kategoria) : ?>
               <li><a href="#" class="dropdown-item" onclick="selectKategoria('<?php echo $kategoria['id']; ?>', '<?php echo htmlspecialchars($kategoria['nazwa']); ?>')">
-                <?php echo htmlspecialchars($kategoria['nazwa']); ?>
+              <?php echo htmlspecialchars($kategoria['nazwa']); ?>
               </a></li>
-            <?php endforeach; ?>
+          <?php endforeach; ?>
           </ul>
         </div>
       </div>
@@ -442,6 +518,38 @@ function closeDeleteModal() {
   document.getElementById('deleteModal').style.display = 'none';
 }
 
+function editProductStock(product) {
+  const modal = document.getElementById('productModal');
+  const modalTitle = document.getElementById('modalTitle');
+  
+  modalTitle.textContent = 'Edytuj stan magazynowy';
+  document.getElementById('formAction').value = 'edit_stock';
+  document.getElementById('productId').value = product.id;
+  document.getElementById('stan_magazynowy').value = product.stan_magazynowy;
+  
+  // Ukryj pozostałe pola formularza i wyłącz wymagania dla ukrytych pól
+  document.querySelectorAll('.form-group').forEach(group => {
+    group.style.display = 'none';
+    
+    // Znajdź pola formularza wewnątrz grupy i wyłącz wymagania
+    const inputs = group.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+      if (input !== document.getElementById('stan_magazynowy')) {
+        input.required = false; // Usuń atrybut required
+        input.disabled = true;  // Wyłącz pole, aby nie było wysyłane z formularzem
+      }
+    });
+  });
+  
+  // Pokaż tylko pole stanu magazynowego i upewnij się, że jest aktywne i wymagane
+  const stanGroup = document.querySelector('.form-group:nth-of-type(5)');
+  stanGroup.style.display = 'block';
+  document.getElementById('stan_magazynowy').disabled = false;
+  document.getElementById('stan_magazynowy').required = true;
+  
+  modal.style.display = 'block';
+}
+
 // Modyfikacja obsługi zamykania modali
 window.onclick = function(event) {
   const productModal = document.getElementById('productModal');
@@ -452,5 +560,43 @@ window.onclick = function(event) {
   } else if (event.target == deleteModal) {
     closeDeleteModal();
   }
+}
+
+function validateForm() {
+  const formAction = document.getElementById('formAction').value;
+  
+  if (formAction === 'add' || formAction === 'edit') {
+    const kod = document.getElementById('kod_produktu').value;
+    const nazwa = document.getElementById('nazwa').value;
+    const opis = document.getElementById('opis').value;
+    const cena = document.getElementById('cena_sprzedazy').value;
+    const stan = document.getElementById('stan_magazynowy').value;
+    const producent = document.getElementById('selectedProducent').value;
+    const kategoria = document.getElementById('selectedCategory').value;
+    
+    if (!kod || !nazwa || !opis || !cena || !stan || !producent || !kategoria) {
+      alert('Wypełnij wszystkie pola formularza');
+      return false;
+    }
+    
+    if (parseFloat(cena) <= 0) {
+      alert('Cena musi być większa od 0');
+      return false;
+    }
+    
+    if (parseInt(stan) < 0) {
+      alert('Stan magazynowy nie może być ujemny');
+      return false;
+    }
+  } else if (formAction === 'edit_stock') {
+    const stan = document.getElementById('stan_magazynowy').value;
+    
+    if (stan === '' || parseInt(stan) < 0) {
+      alert('Stan magazynowy nie może być pusty ani ujemny');
+      return false;
+    }
+  }
+  
+  return true;
 }
 </script>

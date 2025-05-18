@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 13, 2025 at 09:22 PM
+-- Generation Time: Maj 19, 2025 at 01:34 AM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -45,10 +45,15 @@ INSERT INTO `dostawa_szczegoly` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `
 (2, 1, 2, 3, 2000.00, 'dostarczona'),
 (3, 1, 5, 2, 600.00, 'dostarczona'),
 (4, 2, 3, 2, 3500.00, 'oczekiwana'),
-(5, 2, 6, 1, 2800.00, 'oczekiwana'),
 (6, 3, 4, 4, 1800.00, 'oczekiwana'),
 (7, 3, 1, 2, 1200.00, 'oczekiwana'),
-(8, 3, 2, 1, 2000.00, 'oczekiwana');
+(8, 3, 2, 1, 2000.00, 'oczekiwana'),
+(10, 10, 3, 1, 2599.00, 'oczekiwana'),
+(11, 10, 3, 2, 2599.00, 'oczekiwana'),
+(12, 11, 2, 2, 1599.00, 'oczekiwana'),
+(13, 11, 1, 1, 799.00, 'oczekiwana'),
+(14, 12, 5, 5, 599.00, 'dostarczona'),
+(15, 12, 2, 2, 1599.00, 'dostarczona');
 
 -- --------------------------------------------------------
 
@@ -72,7 +77,10 @@ CREATE TABLE `dostawy` (
 INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `producent_id`, `pracownik_id`) VALUES
 (1, '2025-05-10 09:15:00', '2025-05-15 14:30:00', 'dostarczona', 1, 3),
 (2, '2025-05-12 11:20:00', NULL, 'oczekiwana', 2, 4),
-(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 4, 3);
+(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 4, 3),
+(10, '2025-05-19 00:45:06', NULL, 'anulowana', 3, 2),
+(11, '2025-05-19 00:45:55', NULL, 'anulowana', 2, 2),
+(12, '2025-05-19 00:47:06', '2025-05-19 00:57:06', 'dostarczona', 5, 2);
 
 -- --------------------------------------------------------
 
@@ -98,12 +106,13 @@ CREATE TABLE `instrumenty` (
 --
 
 INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedazy`, `cena_kupna`, `cena_wypozyczenia_dzien`, `stan_magazynowy`, `producent_id`, `kategoria_id`) VALUES
-(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 0.00, 0.00, 15, 1, 1),
-(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 0.00, 0.00, 20, 2, 1),
-(3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 0.00, 0.00, 10, 3, 1),
-(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 0.00, 0.00, 25, 4, 1),
-(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 0.00, 0.00, 30, 5, 4),
-(6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 0.00, 0.00, 5, 6, 4);
+(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 799.99, 299.99, 20, 1, 1),
+(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 1599.99, 699.99, 22, 2, 1),
+(3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 2599.99, 1599.99, 10, 3, 1),
+(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 999.99, 599.99, 25, 4, 1),
+(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 599.99, 100.99, 35, 5, 4),
+(6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 1699.99, 1000.99, 9, 6, 4),
+(7, 'FGX800C', 'Yamaha FGX800C Electro-Acoustic Guitar', 'Klasyczna gitara elektroakustyczna typu dreadnought z wycięciem, wykonana z drewna świerkowego i nato. Wyposażona w preamp System66 z wbudowanym tunerem, zapewniającym czyste i dynamiczne brzmienie. Idealna zarówno do gry akustycznej, jak i koncertów na żywo.', 1799.00, 0.00, 0.00, 30, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -130,8 +139,7 @@ INSERT INTO `instrument_oceny` (`id`, `instrument_id`, `ocena`, `komentarz`, `cz
 (2, 2, 4, 'Bardzo dobra gitara, jednak cena jest dość wysoka.', 0, '2025-05-08 14:33:12', NULL),
 (3, 3, 5, 'Klasik, świetne brzmienie.', 0, '2025-05-08 14:33:12', NULL),
 (4, 4, 5, 'Bardzo szybka i wygodna gitara do shredowania.', 0, '2025-05-08 14:33:12', NULL),
-(5, 5, 4, 'Świetny keyboard do nauki, ale brakuje niektórych funkcji profesjonalnych modeli.', 0, '2025-05-08 14:33:12', NULL),
-(6, 6, 5, 'Profesjonalny syntezator, który spełnia wymagania muzyków na najwyższym poziomie.', 0, '2025-05-08 14:33:12', NULL);
+(5, 5, 4, 'Świetny keyboard do nauki, ale brakuje niektórych funkcji profesjonalnych modeli.', 0, '2025-05-08 14:33:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -156,8 +164,7 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (2, 2, 'https://example.com/fender_stratocaster.jpg', 'Fender Stratocaster', 1),
 (3, 3, 'https://example.com/gibson_lespaul.jpg', 'Gibson Les Paul Standard', 1),
 (4, 4, 'https://example.com/ibanez_rg550.jpg', 'Ibanez RG550', 1),
-(5, 5, 'https://example.com/roland_fp30.jpg', 'Roland FP-30', 1),
-(6, 6, 'https://example.com/korg_kronos.jpg', 'Korg Kronos', 1);
+(5, 5, 'https://example.com/roland_fp30.jpg', 'Roland FP-30', 1);
 
 -- --------------------------------------------------------
 
@@ -180,6 +187,7 @@ INSERT INTO `kategorie_instrumentow` (`id`, `nazwa`) VALUES
 (1, 'Gitary elektryczne'),
 (4, 'Keyboardy'),
 (5, 'Perkusja'),
+(8, 'Syntezatory'),
 (6, 'Wiosła');
 
 -- --------------------------------------------------------
@@ -226,7 +234,8 @@ CREATE TABLE `kody_promocyjne` (
 INSERT INTO `kody_promocyjne` (`id`, `kod`, `znizka`, `data_rozpoczecia`, `data_zakonczenia`, `aktywna`) VALUES
 (1, 'WIOSNA2025', 15.00, '2025-03-01 00:00:00', '2025-06-30 00:00:00', 1),
 (2, 'BLACKFRIDAY', 30.00, '2025-11-27 00:00:00', '2025-11-29 00:00:00', 1),
-(3, 'XMAS2025', 10.00, '2025-12-20 00:00:00', '2025-12-25 00:00:00', 1);
+(3, 'XMAS2025', 10.00, '2025-12-19 22:00:00', '2025-12-24 22:00:00', 1),
+(4, 'LATO2025', 15.00, '2025-06-01 23:03:00', '2025-08-31 23:03:00', 1);
 
 -- --------------------------------------------------------
 
@@ -273,7 +282,6 @@ CREATE TABLE `koszyk_szczegoly` (
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
 (1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
 (2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
-(3, 3, 3, 1, 3999.99, 'kupno', '2025-05-08'),
 (4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
 (5, 5, 5, 1, 799.99, 'kupno', '2025-05-08');
 
@@ -288,20 +296,20 @@ CREATE TABLE `pracownicy` (
   `uzytkownik_id` int(11) NOT NULL,
   `stanowisko_id` int(11) NOT NULL,
   `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
-  `data_zwolnienia` datetime DEFAULT NULL,
-  `identyfikator` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `identyfikator` varchar(4) NOT NULL,
+  `data_zwolnienia` datetime DEFAULT NULL
+) ;
 
 --
 -- Dumping data for table `pracownicy`
 --
 
-INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko_id`, `data_zatrudnienia`, `identyfikator`) VALUES
-(1, 1, 1, '2025-05-08 14:33:12', '0159'),
-(2, 2, 2, '2025-05-08 14:33:12', '1594'),
-(3, 3, 3, '2025-05-08 14:33:12', '7494'),
-(4, 4, 1, '2025-05-08 14:33:12', '2690'),
-(5, 5, 2, '2025-05-08 14:33:12', '0969');
+INSERT INTO `pracownicy` (`id`, `uzytkownik_id`, `stanowisko_id`, `data_zatrudnienia`, `identyfikator`, `data_zwolnienia`) VALUES
+(1, 1, 1, '2025-05-08 14:33:12', '0159', NULL),
+(2, 2, 2, '2025-05-08 14:33:12', '1594', NULL),
+(3, 3, 3, '2025-05-08 14:33:12', '7494', NULL),
+(4, 4, 4, '2025-05-08 14:33:12', '2690', NULL),
+(5, 5, 5, '2025-05-08 14:33:12', '0969', NULL);
 
 -- --------------------------------------------------------
 
@@ -329,6 +337,29 @@ INSERT INTO `producenci` (`id`, `nazwa`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `stanowiska`
+--
+
+CREATE TABLE `stanowiska` (
+  `id` int(11) NOT NULL,
+  `nazwa` varchar(255) NOT NULL,
+  `wynagrodzenie_miesieczne` decimal(10,2) NOT NULL CHECK (`wynagrodzenie_miesieczne` > 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `stanowiska`
+--
+
+INSERT INTO `stanowiska` (`id`, `nazwa`, `wynagrodzenie_miesieczne`) VALUES
+(1, 'pracownik', 4000.00),
+(2, 'manager', 6000.00),
+(3, 'właściciel', 10000.00),
+(4, 'informatyk', 7000.00),
+(5, 'sekretarka', 4500.00);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `uzytkownicy`
 --
 
@@ -349,7 +380,7 @@ INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_re
 (1, 'Jan', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (2, 'Anna', 'anna.nowak@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(4, 'Maria', 'maria.wisniewska@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(4, 'Maria', 'maria.wisniewska@gmail.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik');
 
 -- --------------------------------------------------------
@@ -443,42 +474,6 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 (3, 3, 3, 1, 3999.99),
 (4, 4, 4, 1, 1899.99),
 (5, 5, 5, 1, 799.99);
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `stanowiska`
---
-
-CREATE TABLE `stanowiska` (
-  `id` int(11) NOT NULL,
-  `nazwa` enum('pracownik','manager','właściciel','informatyk','sekretarka') NOT NULL,
-  `wynagrodzenie_miesieczne` decimal(10,2) NOT NULL CHECK (`wynagrodzenie_miesieczne` > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `stanowiska`
---
-
-INSERT INTO `stanowiska` (`id`, `nazwa`, `wynagrodzenie_miesieczne`) VALUES
-(1, 'pracownik', 4000.00),
-(2, 'manager', 6000.00),
-(3, 'właściciel', 10000.00),
-(4, 'informatyk', 7000.00),
-(5, 'sekretarka', 4500.00);
-
---
--- Indeksy dla tabeli `stanowiska`
---
-ALTER TABLE `stanowiska`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nazwa` (`nazwa`);
-
---
--- AUTO_INCREMENT for table `stanowiska`
---
-ALTER TABLE `stanowiska`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Indeksy dla zrzutów tabel
@@ -581,6 +576,13 @@ ALTER TABLE `producenci`
   ADD UNIQUE KEY `nazwa` (`nazwa`);
 
 --
+-- Indeksy dla tabeli `stanowiska`
+--
+ALTER TABLE `stanowiska`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nazwa` (`nazwa`);
+
+--
 -- Indeksy dla tabeli `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
@@ -627,19 +629,19 @@ ALTER TABLE `zamowienie_szczegoly`
 -- AUTO_INCREMENT for table `dostawa_szczegoly`
 --
 ALTER TABLE `dostawa_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `dostawy`
 --
 ALTER TABLE `dostawy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `instrumenty`
 --
 ALTER TABLE `instrumenty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `instrument_oceny`
@@ -657,19 +659,19 @@ ALTER TABLE `instrument_zdjecia`
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
 --
 ALTER TABLE `kategorie_instrumentow`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `kody_promocyjne`
 --
 ALTER TABLE `kody_promocyjne`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `koszyk`
@@ -687,7 +689,7 @@ ALTER TABLE `koszyk_szczegoly`
 -- AUTO_INCREMENT for table `pracownicy`
 --
 ALTER TABLE `pracownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `producenci`
@@ -696,10 +698,16 @@ ALTER TABLE `producenci`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `stanowiska`
+--
+ALTER TABLE `stanowiska`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `wiadomosci`
@@ -717,13 +725,13 @@ ALTER TABLE `wypozyczenia`
 -- AUTO_INCREMENT for table `zamowienia`
 --
 ALTER TABLE `zamowienia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `zamowienie_szczegoly`
 --
 ALTER TABLE `zamowienie_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

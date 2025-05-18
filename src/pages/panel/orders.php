@@ -2,6 +2,37 @@
 /** @var mysqli $connection */
 include_once dirname(__DIR__, 2) . '/includes/config/db_config.php';
 
+// Sprawdź czy zmienna $role jest ustawiona (powinna być przekazana z panel.php)
+if (!isset($role)) {
+  // Jeśli nie jest ustawiona, pobierz ją
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+  
+  if (isset($_SESSION['employee_id'])) {
+    $employee_id = $_SESSION['employee_id'];
+    
+    // Pobierz pracownika
+    $stmt = $connection->prepare("SELECT * FROM pracownicy WHERE identyfikator = ?");
+    $stmt->bind_param("s", $employee_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $employee = $result->fetch_assoc();
+    $stmt->close();
+    
+    if ($employee) {
+      // Pobierz nazwę stanowiska
+      $stmt = $connection->prepare("SELECT s.nazwa FROM stanowiska s JOIN pracownicy p ON s.id = p.stanowisko_id WHERE p.id = ?");
+      $stmt->bind_param("i", $employee['id']);
+      $stmt->execute();
+      $stanowisko_result = $stmt->get_result();
+      $stanowisko = $stanowisko_result->fetch_assoc();
+      $role = $stanowisko['nazwa'];
+      $stmt->close();
+    }
+  }
+}
+
 // Stałe dla modułu zamówień
 const ORDER_STATUSES = [
     'w przygotowaniu' => [
@@ -36,27 +67,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['action'])) {
     switch ($_POST['action']) {
       case 'delete':
-        if (isset($_POST['order_id'])) {
-          $order_id = mysqli_real_escape_string($connection, $_POST['order_id']);
-          
-          // Rozpoczęcie transakcji
-          mysqli_begin_transaction($connection);
-          
-          try {
-              // Najpierw usuwamy szczegóły zamówienia
-              $result1 = mysqli_query($connection, "DELETE FROM zamowienie_szczegoly WHERE zamowienie_id = '$order_id'");
-              
-              // Następnie usuwamy samo zamówienie
-              $result2 = mysqli_query($connection, "DELETE FROM zamowienia WHERE id = '$order_id'");
-              
-              // Jeśli obie operacje się powiodły, zatwierdzamy transakcję
-              if ($result1 && $result2) {
-                  mysqli_commit($connection);
-    } else {
-                  mysqli_rollback($connection);
-              }
-          } catch (Exception $e) {
-              mysqli_rollback($connection);
+        // Tylko informatyk i właściciel mogą usuwać zamówienia
+        if ($role === 'informatyk' || $role === 'właściciel') {
+          if (isset($_POST['order_id'])) {
+            $order_id = mysqli_real_escape_string($connection, $_POST['order_id']);
+            
+            // Rozpoczęcie transakcji
+            mysqli_begin_transaction($connection);
+            
+            try {
+                // Najpierw usuwamy szczegóły zamówienia
+                $result1 = mysqli_query($connection, "DELETE FROM zamowienie_szczegoly WHERE zamowienie_id = '$order_id'");
+                
+                // Następnie usuwamy samo zamówienie
+                $result2 = mysqli_query($connection, "DELETE FROM zamowienia WHERE id = '$order_id'");
+                
+                // Jeśli obie operacje się powiodły, zatwierdzamy transakcję
+                if ($result1 && $result2) {
+                    mysqli_commit($connection);
+                } else {
+                    mysqli_rollback($connection);
+                }
+            } catch (Exception $e) {
+                mysqli_rollback($connection);
+            }
           }
         }
         break;
@@ -67,8 +101,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           
           // Sprawdzenie czy status jest prawidłowy
           if (array_key_exists($status, ORDER_STATUSES)) {
+            // Pracownik nie może ustawiać statusu 'anulowane' ani 'dostarczone'
+            if ($role === 'pracownik' && ($status === 'anulowane' || $status === 'dostarczone')) {
+              // Przekieruj bez zmiany statusu
+              header('Location: panel.php?view=orders&error=permission_denied');
+              exit();
+            } else {
               $sql = "UPDATE zamowienia SET status = '$status' WHERE id = '$order_id'";
               mysqli_query($connection, $sql);
+              header('Location: panel.php?view=orders&success=updated');
+              exit();
+            }
           }
         }
         break;
@@ -181,9 +224,11 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
           </div>
           
           <div class="admin-actions">
+            <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
             <button class="admin-button danger" onclick="confirmDelete(<?php echo $order['id']; ?>)">
               <i class="fas fa-trash"></i> Usuń zamówienie
             </button>
+            <?php endif; ?>
           </div>
         </div>
         <?php
@@ -292,9 +337,11 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
                 <button class="admin-button warning" onclick="editOrderStatus(<?php echo $order['id']; ?>, '<?php echo $order['status']; ?>')">
                   <i class="fas fa-edit"></i>
                 </button>
+                <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
                 <button class="admin-button danger" onclick="confirmDelete(<?php echo $order['id']; ?>)">
                   <i class="fas fa-trash"></i>
                 </button>
+                <?php endif; ?>
               </div>
             </td>
           </tr>
@@ -370,6 +417,20 @@ function editOrderStatus(id, status) {
   document.getElementById('order_id').value = id;
   document.getElementById('selectedStatus').value = status;
   document.getElementById('modalStatusDropdownText').textContent = ORDER_STATUSES[status].label;
+
+  // Jeśli pracownik, ukryj opcje 'anulowane' i 'dostarczone'
+  const isWorker = '<?php echo $role; ?>' === 'pracownik';
+  if (isWorker) {
+    const options = document.querySelectorAll('#modalStatusDropdown .dropdown-item');
+    options.forEach(option => {
+      if (option.textContent.trim() === 'Anulowane' || option.textContent.trim() === 'Dostarczone') {
+        option.style.display = 'none';
+      } else {
+        option.style.display = '';
+      }
+    });
+  }
+
   document.getElementById('statusChangeModal').style.display = 'block';
 }
 
@@ -528,6 +589,8 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('Zamówienie zostało pomyślnie usunięte.');
   } else if (urlParams.get('success') === 'updated') {
     alert('Status zamówienia został pomyślnie zaktualizowany.');
+  } else if (urlParams.get('error') === 'permission_denied') {
+    alert('Nie masz uprawnień do wykonania tej operacji.');
   }
 });
 
