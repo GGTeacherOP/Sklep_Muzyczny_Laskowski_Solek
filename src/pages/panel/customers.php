@@ -96,9 +96,6 @@ $klienci = mysqli_query($connection, $sql);
 ?>
 
 <div class="admin-filters">
-  <button class="admin-button success add" onclick="showAddClientModal()">
-    <i class="fas fa-plus"></i> Dodaj klienta
-  </button>
   <div class="admin-search">
     <input type="text" id="clientSearch" class="form-input" placeholder="Szukaj klientów..." 
            onkeyup="filterTable('clientTable', 1)">
