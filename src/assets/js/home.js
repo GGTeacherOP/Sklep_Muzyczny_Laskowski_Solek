@@ -54,19 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return text.toLowerCase().replace(/\s+/g, '-');
   }
 
-  if (instrumentCards.length > 0) {
-    instrumentCards.forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelector('.instrument-card.selected')?.classList.remove('selected');
-        card.classList.add('selected');
-        const categoryName = card.querySelector('.instrument-name')?.textContent;
-        if (categoryName) {
-          redirectTo(`/produkty/${convertToUrlFormat(categoryName)}`);
-        }
-      });
-    });
-  }
-
   /**
    * Aktualizuje stan przycisków przewijania
    * @returns {void}
@@ -99,8 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  if (viewAllButton) {
-    viewAllButton.addEventListener('click', () => redirectTo('/produkty/wszystkie'));
-  }
 });

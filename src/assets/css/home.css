@@ -1,4 +1,5 @@
 @import "global.css";
+@import "rating.css";
 
 html {
   scroll-behavior: smooth;
@@ -66,6 +67,8 @@ html {
 }
 
 .view-all-button {
+  display: flex;
+  align-items: center;
   font-size: var(--font-sm);
   height: var(--button-height-sm);
   padding: 0 var(--spacing-sm);
@@ -253,6 +256,9 @@ html {
   border-radius: var(--radius-sm);
   background: var(--primary-bg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .product-image {
@@ -260,12 +266,18 @@ html {
   overflow: hidden;
   width: 100%;
   height: var(--card-size-xxl);
+  background-color: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: var(--spacing-xs);
 }
 
 .category-badge {
@@ -281,31 +293,39 @@ html {
 }
 
 .product-card .product-info {
-  padding: 15px;
+  padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-xs);
+  flex: 1;
 }
 
 .product-card .product-name {
   color: var(--heading-color);
-  font-size: 1rem;
+  font-size: var(--font-md);
   margin: 0;
   line-height: 1.2;
   font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 1.2em;
+  white-space: nowrap;
 }
 
 .product-card .product-price {
   font-weight: 700;
   color: var(--price-color);
-  font-size: 1.1rem;
+  font-size: var(--font-lg);
   margin: 0;
 }
 
 .product-card .product-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 5px;
+  gap: var(--spacing-xs);
+  margin-top: auto;
   flex-direction: column;
 }
 
@@ -399,4 +419,52 @@ html {
   .product-image {
     height: var(--card-size-lg);
   }
+}
+
+.producers-section {
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.producers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.producers-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.producers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.producer-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: #333;
+}
+
+.producer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.producer-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
 }

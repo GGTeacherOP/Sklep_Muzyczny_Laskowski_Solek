@@ -3,7 +3,13 @@
   {
     if ($type === 'buy') {
       $sql = "
-            SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa AS 'nazwa_kategorii'
+            SELECT 
+              instrumenty.*, 
+              instrument_zdjecia.url, 
+              instrument_zdjecia.alt_text, 
+              kategorie_instrumentow.nazwa AS 'nazwa_kategorii',
+              ROUND(COALESCE(AVG(io.ocena), 0), 1) as srednia_ocena,
+              COUNT(DISTINCT io.id) as liczba_ocen
             FROM instrumenty
             JOIN zamowienie_szczegoly
             ON instrumenty.id = zamowienie_szczegoly.instrument_id
@@ -15,13 +21,21 @@
             AND instrument_zdjecia.kolejnosc = 1
             JOIN kategorie_instrumentow
             ON instrumenty.kategoria_id = kategorie_instrumentow.id
+            LEFT JOIN instrument_oceny io 
+            ON instrumenty.id = io.instrument_id
             GROUP BY zamowienie_szczegoly.instrument_id
             ORDER BY COUNT(zamowienie_szczegoly.instrument_id) DESC
             LIMIT $limit;
         ";
     } elseif ($type === 'rent') {
       $sql = "
-            SELECT instrumenty.*, instrument_zdjecia.url, instrument_zdjecia.alt_text, kategorie_instrumentow.nazwa AS 'nazwa_kategorii'
+            SELECT 
+              instrumenty.*, 
+              instrument_zdjecia.url, 
+              instrument_zdjecia.alt_text, 
+              kategorie_instrumentow.nazwa AS 'nazwa_kategorii',
+              ROUND(COALESCE(AVG(io.ocena), 0), 1) as srednia_ocena,
+              COUNT(DISTINCT io.id) as liczba_ocen
             FROM instrumenty
             JOIN wypozyczenia
             ON instrumenty.id = wypozyczenia.instrument_id
@@ -31,6 +45,8 @@
             AND instrument_zdjecia.kolejnosc = 1
             JOIN kategorie_instrumentow
             ON instrumenty.kategoria_id = kategorie_instrumentow.id
+            LEFT JOIN instrument_oceny io 
+            ON instrumenty.id = io.instrument_id
             GROUP BY wypozyczenia.instrument_id
             ORDER BY COUNT(wypozyczenia.instrument_id) DESC
             LIMIT $limit;
