@@ -80,7 +80,7 @@
   // Pobranie szczegółów produktu
   $query = "
     SELECT i.*, k.nazwa AS nazwa_kategorii, p.nazwa AS nazwa_producenta, 
-           z.url, z.alt_text 
+           CONCAT('../assets/images/', z.url) as url, z.alt_text 
     FROM instrumenty i 
     LEFT JOIN kategorie_instrumentow k ON i.kategoria_id = k.id 
     LEFT JOIN producenci p ON i.producent_id = p.id 
@@ -156,7 +156,8 @@
   
   // Pobranie wszystkich zdjęć produktu
   $query_images = "
-    SELECT * FROM instrument_zdjecia 
+    SELECT id, CONCAT('../assets/images/', url) as url, alt_text, kolejnosc 
+    FROM instrument_zdjecia 
     WHERE instrument_id = ? 
     ORDER BY kolejnosc ASC
   ";
@@ -292,7 +293,7 @@
           <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
           <input type="hidden" name="product_type" value="buy">
           <button type="submit" name="add_to_cart" class="product-action-btn buy-product-btn" <?php echo $product['stan_magazynowy'] <= 0 ? 'disabled' : ''; ?>>
-            Kup teraz <i class="fa-solid fa-cart-plus"></i>
+            <i class="fa-solid fa-cart-shopping"></i> Kup
           </button>
         </form>
         
@@ -301,7 +302,7 @@
             <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
             <input type="hidden" name="product_type" value="rent">
             <button type="submit" name="add_to_cart" class="product-action-btn rent-product-btn" <?php echo $product['stan_magazynowy'] <= 0 ? 'disabled' : ''; ?>>
-              Wypożycz <i class="fa-solid fa-handshake"></i>
+              <i class="fa-solid fa-handshake"></i> Wypożycz
             </button>
           </form>
         <?php endif; ?>
@@ -345,19 +346,22 @@
         <div class="user-review">
           <div class="review-item user-review-item">
             <div class="review-header">
-              <div>
-                <div class="review-stars">
-                  <?php 
-                    for ($i = 1; $i <= 5; $i++) {
-                      if ($i <= $user_rating['ocena']) {
-                        echo '<i class="fa-solid fa-star"></i>';
-                      } else {
-                        echo '<i class="fa-regular fa-star"></i>';
+              <div class="review-header-left">
+                <span class="reviewer-name">Twoja opinia</span>
+                <div class="review-stars-container">
+                  <div class="review-stars">
+                    <?php 
+                      for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= $user_rating['ocena']) {
+                          echo '<i class="fa-solid fa-star"></i>';
+                        } else {
+                          echo '<i class="fa-regular fa-star"></i>';
+                        }
                       }
-                    }
-                  ?>
+                    ?>
+                  </div>
+                  <span class="rating-text"><?php echo $user_rating['ocena']; ?>/5</span>
                 </div>
-                <span class="user-badge">Twoja opinia</span>
               </div>
               <span class="review-date">
                 <?php echo date('d.m.Y', strtotime($user_rating['data_oceny'])); ?>
@@ -370,10 +374,14 @@
               <?php echo nl2br(htmlspecialchars($user_rating['komentarz'])); ?>
             </div>
             <div class="review-actions">
-              <button class="edit-review-btn" onclick="showEditForm()">Edytuj</button>
+              <button class="edit-review-btn" onclick="showEditForm()">
+                <i class="fa-solid fa-pen"></i> Edytuj
+              </button>
               <form method="post" class="delete-review-form">
                 <input type="hidden" name="rating_id" value="<?php echo $user_rating['id']; ?>">
-                <button type="submit" name="delete_rating" class="delete-review-btn">Usuń</button>
+                <button type="submit" name="delete_rating" class="delete-review-btn">
+                  <i class="fa-solid fa-trash"></i> Usuń
+                </button>
               </form>
             </div>
           </div>
@@ -399,8 +407,12 @@
               </div>
               
               <div class="form-actions">
-                <button type="submit" name="edit_rating" class="submit-review-btn">Zapisz zmiany</button>
-                <button type="button" class="cancel-btn" onclick="hideEditForm()">Anuluj</button>
+                <button type="submit" name="edit_rating" class="submit-review-btn">
+                  <i class="fa-solid fa-check"></i> Wyślij
+                </button>
+                <button type="button" class="cancel-btn" onclick="hideEditForm()">
+                  <i class="fa-solid fa-xmark"></i> Anuluj
+                </button>
               </div>
             </form>
           </div>
@@ -424,7 +436,9 @@
               <textarea id="comment" name="comment" class="form-input" required placeholder="Podziel się swoją opinią na temat tego produktu..."></textarea>
             </div>
             
-            <button type="submit" name="add_rating" class="submit-review-btn">Dodaj opinię</button>
+            <button type="submit" name="add_rating" class="submit-review-btn">
+              <i class="fa-solid fa-check"></i> Wyślij
+            </button>
           </form>
         </div>
       <?php endif; ?>
@@ -432,7 +446,9 @@
       <!-- Informacja dla niezalogowanych użytkowników -->
       <div class="login-to-review">
         <p>Zaloguj się, aby dodać opinię o tym produkcie.</p>
-        <a href="login.php" class="login-btn">Zaloguj się</a>
+        <a href="login.php" class="login-btn">
+          <i class="fa-solid fa-right-to-bracket"></i> Zaloguj się
+        </a>
       </div>
     <?php endif; ?>
     
@@ -441,19 +457,22 @@
         <?php while ($rating = $ratings->fetch_assoc()): ?>
           <div class="review-item">
             <div class="review-header">
-              <div>
-                <div class="review-stars">
-                  <?php 
-                    for ($i = 1; $i <= 5; $i++) {
-                      if ($i <= $rating['ocena']) {
-                        echo '<i class="fa-solid fa-star"></i>';
-                      } else {
-                        echo '<i class="fa-regular fa-star"></i>';
-                      }
-                    }
-                  ?>
-                </div>
+              <div class="review-header-left">
                 <span class="reviewer-name"><?php echo htmlspecialchars($rating['nazwa_uzytkownika']); ?></span>
+                <div class="review-stars-container">
+                  <div class="review-stars">
+                    <?php 
+                      for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= $rating['ocena']) {
+                          echo '<i class="fa-solid fa-star"></i>';
+                        } else {
+                          echo '<i class="fa-regular fa-star"></i>';
+                        }
+                      }
+                    ?>
+                  </div>
+                  <span class="rating-text"><?php echo $rating['ocena']; ?>/5</span>
+                </div>
               </div>
               <span class="review-date">
                 <?php echo date('d.m.Y', strtotime($rating['data_oceny'])); ?>

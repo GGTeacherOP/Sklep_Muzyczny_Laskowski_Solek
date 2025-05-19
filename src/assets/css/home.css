@@ -269,14 +269,15 @@ html {
 }
 
 .category-badge {
-  font-size: var(--font-xs);
+  font-size: var(--font-sm);
   position: absolute;
   top: var(--spacing-xs);
   left: var(--spacing-xs);
   padding: var(--spacing-xxs) var(--spacing-xs);
-  color: var(--primary-bg);
-  border-radius: var(--radius-sm);
-  background: rgba(0, 0, 0, 0.5);
+  color: var(--button-text-color);
+  border-radius: var(--radius-xxs);
+  background-color: var(--button-more-bg);
+  font-weight: 500;
 }
 
 .product-card .product-info {
@@ -312,20 +313,25 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 8px 10px;
+  gap: var(--spacing-xs);
+  padding: 0 var(--spacing-sm);
+  height: var(--card-size-xs-sm);
   border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-  text-decoration: none;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.product-action-btn:hover {
+  background-color: #E0E0E0;
+  translate: 0 2px;
 }
 
 .buy-product-btn {
   background-color: var(--button-buy-bg);
+  color: var(--button-text-color);
 }
 
 .buy-product-btn:hover {
@@ -334,6 +340,7 @@ html {
 
 .view-details-btn {
   background-color: var(--button-more-bg);
+  color: var(--button-text-color);
 }
 
 .view-details-btn:hover {

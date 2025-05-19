@@ -160,11 +160,20 @@ CREATE TABLE `instrument_zdjecia` (
 --
 
 INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kolejnosc`) VALUES
-(1, 1, 'https://example.com/yamaha_pacifica.jpg', 'Yamaha Pacifica 112V', 1),
-(2, 2, 'https://example.com/fender_stratocaster.jpg', 'Fender Stratocaster', 1),
-(3, 3, 'https://example.com/gibson_lespaul.jpg', 'Gibson Les Paul Standard', 1),
-(4, 4, 'https://example.com/ibanez_rg550.jpg', 'Ibanez RG550', 1),
-(5, 5, 'https://example.com/roland_fp30.jpg', 'Roland FP-30', 1);
+(1, 1, 'yamaha_pacifica.jpg', 'Yamaha Pacifica 112V', 1),
+(2, 2, 'fender_stratocaster.jpg', 'Fender Stratocaster', 1),
+(3, 3, 'gibson_lespaul.jpg', 'Gibson Les Paul Standard', 1),
+(4, 4, 'ibanez_rg550.jpg', 'Ibanez RG550', 1),
+(5, 5, 'Roland/FP-30_BK_Top_gal.jpg', 'Roland FP-30 - widok z góry', 1),
+(6, 5, 'Roland/FP-30_BK_gal.jpg', 'Roland FP-30 - widok ogólny', 2),
+(7, 5, 'Roland/FP-30_BK_ipad_gal.jpg', 'Roland FP-30 - widok z iPadem', 3),
+(8, 5, 'Roland/FP-30_BK_jack_gal.jpg', 'Roland FP-30 - widok gniazd', 4),
+(9, 5, 'Roland/FP-30_BK_rear_gal.jpg', 'Roland FP-30 - widok z tyłu', 5),
+(10, 5, 'Roland/FP-30_BK_DP10_gal.jpg', 'Roland FP-30 z pedałem DP-10', 6),
+(11, 5, 'Roland/FP-30_BK_DP2_gal.jpg', 'Roland FP-30 z pedałem DP-2', 7),
+(12, 5, 'Roland/FP-30_BK_DR_gal.jpg', 'Roland FP-30 - widok z prawej strony', 8),
+(13, 5, 'Roland/FP-30_BK_KS-12.DP-2_gal.jpg', 'Roland FP-30 z podkładką KS-12 i pedałem DP-2', 9),
+(14, 5, 'Roland/FP-30_BK_Panel_gal.jpg', 'Roland FP-30 - widok panelu sterowania', 10);
 
 -- --------------------------------------------------------
 
@@ -653,7 +662,7 @@ ALTER TABLE `instrument_oceny`
 -- AUTO_INCREMENT for table `instrument_zdjecia`
 --
 ALTER TABLE `instrument_zdjecia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
