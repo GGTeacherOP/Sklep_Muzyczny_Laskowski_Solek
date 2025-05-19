@@ -146,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       
       // Jeśli dostawa jest dostarczona, zaktualizuj stan magazynowy
       if ($new_status === 'dostarczona') {
+        // Pobierz szczegóły dostawy
         $sql = "SELECT ds.instrument_id, ds.ilosc 
                 FROM dostawa_szczegoly ds 
                 WHERE ds.dostawa_id = '$dostawa_id' AND ds.status = 'oczekiwana'";
@@ -155,14 +156,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
           $instrument_id = $detail['instrument_id'];
           $ilosc = $detail['ilosc'];
           
-          mysqli_query($connection, "UPDATE instrumenty 
-                                   SET stan_magazynowy = stan_magazynowy + $ilosc 
-                                   WHERE id = '$instrument_id'");
+          // Aktualizuj stan magazynowy instrumentu
+          $update_sql = "UPDATE instrumenty 
+                        SET stan_magazynowy = stan_magazynowy + $ilosc 
+                        WHERE id = '$instrument_id'";
+          mysqli_query($connection, $update_sql);
           
-          mysqli_query($connection, "UPDATE dostawa_szczegoly 
-                                   SET status = 'dostarczona' 
-                                   WHERE dostawa_id = '$dostawa_id' 
-                                   AND instrument_id = '$instrument_id'");
+          // Aktualizuj status szczegółu dostawy
+          $update_detail_sql = "UPDATE dostawa_szczegoly 
+                              SET status = 'dostarczona' 
+                              WHERE dostawa_id = '$dostawa_id' 
+                              AND instrument_id = '$instrument_id'";
+          mysqli_query($connection, $update_detail_sql);
         }
       }
       
