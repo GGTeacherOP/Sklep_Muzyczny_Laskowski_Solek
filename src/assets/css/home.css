@@ -6,40 +6,106 @@ html {
 }
 
 .hero-section {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--spacing-xl) var(--spacing-md);
   height: 60vh;
-  background: url('../assets/img/hero-bg.jpg') center/cover no-repeat;
-  background-color: var(--secondary-bg);
-  text-align: center;
+  min-height: 400px;
   border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../images/Hero/photo-1725152471889-6c59a52e7794.avif') center/cover no-repeat;
+  z-index: -2;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background-size: 100% auto;
+  background-position: center;
+  will-change: transform;
+}
+
+@media (min-width: 1920px) {
+  .hero-section::before {
+    background-size: cover;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section::before {
+    background-size: auto 100%;
+  }
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.4)
+  );
+  z-index: -1;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 800px;
+  padding: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-sm);
 }
 
 .hero-title {
-  margin-bottom: var(--spacing-sm);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: var(--spacing-md);
   color: var(--primary-bg);
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-  font-size: var(--font-lg);
-  margin-bottom: var(--spacing-md);
-  color: var(--text-color);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-bg);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-inline: auto;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
 }
 
 .hero-button {
-  font-size: var(--font-md);
-  padding: var(--spacing-sm) var(--spacing-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  height: var(--button-height-lg);
+  padding-inline: var(--spacing-lg);
+  border-radius: var(--radius-sm);
   background-color: var(--button-buy-bg);
   color: var(--button-text-color);
-  border-radius: var(--radius-sm);
+  font-weight: bold;
+  font-size: var(--font-md);
   text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .hero-button:hover {
   background-color: var(--button-buy-bg-hover);
+  translate: 0 2px;
 }
 
 .instrument-types, .instrument-brands {
@@ -382,6 +448,21 @@ html {
 @media (max-width: 768px) {
   .hero-section {
     height: 50vh;
+    min-height: 350px;
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .hero-content {
+    padding: var(--spacing-md);
+    margin-inline: var(--spacing-sm);
+  }
+
+  .hero-title {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .hero-subtitle {
+    margin-bottom: var(--spacing-md);
   }
 
   .instrument-types-header, .instrument-brands-header {
@@ -393,11 +474,32 @@ html {
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxxl), 1fr));
   }
+
+  .hero-button {
+    height: var(--button-height-md);
+    font-size: var(--font-sm);
+    padding-inline: var(--spacing-md);
+  }
 }
 
 @media (max-width: 480px) {
   .hero-section {
     height: 40vh;
+    min-height: 300px;
+    padding: var(--spacing-md) var(--spacing-xs);
+  }
+
+  .hero-content {
+    padding: var(--spacing-sm);
+    margin-inline: var(--spacing-xs);
+  }
+
+  .hero-title {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .hero-subtitle {
+    margin-bottom: var(--spacing-sm);
   }
 
   .view-all-button {
@@ -430,5 +532,11 @@ html {
 
   .product-image {
     height: var(--card-size-lg);
+  }
+
+  .hero-button {
+    height: var(--button-height-sm);
+    font-size: var(--font-xs);
+    padding-inline: var(--spacing-sm);
   }
 }
