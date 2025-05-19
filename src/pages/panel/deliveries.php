@@ -645,7 +645,7 @@ async function showDeliveryDetails(dostawaId) {
   const detailsContainer = document.getElementById('deliveryDetails');
   
   try {
-    const response = await fetch(`/sm/src/includes/ajax/delivery_details.php?id=${dostawaId}`);
+    const response = await fetch(`../includes/ajax/delivery_details.php?id=${dostawaId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
