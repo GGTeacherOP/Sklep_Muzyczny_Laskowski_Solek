@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 19, 2025 at 01:34 AM
+-- Generation Time: Maj 19, 2025 at 07:19 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -123,6 +123,7 @@ INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedaz
 CREATE TABLE `instrument_oceny` (
   `id` int(11) NOT NULL,
   `instrument_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `ocena` int(11) NOT NULL CHECK (`ocena` >= 1 and `ocena` <= 5),
   `komentarz` text NOT NULL,
   `czy_edytowana` tinyint(1) NOT NULL DEFAULT 0,
@@ -134,12 +135,14 @@ CREATE TABLE `instrument_oceny` (
 -- Dumping data for table `instrument_oceny`
 --
 
-INSERT INTO `instrument_oceny` (`id`, `instrument_id`, `ocena`, `komentarz`, `czy_edytowana`, `data_oceny`, `data_edycji`) VALUES
-(1, 1, 5, 'Świetna gitara do gry na żywo, bardzo komfortowa.', 0, '2025-05-08 14:33:12', NULL),
-(2, 2, 4, 'Bardzo dobra gitara, jednak cena jest dość wysoka.', 0, '2025-05-08 14:33:12', NULL),
-(3, 3, 5, 'Klasik, świetne brzmienie.', 0, '2025-05-08 14:33:12', NULL),
-(4, 4, 5, 'Bardzo szybka i wygodna gitara do shredowania.', 0, '2025-05-08 14:33:12', NULL),
-(5, 5, 4, 'Świetny keyboard do nauki, ale brakuje niektórych funkcji profesjonalnych modeli.', 0, '2025-05-08 14:33:12', NULL);
+INSERT INTO `instrument_oceny` (`id`, `instrument_id`, `user_id`, `ocena`, `komentarz`, `czy_edytowana`, `data_oceny`, `data_edycji`) VALUES
+(1, 1, 1, 5, 'Świetna gitara do gry na żywo, bardzo komfortowa.', 0, '2025-05-08 14:33:12', NULL),
+(2, 2, 1, 4, 'Bardzo dobra gitara, jednak cena jest dość wysoka.', 0, '2025-05-08 14:33:12', NULL),
+(3, 3, 1, 5, 'Klasik, świetne brzmienie.', 0, '2025-05-08 14:33:12', NULL),
+(4, 4, 1, 5, 'Bardzo szybka i wygodna gitara do shredowania.', 0, '2025-05-08 14:33:12', NULL),
+(5, 5, 1, 4, 'Świetny keyboard do nauki, ale brakuje niektórych funkcji profesjonalnych modeli.', 0, '2025-05-08 14:33:12', NULL),
+(10, 2, 5, 5, 'Zajebisty produkt, cena świetna, kocham żeńchłopców.', 0, '2025-05-19 17:04:52', NULL),
+(11, 5, 5, 5, 'Świetny', 1, '2025-05-19 17:52:43', '2025-05-19 17:54:10');
 
 -- --------------------------------------------------------
 
@@ -161,10 +164,31 @@ CREATE TABLE `instrument_zdjecia` (
 
 INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kolejnosc`) VALUES
 (1, 1, 'https://example.com/yamaha_pacifica.jpg', 'Yamaha Pacifica 112V', 1),
-(2, 2, 'https://example.com/fender_stratocaster.jpg', 'Fender Stratocaster', 1),
-(3, 3, 'https://example.com/gibson_lespaul.jpg', 'Gibson Les Paul Standard', 1),
-(4, 4, 'https://example.com/ibanez_rg550.jpg', 'Ibanez RG550', 1),
-(5, 5, 'https://example.com/roland_fp30.jpg', 'Roland FP-30', 1);
+(5, 5, 'Roland/FP-30_BK_Top_gal.jpg', 'Roland FP-30 - widok z góry', 1),
+(6, 5, 'Roland/FP-30_BK_gal.jpg', 'Roland FP-30 - widok ogólny', 2),
+(7, 5, 'Roland/FP-30_BK_ipad_gal.jpg', 'Roland FP-30 - widok z iPadem', 3),
+(8, 5, 'Roland/FP-30_BK_jack_gal.jpg', 'Roland FP-30 - widok gniazd', 4),
+(9, 5, 'Roland/FP-30_BK_rear_gal.jpg', 'Roland FP-30 - widok z tyłu', 5),
+(10, 5, 'Roland/FP-30_BK_DP10_gal.jpg', 'Roland FP-30 z pedałem DP-10', 6),
+(11, 5, 'Roland/FP-30_BK_DP2_gal.jpg', 'Roland FP-30 z pedałem DP-2', 7),
+(12, 5, 'Roland/FP-30_BK_DR_gal.jpg', 'Roland FP-30 - widok z prawej strony', 8),
+(13, 5, 'Roland/FP-30_BK_KS-12.DP-2_gal.jpg', 'Roland FP-30 z podkładką KS-12 i pedałem DP-2', 9),
+(14, 5, 'Roland/FP-30_BK_Panel_gal.jpg', 'Roland FP-30 - widok panelu sterowania', 10),
+(15, 2, 'Fender/0266420560_fen_ins_hbk_1_nr.png', 'Fender Stratocaster - widok gryfa od tyłu', 5),
+(16, 2, 'Fender/0266420560_fen_ins_hft_1_nr.png', 'Fender Stratocaster - widok gryfa z przodu', 4),
+(17, 2, 'Fender/0266420560_fen_ins_fbd_1_nr.png', 'Fender Stratocaster - widok z przodu', 1),
+(18, 2, 'Fender/0266420560_fen_ins_bck_1_rl.png', 'Fender Stratocaster - widok bokiem od tyłu', 3),
+(19, 2, 'Fender/0266420560_fen_ins_frt_1_rr.png', 'Fender Stratocaster - widok bokiem z przodu', 2),
+(20, 4, 'Ibanez/ibanez-rg550-purple-neon_front.avif', 'Ibanez RG550 - widok z przodu', 2),
+(21, 4, 'Ibanez/ibanez-rg550-purple-neon_back.avif', 'Ibanez RG550 - widok z tyłu', 3),
+(22, 4, 'Ibanez/ibanez-rg550-purple-neon_body_front.avif', 'Ibanez RG550 - widok korpusu z przodu', 1),
+(23, 4, 'Ibanez/ibanez-rg550-purple-neon_neck_front.avif', 'Ibanez RG550 - widok gryfu z przodu', 4),
+(24, 4, 'Ibanez/ibanez-rg550-purple-neon_neck_back.avif', 'Ibanez RG550 - widok gryfu z tyłu', 5),
+(25, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_body_front.avif', 'Gibson Les Paul Standard - widok korpusu z przodu', 1),
+(26, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_side_front.avif', 'Gibson Les Paul Standard - widok boczny z przodu', 2),
+(27, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_side_back.avif', 'Gibson Les Paul Standard - widok boczny z tyłu', 3),
+(28, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_neck_front.avif', 'Gibson Les Paul Standard - widok gryfu z przodu', 4),
+(29, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_neck_back.avif', 'Gibson Les Paul Standard - widok gryfu z tyłu', 5);
 
 -- --------------------------------------------------------
 
@@ -283,7 +307,9 @@ INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `ce
 (1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
 (2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
 (4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
-(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08');
+(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08'),
+(7, 3, 3, 1, 3999.99, '', '2025-05-19'),
+(8, 3, 4, 1, 1899.99, '', '2025-05-19');
 
 -- --------------------------------------------------------
 
@@ -513,7 +539,9 @@ ALTER TABLE `instrumenty`
 --
 ALTER TABLE `instrument_oceny`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_instrument_id_ocena` (`instrument_id`,`ocena`);
+  ADD UNIQUE KEY `uc_user_instrument` (`user_id`,`instrument_id`),
+  ADD KEY `idx_instrument_id_ocena` (`instrument_id`,`ocena`),
+  ADD KEY `idx_instrument_user` (`instrument_id`,`user_id`);
 
 --
 -- Indeksy dla tabeli `instrument_zdjecia`
@@ -647,13 +675,13 @@ ALTER TABLE `instrumenty`
 -- AUTO_INCREMENT for table `instrument_oceny`
 --
 ALTER TABLE `instrument_oceny`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `instrument_zdjecia`
 --
 ALTER TABLE `instrument_zdjecia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
@@ -683,7 +711,7 @@ ALTER TABLE `koszyk`
 -- AUTO_INCREMENT for table `koszyk_szczegoly`
 --
 ALTER TABLE `koszyk_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
@@ -762,7 +790,8 @@ ALTER TABLE `instrumenty`
 -- Constraints for table `instrument_oceny`
 --
 ALTER TABLE `instrument_oceny`
-  ADD CONSTRAINT `instrument_oceny_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `instrument_oceny_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `instrument_oceny_user_fk` FOREIGN KEY (`user_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `instrument_zdjecia`
