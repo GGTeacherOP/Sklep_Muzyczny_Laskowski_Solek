@@ -6,6 +6,7 @@
   include_once '../includes/fetch/fetch_product_categories.php';
   include_once '../includes/render/render_product_card.php';
   include_once '../includes/render/render_category_card.php';
+  include_once '../includes/render/render_brand_card.php';
   include_once '../includes/helpers/cart_helpers.php';
 
   if (isset($_POST['add_to_cart'])) {
@@ -67,15 +68,18 @@
     </div>
   </section>
 
-  <section class="producers-section fade-in">
-    <div class="producers-header">
-      <h4 class="producers-title">Producenci</h4>
+  <section class="instrument-brands fade-in">
+    <div class="instrument-brands-header">
+      <h4 class="instrument-brands-title">Producenci</h4>
+      <div class="instrument-brands-controls">
+        <a href="katalog.php" class="view-all-button"><strong>Wyświetl wszystko</strong></a>
+        <button class="scroll-button" type="button"><i class="fa-solid fa-caret-left"></i></button>
+        <button class="scroll-button" type="button"><i class="fa-solid fa-caret-right"></i></button>
+      </div>
     </div>
-    <div class="producers-list fade-in">
+    <div class="instrument-brands-list fade-in">
       <?php while ($producer = mysqli_fetch_assoc($producers)) : ?>
-        <a href="katalog.php?producer_id=<?php echo $producer['id']; ?>" class="producer-card fade-in">
-          <span class="producer-name"><?php echo htmlspecialchars($producer['nazwa']); ?></span>
-        </a>
+        <?php echo renderBrandCard($producer); ?>
       <?php endwhile; ?>
     </div>
   </section>

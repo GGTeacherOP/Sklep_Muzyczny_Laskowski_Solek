@@ -42,13 +42,14 @@ html {
   background-color: var(--button-buy-bg-hover);
 }
 
-.instrument-types {
+.instrument-types, .instrument-brands {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
 }
 
-.instrument-types-header {
+.instrument-types-header, .instrument-brands-header {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -56,11 +57,11 @@ html {
   gap: var(--spacing-sm);
 }
 
-.instrument-types-title {
+.instrument-types-title, .instrument-brands-title {
   font-size: var(--font-xxl);
 }
 
-.instrument-types-controls {
+.instrument-types-controls, .instrument-brands-controls {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -88,7 +89,7 @@ html {
   background-color: var(--secondary-bg);
 }
 
-.instrument-types-list {
+.instrument-types-list, .instrument-brands-list {
   display: flex;
   overflow: auto;
   padding-block: var(--spacing-sm);
@@ -99,11 +100,11 @@ html {
   -ms-overflow-style: none;
 }
 
-.instrument-types-list::-webkit-scrollbar {
+.instrument-types-list::-webkit-scrollbar, .instrument-brands-list::-webkit-scrollbar {
   display: none;
 }
 
-.instrument-card {
+.instrument-card, .brand-card  {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -117,30 +118,30 @@ html {
   gap: var(--spacing-xs);
 }
 
-.instrument-card:hover:not(.selected) {
+.instrument-card:hover:not(.selected), .brand-card:hover:not(.selected) {
   translate: 0 4px;
 }
 
-.instrument-card:focus-visible {
+.instrument-card:focus-visible, .brand-card:focus-visible {
   transition: 0s;
   outline: 1px dashed var(--highlight-color);
   outline-offset: 2px;
 }
 
-.instrument-card:hover .instrument-name {
+.instrument-card:hover .instrument-name, .brand-card:hover .brand-name {
   color: var(--highlight-color);
 }
 
-.instrument-card.selected {
+.instrument-card.selected, .brand-card.selected {
   cursor: default;
 }
 
-.instrument-card.selected .instrument-name {
+.instrument-card.selected .instrument-name, .brand-card.selected .brand-name {
   font-weight: bold;
   color: var(--highlight-color);
 }
 
-.instrument-icon {
+.instrument-icon, .brand-icon {
   width: 100%;
   height: var(--card-size-sm);
   border-radius: var(--radius-xs);
@@ -151,14 +152,14 @@ html {
   justify-content: center;
 }
 
-.instrument-icon img {
+.instrument-icon img, .brand-icon img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   padding: var(--spacing-xs);
 }
 
-.instrument-name {
+.instrument-name, .brand-name {
   font-size: var(--font-sm);
   text-align: center;
   color: var(--text-color);
@@ -383,7 +384,7 @@ html {
     height: 50vh;
   }
 
-  .instrument-types-header {
+  .instrument-types-header, .instrument-brands-header {
     align-items: center;
     flex-direction: row;
     gap: var(--spacing-xs);
@@ -410,12 +411,12 @@ html {
     height: var(--button-height-xs);
   }
 
-  .instrument-types-list {
+  .instrument-types-list, .instrument-brands-list {
     gap: var(--spacing-sm);
     padding-block: var(--spacing-xs);
   }
 
-  .instrument-types-title {
+  .instrument-types-title, .instrument-brands-title {
     font-size: var(--font-md);
   }
 
@@ -430,52 +431,4 @@ html {
   .product-image {
     height: var(--card-size-lg);
   }
-}
-
-.producers-section {
-  padding: 2rem;
-  margin: 2rem 0;
-}
-
-.producers-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.producers-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.producers-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.producer-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-decoration: none;
-  color: #333;
-}
-
-.producer-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.producer-name {
-  font-size: 1.1rem;
-  font-weight: 500;
-  text-align: center;
 }
