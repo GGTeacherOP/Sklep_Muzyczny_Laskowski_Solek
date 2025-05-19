@@ -14,13 +14,18 @@
       <div class=\"product-info\">
         <h3 class=\"product-name\">{$product['nazwa']}</h3>
         <p class=\"product-price\">{$price}</p>
-        <form method=\"post\" action=\"home.php\">
-          <input type=\"hidden\" name=\"product_id\" value=\"{$product['id']}\">
-          <input type=\"hidden\" name=\"product_type\" value=\"{$type}\">
-          <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
-            Kup <i class=\"fa-solid fa-cart-plus\"></i>
-          </button>
-        </form>
+        <div class=\"product-actions\">
+          <form method=\"post\" action=\"home.php\">
+            <input type=\"hidden\" name=\"product_id\" value=\"{$product['id']}\">
+            <input type=\"hidden\" name=\"product_type\" value=\"{$type}\">
+            <button type=\"submit\" name=\"add_to_cart\" class=\"product-action-btn buy-product-btn\">
+              Kup <i class=\"fa-solid fa-cart-plus\"></i>
+            </button>
+          </form>
+          <a href=\"produkt.php?id={$product['id']}\" class=\"product-action-btn view-details-btn\">
+            Wyświetl informacje <i class=\"fa-solid fa-eye\"></i>
+          </a>
+        </div>
       </div>
     </article>
     ";
