@@ -5,6 +5,25 @@
   {
     $price = formatPrice($product['cena_sprzedazy']);
     $url = "../assets/images/" . $product['url'];
+    $rating = isset($product['srednia_ocena']) ? floatval($product['srednia_ocena']) : 0;
+    $ratingCount = isset($product['liczba_ocen']) ? intval($product['liczba_ocen']) : 0;
+    
+    $ratingStars = '';
+    for ($i = 1; $i <= 5; $i++) {
+      if ($i <= $rating) {
+        $ratingStars .= '<i class="fa-solid fa-star"></i>';
+      } elseif ($i - 0.5 <= $rating) {
+        $ratingStars .= '<i class="fa-solid fa-star-half-stroke"></i>';
+      } else {
+        $ratingStars .= '<i class="fa-regular fa-star"></i>';
+      }
+    }
+    
+    $ratingHtml = "
+      <div class=\"product-rating\">
+        <div class=\"stars\">{$ratingStars}</div>
+      </div>
+    ";
 
     return "
     <article class=\"product-card\">
@@ -14,6 +33,7 @@
       </div>
       <div class=\"product-info\">
         <h3 class=\"product-name\">{$product['nazwa']}</h3>
+        {$ratingHtml}
         <p class=\"product-price\">{$price}</p>
         <div class=\"product-actions\">
           <form method=\"post\" action=\"home.php\">
