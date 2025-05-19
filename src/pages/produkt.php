@@ -41,7 +41,7 @@
         $stmt = $connection->prepare($addQuery);
         $stmt->bind_param("iiis", $product_id, $user_id, $rating, $comment);
         $stmt->execute();
-        header("Location: produkt.php?id=" . $product_id . "&rating=added");
+        header("Location: produkt.php?id=" . $product_id);
         exit();
       }
     }
@@ -60,7 +60,7 @@
       $stmt = $connection->prepare($updateQuery);
       $stmt->bind_param("isii", $rating, $comment, $rating_id, $user_id);
       $stmt->execute();
-      header("Location: produkt.php?id=" . $product_id . "&rating=edited");
+      header("Location: produkt.php?id=" . $product_id);
       exit();
     }
   }
@@ -73,7 +73,7 @@
     $stmt = $connection->prepare($deleteQuery);
     $stmt->bind_param("ii", $rating_id, $user_id);
     $stmt->execute();
-    header("Location: produkt.php?id=" . $product_id . "&rating=deleted");
+    header("Location: produkt.php?id=" . $product_id);
     exit();
   }
   
@@ -185,30 +185,6 @@
 <?php include '../components/header.php'; ?>
 
 <main class="product-container fade-in">
-  <?php if (isset($_GET['dodano']) && $_GET['dodano'] === 'true'): ?>
-    <div class="alert alert-success">
-      Produkt został dodany do koszyka pomyślnie!
-    </div>
-  <?php endif; ?>
-  
-  <?php if (isset($_GET['rating']) && $_GET['rating'] === 'added'): ?>
-    <div class="alert alert-success">
-      Twoja opinia została dodana pomyślnie!
-    </div>
-  <?php endif; ?>
-  
-  <?php if (isset($_GET['rating']) && $_GET['rating'] === 'edited'): ?>
-    <div class="alert alert-success">
-      Twoja opinia została zaktualizowana pomyślnie!
-    </div>
-  <?php endif; ?>
-  
-  <?php if (isset($_GET['rating']) && $_GET['rating'] === 'deleted'): ?>
-    <div class="alert alert-success">
-      Twoja opinia została usunięta pomyślnie!
-    </div>
-  <?php endif; ?>
-
   <div class="product-header">
     <a href="home.php" class="back-link">
       <i class="fa-solid fa-arrow-left"></i> Powrót do strony głównej
@@ -409,7 +385,6 @@
               <input type="hidden" name="rating_id" value="<?php echo $user_rating['id']; ?>">
               
               <div class="form-group">
-                <label class="form-label">Ocena:</label>
                 <div class="rating-input">
                   <?php for ($i = 1; $i <= 5; $i++): ?>
                     <input type="radio" id="edit-star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($user_rating['ocena'] == $i) ? 'checked' : ''; ?>>
@@ -436,7 +411,6 @@
           <h3>Dodaj swoją opinię</h3>
           <form method="post">
             <div class="form-group">
-              <label class="form-label">Ocena:</label>
               <div class="rating-input">
                 <?php for ($i = 1; $i <= 5; $i++): ?>
                   <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($i == 5) ? 'checked' : ''; ?>>
