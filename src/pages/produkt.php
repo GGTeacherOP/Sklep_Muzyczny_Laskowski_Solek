@@ -386,7 +386,7 @@
               
               <div class="form-group">
                 <div class="rating-input">
-                  <?php for ($i = 1; $i <= 5; $i++): ?>
+                  <?php for ($i = 5; $i >= 1; $i--): ?>
                     <input type="radio" id="edit-star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($user_rating['ocena'] == $i) ? 'checked' : ''; ?>>
                     <label for="edit-star<?php echo $i; ?>"><i class="fa-solid fa-star"></i></label>
                   <?php endfor; ?>
@@ -412,7 +412,7 @@
           <form method="post">
             <div class="form-group">
               <div class="rating-input">
-                <?php for ($i = 1; $i <= 5; $i++): ?>
+                <?php for ($i = 5; $i >= 1; $i--): ?>
                   <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($i == 5) ? 'checked' : ''; ?>>
                   <label for="star<?php echo $i; ?>"><i class="fa-solid fa-star"></i></label>
                 <?php endfor; ?>
