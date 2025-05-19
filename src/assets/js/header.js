@@ -9,9 +9,7 @@ export function redirectTo(path) {
   setTimeout(() => {
     try {
       const basePath = window.location.pathname.split('/').slice(0, -1).join('/');
-
       const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-
       window.location.href = `${basePath}/${cleanPath}`;
     }
     catch (error) {
@@ -45,8 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trayItems.home.addEventListener('click', () => redirectTo('/home.php'));
   }
 
-  if (trayItems.pannel)
-  {
+  if (trayItems.pannel) {
     trayItems.pannel.addEventListener('click', () => redirectTo('/panel.php'));
   }
 
@@ -55,16 +52,22 @@ document.addEventListener('DOMContentLoaded', () => {
    * @returns {void}
    */
   function handleSearch() {
-    const searchTerm = searchInput?.value.trim().toLowerCase();
+    const searchTerm = searchInput?.value.trim();
     if (searchTerm) {
-      console.log('Wyszukiwanie:', searchTerm);
+      redirectTo(`/katalog.php?search=${encodeURIComponent(searchTerm)}`);
     }
   }
 
   if (searchButton && searchInput) {
-    searchButton.addEventListener('click', handleSearch);
+    searchButton.addEventListener('click', (e) => {
+      if (e.target.closest('form')?.method !== 'get') {
+        e.preventDefault();
+        handleSearch();
+      }
+    });
+    
     searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && e.target.closest('form')?.method !== 'get') {
         e.preventDefault();
         handleSearch();
       }

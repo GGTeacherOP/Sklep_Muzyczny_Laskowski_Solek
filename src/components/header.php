@@ -15,9 +15,9 @@
   <div class="logo">
     <img alt="Logo Sklepu Muzycznego" src="src/assets/images/logo_sklepu.png">
   </div>
-  <form class="search-bar" role="search">
-    <input aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj instrumentów..." type="text">
-    <button aria-label="Wyszukaj" class="search-button" type="button">
+  <form class="search-bar" role="search" method="get" action="katalog.php">
+    <input type="text" name="search" aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj po nazwie, opisie lub kodzie produktu..." value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+    <button aria-label="Wyszukaj" class="search-button" type="submit">
       <i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
     </button>
   </form>
