@@ -1,0 +1,40 @@
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.product-rating .stars {
+    color: #ffc107;
+    font-size: var(--font-md);
+}
+
+.product-rating .rating-count {
+    color: var(--text-color-light);
+    font-size: var(--font-sm);
+}
+
+@media (max-width: 768px) {
+    .product-rating .stars {
+        font-size: var(--font-sm);
+    }
+    
+    .product-rating .rating-count {
+        font-size: var(--font-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .product-rating {
+        gap: var(--spacing-xxxs);
+    }
+    
+    .product-rating .stars {
+        font-size: var(--font-xs);
+    }
+    
+    .product-rating .rating-count {
+        font-size: var(--font-xxs);
+    }
+} 

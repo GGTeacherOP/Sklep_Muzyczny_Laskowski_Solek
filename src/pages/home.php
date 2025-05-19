@@ -6,6 +6,7 @@
   include_once '../includes/fetch/fetch_product_categories.php';
   include_once '../includes/render/render_product_card.php';
   include_once '../includes/render/render_category_card.php';
+  include_once '../includes/render/render_brand_card.php';
   include_once '../includes/helpers/cart_helpers.php';
 
   if (isset($_POST['add_to_cart'])) {
@@ -17,6 +18,10 @@
   $popularBuyProducts = getPopularProducts($connection, 'buy');
   $popularRentProducts = getPopularProducts($connection, 'rent');
   $productCategories = getProductCategories($connection);
+  
+  // Pobieranie producentów
+  $producers_query = "SELECT id, nazwa FROM producenci ORDER BY nazwa";
+  $producers = mysqli_query($connection, $producers_query);
 ?>
 <!doctype html>
 <html lang="pl">
@@ -51,7 +56,7 @@
     <div class="instrument-types-header">
       <h4 class="instrument-types-title">Typy produktów</h4>
       <div class="instrument-types-controls">
-        <button class="view-all-button" type="button"><strong>Wyświetl wszystko</strong></button>
+        <a href="katalog.php" class="view-all-button"><strong>Wyświetl wszystko</strong></a>
         <button class="scroll-button" type="button"><i class="fa-solid fa-caret-left"></i></button>
         <button class="scroll-button" type="button"><i class="fa-solid fa-caret-right"></i></button>
       </div>
@@ -62,6 +67,23 @@
       } ?>
     </div>
   </section>
+
+  <section class="instrument-brands fade-in">
+    <div class="instrument-brands-header">
+      <h4 class="instrument-brands-title">Producenci</h4>
+      <div class="instrument-brands-controls">
+        <a href="katalog.php" class="view-all-button"><strong>Wyświetl wszystko</strong></a>
+        <button class="scroll-button" type="button"><i class="fa-solid fa-caret-left"></i></button>
+        <button class="scroll-button" type="button"><i class="fa-solid fa-caret-right"></i></button>
+      </div>
+    </div>
+    <div class="instrument-brands-list fade-in">
+      <?php while ($producer = mysqli_fetch_assoc($producers)) : ?>
+        <?php echo renderBrandCard($producer); ?>
+      <?php endwhile; ?>
+    </div>
+  </section>
+
   <section class="popular-products fade-in" id="popular-products">
     <div class="popular-section">
       <h2 class="section-title">Najczęściej Kupowane</h2>

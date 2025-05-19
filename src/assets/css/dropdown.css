@@ -1,0 +1,143 @@
+.dropdown-toggle {
+    height: var(--card-size-xs-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+}
+
+/* Style dla dropdownów */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    min-width: var(--card-size-xxl);
+  }
+  
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
+    height: var(--card-size-xs-sm);
+    border: none;
+    outline: none;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-md);
+  }
+  
+  .dropdown-toggle:hover {
+    background-color: var(--form-input-bg);
+  }
+  
+  .dropdown-toggle i {
+    margin-left: var(--spacing-sm);
+    transition: transform 0.2s ease;
+  }
+  
+  .dropdown-toggle.active i {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    width: 100%;
+    min-width: fit-content;
+    margin-top: var(--spacing-xxs);
+    padding: var(--spacing-xs) 0;
+    background-color: var(--primary-bg);
+    border: 1px solid var(--form-border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+    list-style: none;
+  }
+  
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: left;
+    border: none;
+    background: none;
+    font-size: var(--font-md);
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--secondary-bg);
+    color: var(--highlight-color);
+  }
+  
+  .dropdown-item.active {
+    background-color: var(--button-more-bg);
+    color: var(--button-text-color);
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    margin: var(--spacing-xxs) 0;
+    background-color: var(--form-border);
+  }
+  
+  /* Nadpisanie stylów dla dropdownów w modalach */
+  .modal-content .dropdown-toggle {
+    border: none;
+    background-color: var(--form-input-bg);
+  }
+
+  .filter-section .dropdown {
+    width: 100%;
+  }
+
+@media (max-width: 768px) {
+    .dropdown-toggle,
+    .admin-filters .dropdown-toggle {
+        height: var(--button-height-lg);
+        font-size: var(--font-md);
+        border-radius: var(--radius-sm);
+    }
+
+    .dropdown {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .dropdown-menu {
+        font-size: var(--font-md);
+    }
+
+    .dropdown-item {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .dropdown-toggle,
+    .admin-filters .dropdown-toggle {
+        height: var(--button-height-md);
+        font-size: var(--font-xs);
+    }
+
+    .dropdown-menu {
+        font-size: var(--font-xs);
+    }
+
+    .dropdown-item {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-xs);
+    }
+}

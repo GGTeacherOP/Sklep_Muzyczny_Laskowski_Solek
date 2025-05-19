@@ -1,53 +1,121 @@
 @import "global.css";
+@import "rating.css";
 
 html {
   scroll-behavior: smooth;
 }
 
 .hero-section {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--spacing-xl) var(--spacing-md);
   height: 60vh;
-  background: url('../assets/img/hero-bg.jpg') center/cover no-repeat;
-  background-color: var(--secondary-bg);
-  text-align: center;
+  min-height: 400px;
   border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../images/Hero/photo-1725152471889-6c59a52e7794.avif') center/cover no-repeat;
+  z-index: -2;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+  background-size: 100% auto;
+  background-position: center;
+  will-change: transform;
+}
+
+@media (min-width: 1920px) {
+  .hero-section::before {
+    background-size: cover;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section::before {
+    background-size: auto 100%;
+  }
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.4)
+  );
+  z-index: -1;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 800px;
+  padding: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-sm);
 }
 
 .hero-title {
-  margin-bottom: var(--spacing-sm);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: var(--spacing-md);
   color: var(--primary-bg);
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-  font-size: var(--font-lg);
-  margin-bottom: var(--spacing-md);
-  color: var(--text-color);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-bg);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-inline: auto;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
 }
 
 .hero-button {
-  font-size: var(--font-md);
-  padding: var(--spacing-sm) var(--spacing-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  height: var(--button-height-lg);
+  padding-inline: var(--spacing-lg);
+  border-radius: var(--radius-sm);
   background-color: var(--button-buy-bg);
   color: var(--button-text-color);
-  border-radius: var(--radius-sm);
+  font-weight: bold;
+  font-size: var(--font-md);
   text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .hero-button:hover {
   background-color: var(--button-buy-bg-hover);
+  translate: 0 2px;
 }
 
-.instrument-types {
+.instrument-types, .instrument-brands {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
 }
 
-.instrument-types-header {
+.instrument-types-header, .instrument-brands-header {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -55,17 +123,19 @@ html {
   gap: var(--spacing-sm);
 }
 
-.instrument-types-title {
+.instrument-types-title, .instrument-brands-title {
   font-size: var(--font-xxl);
 }
 
-.instrument-types-controls {
+.instrument-types-controls, .instrument-brands-controls {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
 }
 
 .view-all-button {
+  display: flex;
+  align-items: center;
   font-size: var(--font-sm);
   height: var(--button-height-sm);
   padding: 0 var(--spacing-sm);
@@ -85,7 +155,7 @@ html {
   background-color: var(--secondary-bg);
 }
 
-.instrument-types-list {
+.instrument-types-list, .instrument-brands-list {
   display: flex;
   overflow: auto;
   padding-block: var(--spacing-sm);
@@ -96,11 +166,11 @@ html {
   -ms-overflow-style: none;
 }
 
-.instrument-types-list::-webkit-scrollbar {
+.instrument-types-list::-webkit-scrollbar, .instrument-brands-list::-webkit-scrollbar {
   display: none;
 }
 
-.instrument-card {
+.instrument-card, .brand-card  {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -114,37 +184,48 @@ html {
   gap: var(--spacing-xs);
 }
 
-.instrument-card:hover:not(.selected) {
+.instrument-card:hover:not(.selected), .brand-card:hover:not(.selected) {
   translate: 0 4px;
 }
 
-.instrument-card:focus-visible {
+.instrument-card:focus-visible, .brand-card:focus-visible {
   transition: 0s;
   outline: 1px dashed var(--highlight-color);
   outline-offset: 2px;
 }
 
-.instrument-card:hover .instrument-name {
+.instrument-card:hover .instrument-name, .brand-card:hover .brand-name {
   color: var(--highlight-color);
 }
 
-.instrument-card.selected {
+.instrument-card.selected, .brand-card.selected {
   cursor: default;
 }
 
-.instrument-card.selected .instrument-name {
+.instrument-card.selected .instrument-name, .brand-card.selected .brand-name {
   font-weight: bold;
   color: var(--highlight-color);
 }
 
-.instrument-icon {
+.instrument-icon, .brand-icon {
   width: 100%;
   height: var(--card-size-sm);
   border-radius: var(--radius-xs);
-  background-color: var(--secondary-bg);
+  background-color: var(--primary-bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.instrument-name {
+.instrument-icon img, .brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--spacing-xs);
+}
+
+.instrument-name, .brand-name {
   font-size: var(--font-sm);
   text-align: center;
   color: var(--text-color);
@@ -253,6 +334,9 @@ html {
   border-radius: var(--radius-sm);
   background: var(--primary-bg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .product-image {
@@ -260,12 +344,18 @@ html {
   overflow: hidden;
   width: 100%;
   height: var(--card-size-xxl);
+  background-color: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: var(--spacing-xs);
 }
 
 .category-badge {
@@ -281,31 +371,39 @@ html {
 }
 
 .product-card .product-info {
-  padding: 15px;
+  padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-xs);
+  flex: 1;
 }
 
 .product-card .product-name {
   color: var(--heading-color);
-  font-size: 1rem;
+  font-size: var(--font-md);
   margin: 0;
   line-height: 1.2;
   font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 1.2em;
+  white-space: nowrap;
 }
 
 .product-card .product-price {
   font-weight: 700;
   color: var(--price-color);
-  font-size: 1.1rem;
+  font-size: var(--font-lg);
   margin: 0;
 }
 
 .product-card .product-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 5px;
+  gap: var(--spacing-xs);
+  margin-top: auto;
   flex-direction: column;
 }
 
@@ -350,9 +448,24 @@ html {
 @media (max-width: 768px) {
   .hero-section {
     height: 50vh;
+    min-height: 350px;
+    padding: var(--spacing-lg) var(--spacing-sm);
   }
 
-  .instrument-types-header {
+  .hero-content {
+    padding: var(--spacing-md);
+    margin-inline: var(--spacing-sm);
+  }
+
+  .hero-title {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .hero-subtitle {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .instrument-types-header, .instrument-brands-header {
     align-items: center;
     flex-direction: row;
     gap: var(--spacing-xs);
@@ -361,11 +474,32 @@ html {
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(var(--card-size-xxxl), 1fr));
   }
+
+  .hero-button {
+    height: var(--button-height-md);
+    font-size: var(--font-sm);
+    padding-inline: var(--spacing-md);
+  }
 }
 
 @media (max-width: 480px) {
   .hero-section {
     height: 40vh;
+    min-height: 300px;
+    padding: var(--spacing-md) var(--spacing-xs);
+  }
+
+  .hero-content {
+    padding: var(--spacing-sm);
+    margin-inline: var(--spacing-xs);
+  }
+
+  .hero-title {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .hero-subtitle {
+    margin-bottom: var(--spacing-sm);
   }
 
   .view-all-button {
@@ -379,12 +513,12 @@ html {
     height: var(--button-height-xs);
   }
 
-  .instrument-types-list {
+  .instrument-types-list, .instrument-brands-list {
     gap: var(--spacing-sm);
     padding-block: var(--spacing-xs);
   }
 
-  .instrument-types-title {
+  .instrument-types-title, .instrument-brands-title {
     font-size: var(--font-md);
   }
 
@@ -398,5 +532,11 @@ html {
 
   .product-image {
     height: var(--card-size-lg);
+  }
+
+  .hero-button {
+    height: var(--button-height-sm);
+    font-size: var(--font-xs);
+    padding-inline: var(--spacing-sm);
   }
 }
