@@ -144,7 +144,18 @@ html {
   width: 100%;
   height: var(--card-size-sm);
   border-radius: var(--radius-xs);
-  background-color: var(--secondary-bg);
+  background-color: var(--primary-bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instrument-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--spacing-xs);
 }
 
 .instrument-name {
