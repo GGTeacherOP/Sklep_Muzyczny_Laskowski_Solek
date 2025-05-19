@@ -25,7 +25,6 @@
     'register_email' => '',
     'register_password' => '',
     'register_username' => '',
-    'profile_update' => '',
   ];
 
   $values = [
@@ -96,8 +95,6 @@
       $newPassword = trim($_POST['new_password']);
       $confirmPassword = trim($_POST['confirm_password']);
 
-      $errors['profile_update'] = '';
-
       // Sprawdź czy email jest już zajęty przez innego użytkownika
       $query = "SELECT id FROM uzytkownicy WHERE email = ? AND id != ?";
       $stmt = mysqli_prepare($connection, $query);
@@ -105,9 +102,7 @@
       mysqli_stmt_execute($stmt);
       $result = mysqli_stmt_get_result($stmt);
       
-      if (mysqli_num_rows($result) > 0) {
-        $errors['profile_update'] = "Ten adres email jest już zajęty";
-      } else {
+      if (mysqli_num_rows($result) === 0) {
         $updateQuery = "UPDATE uzytkownicy SET nazwa_uzytkownika = ?, email = ?";
         $params = [$newUsername, $newEmail];
         $types = 'ss';
@@ -117,8 +112,6 @@
             $updateQuery .= ", haslo = ?";
             $params[] = $newPassword;
             $types .= 's';
-          } else {
-            $errors['profile_update'] = "Nowe hasła nie są identyczne";
           }
         }
 
@@ -126,17 +119,14 @@
         $params[] = $userId;
         $types .= 'i';
 
-        if (empty($errors['profile_update'])) {
-          $stmt = mysqli_prepare($connection, $updateQuery);
-          mysqli_stmt_bind_param($stmt, $types, ...$params);
-          
-          if (mysqli_stmt_execute($stmt)) {
-            $userData['nazwa_uzytkownika'] = $newUsername;
-            $userData['email'] = $newEmail;
-            $_SESSION['success_message'] = "Profil został zaktualizowany pomyślnie";
-          } else {
-            $errors['profile_update'] = "Wystąpił błąd podczas aktualizacji profilu";
-          }
+        $stmt = mysqli_prepare($connection, $updateQuery);
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+        
+        if (mysqli_stmt_execute($stmt)) {
+          $userData['nazwa_uzytkownika'] = $newUsername;
+          $userData['email'] = $newEmail;
+          header("Location: profile.php");
+          exit();
         }
       }
     }
@@ -163,11 +153,8 @@
         mysqli_stmt_bind_param($stmt, "i", $order_id);
         
         if (mysqli_stmt_execute($stmt)) {
-          $_SESSION['success_message'] = "Zamówienie zostało anulowane.";
           header("Location: profile.php");
           exit();
-        } else {
-          $errors['profile_update'] = "Wystąpił błąd podczas anulowania zamówienia.";
         }
       }
     }
@@ -214,7 +201,7 @@
                 </button>
               </form>
             <?php endif; ?>
-            <a href="profile.php" class="form-button">Powrót do profilu</a>
+            <a href="profile.php" class="form-button"><i class="fas fa-arrow-left"></i> Powrót do profilu</a>
           </div>
         </div>
 
@@ -287,22 +274,9 @@
         <div class="profile-header">
           <h1>Mój Profil</h1>
           <form method="POST" class="logout-form">
-            <button type="submit" name="logout" class="form-button btn-danger">Wyloguj się</button>
+            <button type="submit" name="logout" class="form-button btn-danger"><i class="fas fa-sign-out-alt"></i> Wyloguj się</button>
           </form>
         </div>
-
-        <?php if (isset($_SESSION['success_message'])): ?>
-          <div class="success-message">
-            <?= $_SESSION['success_message'] ?>
-            <?php unset($_SESSION['success_message']); ?>
-          </div>
-        <?php endif; ?>
-        
-        <?php if (!empty($errors['profile_update'])): ?>
-          <div class="error-message">
-            <?= $errors['profile_update'] ?>
-          </div>
-        <?php endif; ?>
 
         <div class="profile-tabs">
           <button class="profile-tab active" data-tab="profile">Dane profilu</button>
@@ -335,7 +309,7 @@
             </div>
 
             <div class="button-group">
-              <button type="submit" name="update_profile" class="form-button">Aktualizuj profil</button>
+              <button type="submit" name="update_profile" class="form-button"><i class="fas fa-save"></i> Aktualizuj profil</button>
             </div>
           </form>
         </div>
@@ -359,7 +333,7 @@
                     <span class="order-value">Wartość: <?= number_format($order['wartosc_calkowita'], 2) ?> zł</span>
                   </div>
                   <div class="order-actions">
-                    <a href="?order_details=<?= $order['id'] ?>" class="form-button">Zobacz szczegóły</a>
+                    <a href="?order_details=<?= $order['id'] ?>" class="form-button"><i class="fas fa-eye"></i> Zobacz szczegóły</a>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -376,15 +350,32 @@
               <?php foreach ($userReviews as $review): ?>
                 <div class="review-item">
                   <div class="review-header">
-                    <span class="product-name"><?= htmlspecialchars($review['nazwa_instrumentu']) ?></span>
-                    <span class="review-date"><?= date('d.m.Y H:i', strtotime($review['data_oceny'])) ?></span>
+                    <div class="review-header-left">
+                      <span class="product-name"><?= htmlspecialchars($review['nazwa_instrumentu']) ?></span>
+                      <div class="review-stars-container">
+                        <div class="review-stars">
+                          <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fas fa-star<?= $i <= $review['ocena'] ? ' active' : '' ?>"></i>
+                          <?php endfor; ?>
+                        </div>
+                        <span class="rating-text"><?= $review['ocena'] ?>/5</span>
+                      </div>
+                    </div>
+                    <div class="review-date">
+                      <?= date('d.m.Y H:i', strtotime($review['data_oceny'])) ?>
+                      <?php if ($review['czy_edytowana']): ?>
+                        <span class="edited-badge">(edytowana)</span>
+                      <?php endif; ?>
+                    </div>
                   </div>
-                  <div class="review-rating">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                      <i class="fas fa-star<?= $i <= $review['ocena'] ? ' active' : '' ?>"></i>
-                    <?php endfor; ?>
+                  <div class="review-content">
+                    <?= htmlspecialchars($review['komentarz']) ?>
                   </div>
-                  <p class="review-comment"><?= htmlspecialchars($review['komentarz']) ?></p>
+                  <div class="review-actions">
+                    <a href="produkt.php?id=<?= $review['instrument_id'] ?>" class="review-product-btn">
+                      <i class="fas fa-eye"></i> Zobacz produkt
+                    </a>
+                  </div>
                 </div>
               <?php endforeach; ?>
             </div>
