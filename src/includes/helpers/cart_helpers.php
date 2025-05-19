@@ -68,30 +68,60 @@
 
   function syncCartWithDatabase(mysqli $connection, int $userId, array &$cartItems) : void
   {
-    $query = "SELECT id FROM koszyk WHERE klient_id = $userId";
-    $result = mysqli_query($connection, $query);
+    // Najpierw sprawdź czy użytkownik ma rekord w tabeli klienci
+    $checkClientQuery = "SELECT id FROM klienci WHERE uzytkownik_id = ?";
+    $stmt = mysqli_prepare($connection, $checkClientQuery);
+    mysqli_stmt_bind_param($stmt, 'i', $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if (!$result || mysqli_num_rows($result) === 0) {
+      // Jeśli nie ma rekordu w tabeli klienci, utwórz go
+      $insertClientQuery = "INSERT INTO klienci (uzytkownik_id) VALUES (?)";
+      $stmt = mysqli_prepare($connection, $insertClientQuery);
+      mysqli_stmt_bind_param($stmt, 'i', $userId);
+      mysqli_stmt_execute($stmt);
+      $clientId = mysqli_insert_id($connection);
+    } else {
+      $clientId = mysqli_fetch_assoc($result)['id'];
+    }
+    mysqli_free_result($result);
+
+    // Teraz sprawdź czy klient ma koszyk
+    $query = "SELECT id FROM koszyk WHERE klient_id = ?";
+    $stmt = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $clientId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     if ($result && mysqli_num_rows($result) > 0) {
       $cartId = mysqli_fetch_assoc($result)['id'];
       mysqli_free_result($result);
     } else {
-      $query = "INSERT INTO koszyk (klient_id) VALUES ($userId)";
-      mysqli_query($connection, $query);
+      // Utwórz nowy koszyk dla klienta
+      $insertCartQuery = "INSERT INTO koszyk (klient_id) VALUES (?)";
+      $stmt = mysqli_prepare($connection, $insertCartQuery);
+      mysqli_stmt_bind_param($stmt, 'i', $clientId);
+      mysqli_stmt_execute($stmt);
       $cartId = mysqli_insert_id($connection);
     }
 
-    mysqli_query($connection, "DELETE FROM koszyk_szczegoly WHERE koszyk_id = $cartId");
+    // Usuń stare pozycje z koszyka
+    $deleteQuery = "DELETE FROM koszyk_szczegoly WHERE koszyk_id = ?";
+    $stmt = mysqli_prepare($connection, $deleteQuery);
+    mysqli_stmt_bind_param($stmt, 'i', $cartId);
+    mysqli_stmt_execute($stmt);
 
+    // Dodaj nowe pozycje do koszyka
     foreach (['buy', 'rent'] as $type) {
       foreach ($cartItems[$type] as $productId => $product) {
         $quantity = intval($product['quantity']);
         $price = floatval($product['cena_sprzedazy']);
 
-        $query = "
-                INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena)
-                VALUES ($cartId, $productId, '$type', $quantity, $price)
-            ";
-        mysqli_query($connection, $query);
+        $insertQuery = "INSERT INTO koszyk_szczegoly (koszyk_id, instrument_id, typ, ilosc, cena) VALUES (?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($connection, $insertQuery);
+        mysqli_stmt_bind_param($stmt, 'iisid', $cartId, $productId, $type, $quantity, $price);
+        mysqli_stmt_execute($stmt);
       }
     }
   }
