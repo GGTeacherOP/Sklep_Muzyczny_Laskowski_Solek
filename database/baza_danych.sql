@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 19, 2025 at 07:19 PM
+-- Generation Time: Maj 20, 2025 at 02:02 AM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -45,9 +45,9 @@ INSERT INTO `dostawa_szczegoly` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `
 (2, 1, 2, 3, 2000.00, 'dostarczona'),
 (3, 1, 5, 2, 600.00, 'dostarczona'),
 (4, 2, 3, 2, 3500.00, 'oczekiwana'),
-(6, 3, 4, 4, 1800.00, 'oczekiwana'),
-(7, 3, 1, 2, 1200.00, 'oczekiwana'),
-(8, 3, 2, 1, 2000.00, 'oczekiwana'),
+(6, 3, 4, 4, 1800.00, 'dostarczona'),
+(7, 3, 1, 2, 1200.00, 'dostarczona'),
+(8, 3, 2, 1, 2000.00, 'dostarczona'),
 (10, 10, 3, 1, 2599.00, 'oczekiwana'),
 (11, 10, 3, 2, 2599.00, 'oczekiwana'),
 (12, 11, 2, 2, 1599.00, 'oczekiwana'),
@@ -77,7 +77,7 @@ CREATE TABLE `dostawy` (
 INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `producent_id`, `pracownik_id`) VALUES
 (1, '2025-05-10 09:15:00', '2025-05-15 14:30:00', 'dostarczona', 1, 3),
 (2, '2025-05-12 11:20:00', NULL, 'oczekiwana', 2, 4),
-(3, '2025-05-14 14:45:00', NULL, 'oczekiwana', 4, 3),
+(3, '2025-05-14 14:45:00', '2025-05-20 01:41:39', 'dostarczona', 4, 3),
 (10, '2025-05-19 00:45:06', NULL, 'anulowana', 3, 2),
 (11, '2025-05-19 00:45:55', NULL, 'anulowana', 2, 2),
 (12, '2025-05-19 00:47:06', '2025-05-19 00:57:06', 'dostarczona', 5, 2);
@@ -106,13 +106,27 @@ CREATE TABLE `instrumenty` (
 --
 
 INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedazy`, `cena_kupna`, `cena_wypozyczenia_dzien`, `stan_magazynowy`, `producent_id`, `kategoria_id`) VALUES
-(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 799.99, 299.99, 20, 1, 1),
-(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 1599.99, 699.99, 22, 2, 1),
+(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 799.99, 299.99, 22, 1, 1),
+(2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 1599.99, 699.99, 23, 2, 1),
 (3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 2599.99, 1599.99, 10, 3, 1),
-(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 999.99, 599.99, 25, 4, 1),
-(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 599.99, 100.99, 35, 5, 4),
+(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 999.99, 599.99, 29, 4, 1),
+(5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 599.99, 100.99, 34, 5, 4),
 (6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 1699.99, 1000.99, 9, 6, 4),
-(7, 'FGX800C', 'Yamaha FGX800C Electro-Acoustic Guitar', 'Klasyczna gitara elektroakustyczna typu dreadnought z wycięciem, wykonana z drewna świerkowego i nato. Wyposażona w preamp System66 z wbudowanym tunerem, zapewniającym czyste i dynamiczne brzmienie. Idealna zarówno do gry akustycznej, jak i koncertów na żywo.', 1799.00, 0.00, 0.00, 30, 1, 2);
+(7, 'FGX800C', 'Yamaha FGX800C', 'Klasyczna gitara elektroakustyczna typu dreadnought z wycięciem, wykonana z drewna świerkowego i nato. Wyposażona w preamp System66 z wbudowanym tunerem.', 1799.00, 899.00, 299.00, 30, 1, 2),
+(8, 'CAS7890', 'Casio CT-S100', 'Lekki i przenośny keyboard z 61 klawiszami, idealny dla początkujących. Wyposażony w 400 brzmień i 77 rytmów.', 899.99, 499.99, 99.99, 15, 7, 4),
+(9, 'PEA1234', 'Pearl Export', 'Komplet perkusyjny dla początkujących i średniozaawansowanych. Zestaw 5-częściowy z talerzami.', 3499.99, 1999.99, 499.99, 8, 8, 5),
+(10, 'GRE5678', 'Gretsch G2622 Streamliner', 'Gitara elektryczna typu hollow body, idealna do jazzu i bluesa. Wyposażona w przetworniki BroadTron™.', 2299.99, 1299.99, 399.99, 12, 9, 1),
+(11, 'YAM9012', 'Yamaha TRBX174', 'Gitara basowa 4-strunowa, idealna dla początkujących. Wyposażona w przetworniki split-coil.', 1299.99, 699.99, 249.99, 18, 1, 3),
+(12, 'IBA3456', 'Ibanez SR300E', 'Gitara basowa 4-strunowa z aktywną elektroniką. Idealna do muzyki rockowej i metalowej.', 1599.99, 899.99, 299.99, 14, 4, 3),
+(13, 'FEN7890', 'Fender Precision Bass', 'Klasyczna gitara basowa 4-strunowa. Kultowy instrument używany przez największych basistów.', 2999.99, 1799.99, 499.99, 10, 2, 3),
+(14, 'KOR9012', 'Korg MS-20', 'Legendarny syntezator monofoniczny z filtrem Korg 35. Używany przez największych artystów.', 3999.99, 2499.99, 799.99, 5, 6, 8),
+(15, 'ROL3456', 'Roland JD-XA', 'Hybrydowy syntezator łączący analogowe i cyfrowe brzmienia. 49 klawiszy z aftertouch.', 4999.99, 2999.99, 999.99, 7, 5, 8),
+(16, 'CAS7890', 'Casio WK-7600', 'Zaawansowany keyboard z 76 klawiszami. Wyposażony w 820 brzmień i 260 rytmów.', 1999.99, 1199.99, 299.99, 20, 7, 4),
+(17, 'PEA5678', 'Pearl Masters', 'Profesjonalny zestaw perkusyjny. Najwyższa jakość wykonania i brzmienia.', 8999.99, 4999.99, 1499.99, 3, 8, 5),
+(18, 'GRE9012', 'Gretsch Catalina Club', 'Kompaktowy zestaw perkusyjny w stylu jazzowym. Idealny do małych klubów i studyjnych nagrań.', 3499.99, 1999.99, 499.99, 6, 9, 5),
+(19, 'YAM3456', 'Yamaha YAS-62', 'Profesjonalny saksofon altowy. Używany przez największych saksofonistów jazzowych.', 8999.99, 4999.99, 1499.99, 4, 1, 6),
+(20, 'FEN9012', 'Fender American Professional II', 'Gitara elektryczna typu stratocaster, wykonana w USA. Najwyższa jakość i brzmienie.', 4999.99, 2999.99, 999.99, 8, 2, 1),
+(21, 'GIB5678', 'Gibson ES-335', 'Kultowa gitara elektryczna typu semi-hollow body. Używana przez największych gitarzystów bluesowych i jazzowych.', 5999.99, 3499.99, 1199.99, 5, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -163,7 +177,6 @@ CREATE TABLE `instrument_zdjecia` (
 --
 
 INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kolejnosc`) VALUES
-(1, 1, 'https://example.com/yamaha_pacifica.jpg', 'Yamaha Pacifica 112V', 1),
 (5, 5, 'Roland/FP-30_BK_Top_gal.jpg', 'Roland FP-30 - widok z góry', 1),
 (6, 5, 'Roland/FP-30_BK_gal.jpg', 'Roland FP-30 - widok ogólny', 2),
 (7, 5, 'Roland/FP-30_BK_ipad_gal.jpg', 'Roland FP-30 - widok z iPadem', 3),
@@ -188,7 +201,40 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (26, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_side_front.avif', 'Gibson Les Paul Standard - widok boczny z przodu', 2),
 (27, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_side_back.avif', 'Gibson Les Paul Standard - widok boczny z tyłu', 3),
 (28, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_neck_front.avif', 'Gibson Les Paul Standard - widok gryfu z przodu', 4),
-(29, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_neck_back.avif', 'Gibson Les Paul Standard - widok gryfu z tyłu', 5);
+(29, 3, 'Gibson/gibson-les-paul-standard-60s-plain-top-ebony-top_neck_back.avif', 'Gibson Les Paul Standard - widok gryfu z tyłu', 5),
+(30, 8, 'Casio/casio-ct-s100_front.avif', 'Casio CT-S100 - widok z przodu', 1),
+(31, 8, 'Casio/casio-ct-s100_front_side.avif', 'Casio CT-S100 - widok z przodu i boku', 2),
+(32, 8, 'Casio/casio-ct-s100_front_side_second.avif', 'Casio CT-S100 - widok z przodu i boku (2)', 3),
+(33, 8, 'Casio/casio-ct-s100_top_front.avif', 'Casio CT-S100 - widok z góry i przodu', 4),
+(34, 8, 'Casio/casio-ct-s100_back.avif', 'Casio CT-S100 - widok z tyłu', 5),
+(35, 8, 'Casio/casio-ct-s100_closeup_keys.avif', 'Casio CT-S100 - zbliżenie na klawiaturę', 6),
+(36, 8, 'Casio/casio-ct-s100_closeup_back.avif', 'Casio CT-S100 - zbliżenie na tył instrumentu', 7),
+(37, 16, 'Casio/WK-7600_1_top.jpg', 'Casio WK-7600 - widok z góry', 1),
+(38, 16, 'Casio/WK-7600_2_front.jpg', 'Casio WK-7600 - widok przodu', 2),
+(39, 16, 'Casio/WK-7600_3_side.jpg', 'Casio WK-7600 - widok z boku', 3),
+(40, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb.avif', 'Fender Precision Bass - widok ogólny', 1),
+(41, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (1).avif', 'Fender Precision Bass - widok z przodu', 2),
+(42, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (2).avif', 'Fender Precision Bass - widok z boku', 3),
+(43, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (3).avif', 'Fender Precision Bass - widok z tyłu', 4),
+(44, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (4).avif', 'Fender Precision Bass - widok gryfu', 5),
+(45, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (5).avif', 'Fender Precision Bass - widok szczegółowy', 6),
+(46, 21, 'Gibson/epiphone-es-335-cherry.avif', 'Gibson ES-335 - widok ogólny', 1),
+(47, 21, 'Gibson/epiphone-es-335-cherry (1).avif', 'Gibson ES-335 - widok z przodu', 2),
+(48, 21, 'Gibson/epiphone-es-335-cherry (2).avif', 'Gibson ES-335 - widok z boku', 3),
+(49, 21, 'Gibson/epiphone-es-335-cherry (3).avif', 'Gibson ES-335 - widok z tyłu', 4),
+(50, 21, 'Gibson/epiphone-es-335-cherry (4).avif', 'Gibson ES-335 - widok szczegółowy', 5),
+(51, 18, 'Gretsch/gretsch-catalina-maple-satin-deep-cherry-burst-rock-set.avif', 'Gretsch Catalina Club - widok zestawu perkusyjnego', 1),
+(52, 20, 'Fender/0113900803_fen_ins_bck_1_rl.png', 'Fender American Professional II - widok tył', 4),
+(53, 20, 'Fender/0113900803_fen_ins_cbr_1_nr.png', 'Fender American Professional II - widok całości', 2),
+(54, 20, 'Fender/0113900803_fen_ins_fbd_1_nr.png', 'Fender American Professional II - widok z przodu', 1),
+(55, 20, 'Fender/0113900803_fen_ins_frt_1_rr.png', 'Fender American Professional II - widok bokiem z przodu', 3),
+(56, 20, 'Fender/0113900803_fen_ins_hbk_1_nr.png', 'Fender American Professional II - widok gryfu od tyłu', 6),
+(57, 20, 'Fender/0113900803_fen_ins_hft_1_nr.png', 'Fender American Professional II - widok gryfu z przodu', 5),
+(58, 10, 'Gretsch/gretsch-g2622t-streamliner-arb.avif', 'Gretsch G2622 Streamliner - widok ogólny', 1),
+(59, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (1).avif', 'Gretsch G2622 Streamliner - widok z tyłu', 3),
+(60, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (2).avif', 'Gretsch G2622 Streamliner - widok z przodu', 2),
+(61, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (3).avif', 'Gretsch G2622 Streamliner - widok gryfu z przodu', 4),
+(62, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (4).avif', 'Gretsch G2622 Streamliner - widok gryfu z tyłu', 5);
 
 -- --------------------------------------------------------
 
@@ -234,7 +280,8 @@ INSERT INTO `klienci` (`id`, `uzytkownik_id`) VALUES
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 5);
+(5, 5),
+(10, 12);
 
 -- --------------------------------------------------------
 
@@ -281,7 +328,8 @@ INSERT INTO `koszyk` (`id`, `klient_id`) VALUES
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 5);
+(5, 5),
+(8, 10);
 
 -- --------------------------------------------------------
 
@@ -295,7 +343,7 @@ CREATE TABLE `koszyk_szczegoly` (
   `instrument_id` int(11) NOT NULL,
   `ilosc` int(11) NOT NULL DEFAULT 1 CHECK (`ilosc` > 0),
   `cena` decimal(10,2) NOT NULL CHECK (`cena` > 0),
-  `typ` enum('kupno','wypozyczenie') NOT NULL DEFAULT 'kupno',
+  `typ` enum('buy','rent') NOT NULL DEFAULT 'buy',
   `okres_wypozyczenia` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -304,12 +352,9 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(1, 1, 1, 1, 1499.99, 'kupno', '2025-05-08'),
-(2, 2, 2, 1, 2499.99, 'kupno', '2025-05-08'),
-(4, 4, 4, 1, 1899.99, 'wypozyczenie', '2025-05-31'),
-(5, 5, 5, 1, 799.99, 'kupno', '2025-05-08'),
-(7, 3, 3, 1, 3999.99, '', '2025-05-19'),
-(8, 3, 4, 1, 1899.99, '', '2025-05-19');
+(2, 2, 2, 1, 2499.99, '', '2025-05-08'),
+(4, 4, 4, 1, 1899.99, '', '2025-05-31'),
+(10, 5, 2, 1, 2499.99, '', '2025-05-20');
 
 -- --------------------------------------------------------
 
@@ -353,10 +398,13 @@ CREATE TABLE `producenci` (
 --
 
 INSERT INTO `producenci` (`id`, `nazwa`) VALUES
+(7, 'Casio'),
 (2, 'Fender'),
 (3, 'Gibson'),
+(9, 'Gretsch'),
 (4, 'Ibanez'),
 (6, 'Korg'),
+(8, 'Pearl'),
 (5, 'Roland'),
 (1, 'Yamaha');
 
@@ -403,11 +451,12 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_rejestracji`, `typ`) VALUES
-(1, 'Jan', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(1, 'Janek', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (2, 'Anna', 'anna.nowak@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
 (4, 'Maria', 'maria.wisniewska@gmail.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik');
+(5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
+(12, 'Herbert', 'herbert@example.com', '$2y$10$nPK2hvLR6usuaSMS6gau5uHv.QSh6DzmqceeGRuPht3Dl2n0Bs4KO', '2025-05-20 01:44:54', 'klient');
 
 -- --------------------------------------------------------
 
@@ -472,9 +521,10 @@ CREATE TABLE `zamowienia` (
 INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`) VALUES
 (1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL),
 (2, 2, '2025-05-08 14:33:13', 'wysłane', NULL),
-(3, 3, '2025-05-08 14:33:13', 'dostarczone', NULL),
+(3, 3, '2025-05-08 14:33:13', 'anulowane', NULL),
 (4, 4, '2025-05-08 14:33:13', 'anulowane', NULL),
-(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL);
+(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL),
+(7, 5, '2025-05-20 01:30:08', 'w przygotowaniu', NULL);
 
 -- --------------------------------------------------------
 
@@ -499,7 +549,8 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 (2, 2, 2, 1, 2499.99),
 (3, 3, 3, 1, 3999.99),
 (4, 4, 4, 1, 1899.99),
-(5, 5, 5, 1, 799.99);
+(5, 5, 5, 1, 799.99),
+(7, 7, 5, 1, 799.99);
 
 --
 -- Indeksy dla zrzutów tabel
@@ -669,7 +720,7 @@ ALTER TABLE `dostawy`
 -- AUTO_INCREMENT for table `instrumenty`
 --
 ALTER TABLE `instrumenty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `instrument_oceny`
@@ -681,7 +732,7 @@ ALTER TABLE `instrument_oceny`
 -- AUTO_INCREMENT for table `instrument_zdjecia`
 --
 ALTER TABLE `instrument_zdjecia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
@@ -693,7 +744,7 @@ ALTER TABLE `kategorie_instrumentow`
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `kody_promocyjne`
@@ -705,13 +756,13 @@ ALTER TABLE `kody_promocyjne`
 -- AUTO_INCREMENT for table `koszyk`
 --
 ALTER TABLE `koszyk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `koszyk_szczegoly`
 --
 ALTER TABLE `koszyk_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
@@ -723,7 +774,7 @@ ALTER TABLE `pracownicy`
 -- AUTO_INCREMENT for table `producenci`
 --
 ALTER TABLE `producenci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `stanowiska`
@@ -735,7 +786,7 @@ ALTER TABLE `stanowiska`
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `wiadomosci`
@@ -753,13 +804,13 @@ ALTER TABLE `wypozyczenia`
 -- AUTO_INCREMENT for table `zamowienia`
 --
 ALTER TABLE `zamowienia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `zamowienie_szczegoly`
 --
 ALTER TABLE `zamowienie_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -787,66 +838,4 @@ ALTER TABLE `instrumenty`
   ADD CONSTRAINT `instrumenty_ibfk_2` FOREIGN KEY (`kategoria_id`) REFERENCES `kategorie_instrumentow` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `instrument_oceny`
---
-ALTER TABLE `instrument_oceny`
-  ADD CONSTRAINT `instrument_oceny_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `instrument_oceny_user_fk` FOREIGN KEY (`user_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `instrument_zdjecia`
---
-ALTER TABLE `instrument_zdjecia`
-  ADD CONSTRAINT `instrument_zdjecia_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `klienci`
---
-ALTER TABLE `klienci`
-  ADD CONSTRAINT `klienci_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `koszyk`
---
-ALTER TABLE `koszyk`
-  ADD CONSTRAINT `koszyk_ibfk_1` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `koszyk_szczegoly`
---
-ALTER TABLE `koszyk_szczegoly`
-  ADD CONSTRAINT `koszyk_szczegoly_ibfk_1` FOREIGN KEY (`koszyk_id`) REFERENCES `koszyk` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `koszyk_szczegoly_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `pracownicy`
---
-ALTER TABLE `pracownicy`
-  ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `pracownicy_ibfk_2` FOREIGN KEY (`stanowisko_id`) REFERENCES `stanowiska` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `wypozyczenia`
---
-ALTER TABLE `wypozyczenia`
-  ADD CONSTRAINT `wypozyczenia_ibfk_1` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `wypozyczenia_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `zamowienia`
---
-ALTER TABLE `zamowienia`
-  ADD CONSTRAINT `zamowienia_ibfk_1` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `zamowienia_ibfk_2` FOREIGN KEY (`kod_promocyjny_id`) REFERENCES `kody_promocyjne` (`id`) ON DELETE SET NULL;
-
---
--- Constraints for table `zamowienie_szczegoly`
---
-ALTER TABLE `zamowienie_szczegoly`
-  ADD CONSTRAINT `zamowienie_szczegoly_ibfk_1` FOREIGN KEY (`zamowienie_id`) REFERENCES `zamowienia` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `zamowienie_szczegoly_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Constraints for table `
