@@ -234,7 +234,15 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (59, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (1).avif', 'Gretsch G2622 Streamliner - widok z tyłu', 3),
 (60, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (2).avif', 'Gretsch G2622 Streamliner - widok z przodu', 2),
 (61, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (3).avif', 'Gretsch G2622 Streamliner - widok gryfu z przodu', 4),
-(62, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (4).avif', 'Gretsch G2622 Streamliner - widok gryfu z tyłu', 5);
+(62, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (4).avif', 'Gretsch G2622 Streamliner - widok gryfu z tyłu', 5),
+(63, 14, 'Korg/korg-ms-20-mini.avif', 'Korg MS-20 - widok z przodu', 1),
+(64, 14, 'Korg/korg-ms-20-mini.avif (1)', 'Korg MS-20 - widok z góry', 2),
+(65, 14, 'Korg/korg-ms-20-mini.avif (2)', 'Korg MS-20 - widok z przodu (kable)', 3),
+(66, 14, 'Korg/korg-ms-20-mini.avif (3)', 'Korg MS-20 - widok z boku', 4),
+(67, 14, 'Korg/korg-ms-20-mini.avif (4)', 'Korg MS-20 - widok z boku (2)', 5),
+(68, 14, 'Korg/korg-ms-20-mini.avif (5)', 'Korg MS-20 - widok pokręteł', 6),
+(69, 14, 'Korg/korg-ms-20-mini.avif (6)', 'Korg MS-20 - widok wejść', 7),
+(70, 14, 'Korg/korg-ms-20-mini.avif (7)', 'Korg MS-20 - widok z tyłu', 8);		
 
 -- --------------------------------------------------------
 
