@@ -257,7 +257,11 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (84, 19, 'Fender/0113902705_fen_ins_cbr_1_nr.png', 'Fender American Professional II - widok całości', 2),
 (85, 19, 'Fender/0113902705_fen_ins_fbd_1_nr.png', 'Fender American Professional II - widok z przodu', 1),
 (86, 19, 'Fender/0113902705_fen_ins_hbk_1_nr.png', 'Fender American Professional II - widok gryfu od tyłu', 5),
-(87, 19, 'Fender/0113902705_fen_ins_hft_1_nr.png', 'Fender American Professional II - widok gryfu z przodu', 4);
+(87, 19, 'Fender/0113902705_fen_ins_hft_1_nr.png', 'Fender American Professional II - widok gryfu z przodu', 4),
+(88, 6, 'Korg/korg-kronos-3-61.avif', 'Korg Kronos - widok z góry', 1),
+(89, 6, 'Korg/korg-kronos-3-61 (1).avif', 'Korg Kronos - widok z przodu', 2),
+(90, 6, 'Korg/korg-kronos-3-61 (2).avif', 'Korg Kronos - widok z boku', 3),
+(91, 6, 'Korg/korg-kronos-3-61 (3).avif', 'Korg Kronos - widok z tyłu', 4);
 
 
 -- --------------------------------------------------------
