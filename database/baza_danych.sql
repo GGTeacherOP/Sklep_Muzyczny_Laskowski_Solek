@@ -246,8 +246,13 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (72, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_5.webp', 'Pearl Export - widok z przodu', 1),
 (73, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_3.webp', 'Pearl Export - widok z boku', 2),
 (74, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_4.webp', 'Pearl Export - widok z tyłu', 3),
-(75, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_2', 'Pearl Export - widok przybliżony bębnów', 4),
-(76, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_6.webp', 'Pearl Export - widok bębna', 5);
+(75, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_2.webp', 'Pearl Export - widok przybliżony bębnów', 4),
+(76, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_6.webp', 'Pearl Export - widok bębna', 5),
+(78, 12, 'Ibanez/ibanez-sr300e-iron-pewter (2).avif', 'Ibanez SR300E - widok przybliżony z przodu', 1),
+(79, 12, 'Ibanez/ibanez-sr300e-iron-pewter.avif', 'Ibanez SR300E - widok z ogólny z przodu', 2),
+(80, 12, 'Ibanez/ibanez-sr300e-iron-pewter (1).avif', 'Ibanez SR300E - widok ogólny z tyłu', 3),
+(81, 12, 'Ibanez/ibanez-sr300e-iron-pewter (3).avif', 'Ibanez SR300E - widok gryfu z przodu', 4),
+(82, 12, 'Ibanez/ibanez-sr300e-iron-pewter (4).avif', 'Ibanez SR300E - widok gryfu z tyłu', 5);
 
 
 -- --------------------------------------------------------
