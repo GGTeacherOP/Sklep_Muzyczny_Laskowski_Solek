@@ -116,7 +116,6 @@ INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedaz
 (8, 'CASS100', 'Casio CT-S100', 'Lekki i przenośny keyboard z 61 klawiszami, idealny dla początkujących. Wyposażony w 400 brzmień i 77 rytmów.', 899.99, 499.99, 99.99, 15, 7, 4),
 (9, 'PEA1234', 'Pearl Export', 'Komplet perkusyjny dla początkujących i średniozaawansowanych. Zestaw 5-częściowy z talerzami.', 3499.99, 1999.99, 499.99, 8, 8, 5),
 (10, 'GRE5678', 'Gretsch G2622 Streamliner', 'Gitara elektryczna typu hollow body, idealna do jazzu i bluesa. Wyposażona w przetworniki BroadTron™.', 2299.99, 1299.99, 399.99, 12, 9, 1),
-(11, 'YAM9012', 'Yamaha TRBX174', 'Gitara basowa 4-strunowa, idealna dla początkujących. Wyposażona w przetworniki split-coil.', 1299.99, 699.99, 249.99, 18, 1, 3),
 (12, 'IBA3456', 'Ibanez SR300E', 'Gitara basowa 4-strunowa z aktywną elektroniką. Idealna do muzyki rockowej i metalowej.', 1599.99, 899.99, 299.99, 14, 4, 3),
 (13, 'FEN7890', 'Fender Precision Bass', 'Klasyczna gitara basowa 4-strunowa. Kultowy instrument używany przez największych basistów.', 2999.99, 1799.99, 499.99, 10, 2, 3),
 (14, 'KOR9012', 'Korg MS-20', 'Legendarny syntezator monofoniczny z filtrem Korg 35. Używany przez największych artystów.', 3999.99, 2499.99, 799.99, 5, 6, 8),
@@ -261,7 +260,13 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (88, 6, 'Korg/korg-kronos-3-61.avif', 'Korg Kronos - widok z góry', 1),
 (89, 6, 'Korg/korg-kronos-3-61 (1).avif', 'Korg Kronos - widok z przodu', 2),
 (90, 6, 'Korg/korg-kronos-3-61 (2).avif', 'Korg Kronos - widok z boku', 3),
-(91, 6, 'Korg/korg-kronos-3-61 (3).avif', 'Korg Kronos - widok z tyłu', 4);
+(91, 6, 'Korg/korg-kronos-3-61 (3).avif', 'Korg Kronos - widok z tyłu', 4),
+(92, 17, 'Pearl/pol_pl_Pearl-Masters-Maple-Complete-MCT904XEPC414-6244_1.webp', 'Pearl Masters - widok ogólny', 1),
+(93, 17, 'Pearl/pol_pl_Pearl-Masters-Maple-Complete-MCT904XEPC414-6244_2.webp', 'Pearl Masters - widok przybliżony bębnów', 2),
+(94, 17, 'Pearl/pol_pl_Pearl-Masters-Maple-Complete-MCT904XEPC414-6244_3.webp', 'Pearl Masters - widok przybliżony bębna', 3),
+(95, 15, 'Roland/jd-xa_gal.jpg', 'Roland JD-XA - widok z góry', 1),
+(96, 15, 'Roland/jd-xa_dr_gal.jpg', 'Roland JD-XA - widok z boku', 2),
+(97, 1, 'Yamaha/B4851F1DBB7B4AC2980E5C7F8AE91628_12073_97cc329d2145a06c31d1bd7195b15b53.jpg', 'Yamaha Pacifica 112V - widok ogólny', 1);
 
 
 -- --------------------------------------------------------
