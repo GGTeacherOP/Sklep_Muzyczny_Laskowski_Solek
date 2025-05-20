@@ -13,7 +13,7 @@
 ?>
 <header class="header">
   <div class="logo">
-    <img alt="Logo Sklepu Muzycznego" src="src/assets/images/logo_sklepu.png">
+    <img alt="Logo Sklepu Muzycznego" src="../assets/images/Logo/logo_muzyczny.png">
   </div>
   <form class="search-bar" role="search" method="get" action="katalog.php">
     <input type="text" name="search" aria-label="Wyszukiwarka instrumentów" class="search-input" placeholder="Szukaj po nazwie, opisie lub kodzie produktu..." value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
