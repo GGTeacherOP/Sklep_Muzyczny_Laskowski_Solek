@@ -252,7 +252,12 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (79, 12, 'Ibanez/ibanez-sr300e-iron-pewter.avif', 'Ibanez SR300E - widok z ogólny z przodu', 2),
 (80, 12, 'Ibanez/ibanez-sr300e-iron-pewter (1).avif', 'Ibanez SR300E - widok ogólny z tyłu', 3),
 (81, 12, 'Ibanez/ibanez-sr300e-iron-pewter (3).avif', 'Ibanez SR300E - widok gryfu z przodu', 4),
-(82, 12, 'Ibanez/ibanez-sr300e-iron-pewter (4).avif', 'Ibanez SR300E - widok gryfu z tyłu', 5);
+(82, 12, 'Ibanez/ibanez-sr300e-iron-pewter (4).avif', 'Ibanez SR300E - widok gryfu z tyłu', 5),
+(83, 19, 'Fender/0113902705_fen_ins_bck_1_rl.png', 'Fender American Professional II - widok z tyłu', 3),
+(84, 19, 'Fender/0113902705_fen_ins_cbr_1_nr.png', 'Fender American Professional II - widok całości', 2),
+(85, 19, 'Fender/0113902705_fen_ins_fbd_1_nr.png', 'Fender American Professional II - widok z przodu', 1),
+(86, 19, 'Fender/0113902705_fen_ins_hbk_1_nr.png', 'Fender American Professional II - widok gryfu od tyłu', 5),
+(87, 19, 'Fender/0113902705_fen_ins_hft_1_nr.png', 'Fender American Professional II - widok gryfu z przodu', 4);
 
 
 -- --------------------------------------------------------
