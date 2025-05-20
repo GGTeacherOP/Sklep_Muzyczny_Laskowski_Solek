@@ -124,9 +124,8 @@ INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedaz
 (16, 'CAS7600', 'Casio WK-7600', 'Zaawansowany keyboard z 76 klawiszami. Wyposażony w 820 brzmień i 260 rytmów.', 1999.99, 1199.99, 299.99, 20, 7, 4),
 (17, 'PEA5678', 'Pearl Masters', 'Profesjonalny zestaw perkusyjny. Najwyższa jakość wykonania i brzmienia.', 8999.99, 4999.99, 1499.99, 3, 8, 5),
 (18, 'GRE9012', 'Gretsch Catalina Club', 'Kompaktowy zestaw perkusyjny w stylu jazzowym. Idealny do małych klubów i studyjnych nagrań.', 3499.99, 1999.99, 499.99, 6, 9, 5),
-(19, 'YAM3456', 'Yamaha YAS-62', 'Profesjonalny saksofon altowy. Używany przez największych saksofonistów jazzowych.', 8999.99, 4999.99, 1499.99, 4, 1, 6),
-(20, 'FEN9012', 'Fender American Professional II', 'Gitara elektryczna typu stratocaster, wykonana w USA. Najwyższa jakość i brzmienie.', 4999.99, 2999.99, 999.99, 8, 2, 1),
-(21, 'GIB5678', 'Gibson ES-335', 'Kultowa gitara elektryczna typu semi-hollow body. Używana przez największych gitarzystów bluesowych i jazzowych.', 5999.99, 3499.99, 1199.99, 5, 3, 1);
+(19, 'FEN9012', 'Fender American Professional II', 'Gitara elektryczna typu stratocaster, wykonana w USA. Najwyższa jakość i brzmienie.', 4999.99, 2999.99, 999.99, 8, 2, 1),
+(20, 'GIB5678', 'Gibson ES-335', 'Kultowa gitara elektryczna typu semi-hollow body. Używana przez największych gitarzystów bluesowych i jazzowych.', 5999.99, 3499.99, 1199.99, 5, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -242,7 +241,14 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (67, 14, 'Korg/korg-ms-20-mini.avif (4)', 'Korg MS-20 - widok z boku (2)', 5),
 (68, 14, 'Korg/korg-ms-20-mini.avif (5)', 'Korg MS-20 - widok pokręteł', 6),
 (69, 14, 'Korg/korg-ms-20-mini.avif (6)', 'Korg MS-20 - widok wejść', 7),
-(70, 14, 'Korg/korg-ms-20-mini.avif (7)', 'Korg MS-20 - widok z tyłu', 8);		
+(70, 14, 'Korg/korg-ms-20-mini.avif (7)', 'Korg MS-20 - widok z tyłu', 8),
+(71, 7, 'Yamaha/yamaha-fgx800c-nt.avif', 'Yamaha FGX800C - widok ogólny', 1),
+(72, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_5.webp', 'Pearl Export - widok z przodu', 1),
+(73, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_3.webp', 'Pearl Export - widok z boku', 2),
+(74, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_4.webp', 'Pearl Export - widok z tyłu', 3),
+(75, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_2', 'Pearl Export - widok przybliżony bębnów', 4),
+(76, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_6.webp', 'Pearl Export - widok bębna', 5);
+
 
 -- --------------------------------------------------------
 
