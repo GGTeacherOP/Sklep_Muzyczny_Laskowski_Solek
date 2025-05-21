@@ -116,7 +116,9 @@ ul {
   margin-right: var(--spacing-md);
   border-radius: var(--radius-sm);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  object-fit: cover;
+  object-fit: contain;
+  padding: var(--spacing-xs);
+  background-color: var(--primary-bg);
 }
 
 .cart-item-details {
@@ -385,7 +387,8 @@ ul {
     min-height: var(--card-size-xs);
     margin-right: var(--spacing-sm);
     border-radius: var(--radius-xs);
-    object-fit: cover;
+    object-fit: contain;
+    padding: var(--spacing-xs);
   }
 
   .cart-item-name {
@@ -439,7 +442,8 @@ ul {
     min-height: var(--card-size-xs-sm);
     margin-right: var(--spacing-xs);
     border-radius: var(--radius-xxs);
-    object-fit: cover;
+    object-fit: contain;
+    padding: var(--spacing-xs);
   }
 
   .cart-item-name {

@@ -4,7 +4,7 @@
     $productId = $product['id'];
     $name = htmlspecialchars($product['nazwa']);
     $category = htmlspecialchars($product['nazwa_kategorii']);
-    $imageUrl = htmlspecialchars($product['url']);
+    $imageUrl = "../assets/images/" . htmlspecialchars($product['url']);
     $altText = htmlspecialchars($product['alt_text']);
     $quantity = intval($product['quantity']);
     $price = formatPrice($product['cena_sprzedazy'], $quantity);
