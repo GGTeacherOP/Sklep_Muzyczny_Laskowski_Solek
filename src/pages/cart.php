@@ -32,12 +32,13 @@
     updateCartQuantity($productId, $type, $quantity);
   }
 
-  $cartItems = ["buy" => [], "rent" => []];
-  $totalItems = 0;
-
+  // Inicjalizacja koszyka
+  initializeCart();
+  
+  // Pobierz wszystkie ID produktów z koszyka sesji
   $productIds = array_unique(array_merge(
     array_keys($_SESSION['cart']['buy'] ?? []),
-    array_keys($_SESSION['cart']['rent'] ?? []),
+    array_keys($_SESSION['cart']['rent'] ?? [])
   ));
 
   $cartItems = ["buy" => [], "rent" => []];
@@ -45,7 +46,7 @@
 
   if (!empty($productIds)) {
     $totalItems = count($_SESSION['cart']['buy']) + count($_SESSION['cart']['rent']);
-    getCartItemsFromDatabase($connection, $productIds, $cartItems); // New function call
+    getCartItemsFromDatabase($connection, $productIds, $cartItems);
   }
 
   $totalBuy = 0;
@@ -59,6 +60,7 @@
     $totalRent += $item['cena_sprzedazy'] * $item['quantity'];
   }
 
+  // Synchronizuj koszyk z bazą danych jeśli użytkownik jest zalogowany
   if ($userId) {
     syncCartWithDatabase($connection, $userId, $cartItems);
   }
