@@ -164,7 +164,12 @@
           </div>
 
         </div>
-        <button class="checkout-button">Przejdź do kasy</button>
+        <div class="cart-actions">
+            <a href="home.php" class="continue-shopping">Kontynuuj zakupy</a>
+            <?php if (!empty($cartItems)): ?>
+                <a href="checkout.php" class="checkout-button">Przejdź do kasy</a>
+            <?php endif; ?>
+        </div>
       </aside>
     </section>
   </section>

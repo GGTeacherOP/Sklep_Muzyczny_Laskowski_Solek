@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 20, 2025 at 02:02 AM
+-- Generation Time: Maj 21, 2025 at 09:19 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -268,7 +268,6 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (96, 15, 'Roland/jd-xa_dr_gal.jpg', 'Roland JD-XA - widok z boku', 2),
 (97, 1, 'Yamaha/B4851F1DBB7B4AC2980E5C7F8AE91628_12073_97cc329d2145a06c31d1bd7195b15b53.jpg', 'Yamaha Pacifica 112V - widok ogólny', 1);
 
-
 -- --------------------------------------------------------
 
 --
@@ -385,9 +384,12 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(2, 2, 2, 1, 2499.99, '', '2025-05-08'),
-(4, 4, 4, 1, 1899.99, '', '2025-05-31'),
-(10, 5, 2, 1, 2499.99, '', '2025-05-20');
+(4, 4, 4, 1, 1899.99, 'buy', '2025-05-31'),
+(14, 2, 4, 1, 1899.99, 'buy', '2025-05-31'),
+(16, 2, 14, 3, 3999.99, 'buy', '2025-05-31'),
+(17, 2, 2, 3, 2499.99, 'buy', '2025-05-21'),
+(18, 2, 5, 1, 799.99, 'buy', '2025-05-21'),
+(19, 2, 5, 1, 799.99, 'rent', '2025-05-21');
 
 -- --------------------------------------------------------
 
@@ -402,7 +404,7 @@ CREATE TABLE `pracownicy` (
   `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
   `identyfikator` varchar(4) NOT NULL,
   `data_zwolnienia` datetime DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pracownicy`
@@ -544,20 +546,21 @@ CREATE TABLE `zamowienia` (
   `klient_id` int(11) NOT NULL,
   `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
   `status` enum('w przygotowaniu','wysłane','dostarczone','anulowane') NOT NULL DEFAULT 'w przygotowaniu',
-  `kod_promocyjny_id` int(11) DEFAULT NULL
+  `kod_promocyjny_id` int(11) DEFAULT NULL,
+  `adres_wysylki` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `zamowienia`
 --
 
-INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`) VALUES
-(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL),
-(2, 2, '2025-05-08 14:33:13', 'wysłane', NULL),
-(3, 3, '2025-05-08 14:33:13', 'anulowane', NULL),
-(4, 4, '2025-05-08 14:33:13', 'anulowane', NULL),
-(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL),
-(7, 5, '2025-05-20 01:30:08', 'w przygotowaniu', NULL);
+INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`, `adres_wysylki`) VALUES
+(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL, ''),
+(2, 2, '2025-05-08 14:33:13', 'wysłane', NULL, ''),
+(3, 3, '2025-05-08 14:33:13', 'anulowane', NULL, ''),
+(4, 4, '2025-05-08 14:33:13', 'anulowane', NULL, ''),
+(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL, ''),
+(7, 5, '2025-05-20 01:30:08', 'w przygotowaniu', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -753,7 +756,7 @@ ALTER TABLE `dostawy`
 -- AUTO_INCREMENT for table `instrumenty`
 --
 ALTER TABLE `instrumenty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `instrument_oceny`
@@ -765,7 +768,7 @@ ALTER TABLE `instrument_oceny`
 -- AUTO_INCREMENT for table `instrument_zdjecia`
 --
 ALTER TABLE `instrument_zdjecia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
@@ -789,19 +792,19 @@ ALTER TABLE `kody_promocyjne`
 -- AUTO_INCREMENT for table `koszyk`
 --
 ALTER TABLE `koszyk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `koszyk_szczegoly`
 --
 ALTER TABLE `koszyk_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
 --
 ALTER TABLE `pracownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `producenci`
@@ -869,6 +872,8 @@ ALTER TABLE `dostawy`
 ALTER TABLE `instrumenty`
   ADD CONSTRAINT `instrumenty_ibfk_1` FOREIGN KEY (`producent_id`) REFERENCES `producenci` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `instrumenty_ibfk_2` FOREIGN KEY (`kategoria_id`) REFERENCES `kategorie_instrumentow` (`id`) ON DELETE CASCADE;
+COMMIT;
 
---
--- Constraints for table `
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

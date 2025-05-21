@@ -276,4 +276,19 @@
 
       mysqli_free_result($result);
   }
+
+  function getPromoCodeId(mysqli $connection, string $promoCode) : ?int {
+    $query = "SELECT id FROM kody_promocyjne WHERE kod = ? AND aktywna = 1 AND data_rozpoczecia <= NOW() AND data_zakonczenia >= NOW()";
+    $stmt = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($stmt, 's', $promoCode);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return intval($row['id']);
+    }
+    
+    return null;
+  }
 ?>
