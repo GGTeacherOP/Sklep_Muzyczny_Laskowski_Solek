@@ -259,6 +259,7 @@
           JOIN instrument_zdjecia ON instrumenty.id = instrument_zdjecia.instrument_id
           JOIN kategorie_instrumentow ON instrumenty.kategoria_id = kategorie_instrumentow.id
           WHERE instrumenty.id IN ($idList)
+          AND instrument_zdjecia.kolejnosc = 1
       ";
 
       $result = mysqli_query($connection, $sql);
