@@ -86,6 +86,15 @@
               mysqli_stmt_execute($stmt);
             }
           }
+
+          foreach (['buy', 'rent'] as $type) {
+            foreach ($cartItems[$type] as $product) {
+              $query = "UPDATE instrumenty SET stan_magazynowy = stan_magazynowy - ? WHERE id = ?";
+              $stmt = mysqli_prepare($connection, $query);
+              mysqli_stmt_bind_param($stmt, 'ii', $product['quantity'], $product['id']);
+              mysqli_stmt_execute($stmt);
+            }
+          }
           
           // Wyczyść koszyk
           $_SESSION['cart'] = ['buy' => [], 'rent' => []];

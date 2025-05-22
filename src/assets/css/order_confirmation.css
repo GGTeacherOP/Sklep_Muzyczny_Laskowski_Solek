@@ -1,51 +1,73 @@
+@import 'global.css';
+
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+}
+
 .confirmation-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  background-color: var(--primary-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .confirmation-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
 }
 
 .confirmation-header i {
-  font-size: 4rem;
-  color: #4CAF50;
-  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  color: var(--success-color);
 }
 
 .confirmation-header h1 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0;
 }
 
 .confirmation-header p {
-  color: #666;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: var(--text-color);
+  margin: 0;
+  font-weight: bold;
+}
+
+.confirmation-header-message {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 .order-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
   margin-bottom: 2rem;
 }
 
 .order-details h2 {
   font-size: 1.5rem;
   color: #333;
-  margin-bottom: 1.5rem;
 }
 
 .order-info {
-  background-color: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 6px;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--button-text-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .info-group h3 {
@@ -108,56 +130,45 @@
 .confirmation-actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
 }
 
 .action-button {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  justify-content: center;
+  padding: 0 var(--spacing-lg);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  font-weight: bold;
   text-decoration: none;
-  font-weight: 500;
+  cursor: pointer;
   transition: all 0.3s ease;
+  height: var(--card-size-xs-sm);
 }
 
 .action-button i {
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-xs);
 }
 
 .home-button {
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--button-buy-bg);
+  color: var(--button-text-color);
 }
 
 .home-button:hover {
-  background-color: #45a049;
+  background-color: var(--button-buy-bg-hover);
 }
 
 .profile-button {
-  background-color: #2196F3;
-  color: white;
+  background-color: var(--button-more-bg);
+  color: var(--button-text-color);
 }
 
 .profile-button:hover {
-  background-color: #1976D2;
-}
-
-/* Animacja fade-in */
-.fade-in {
-  animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  background-color: var(--button-more-bg-hover);
 }
 
 /* Responsywność */
@@ -165,6 +176,23 @@
   .confirmation-container {
     margin: 1rem;
     padding: 1rem;
+    font-size: clamp(0.75rem, 1.25vw, 0.875rem);
+  }
+
+  .confirmation-header i {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+  }
+
+  .confirmation-header h1 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+  }
+
+  .confirmation-header p {
+    font-size: clamp(0.875rem, 1.25vw, 1rem);
+  }
+
+  .order-info {
+    padding: var(--spacing-md);
   }
 
   .order-item {
@@ -184,6 +212,36 @@
 
   .action-button {
     width: 100%;
-    justify-content: center;
+    height: var(--button-height-md);
+    font-size: var(--font-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .confirmation-container {
+    margin: 0.5rem;
+    padding: 0.75rem;
+    font-size: clamp(0.625rem, 1vw, 0.75rem);
+  }
+
+  .confirmation-header i {
+    font-size: clamp(1rem, 1.75vw, 1.25rem);
+  }
+
+  .confirmation-header h1 {
+    font-size: clamp(1rem, 1.75vw, 1.25rem);
+  }
+
+  .confirmation-header p {
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+  }
+
+  .order-info {
+    padding: var(--spacing-sm);
+  }
+
+  .action-button {
+    height: var(--button-height-sm);
+    font-size: var(--font-sm);
   }
 } 

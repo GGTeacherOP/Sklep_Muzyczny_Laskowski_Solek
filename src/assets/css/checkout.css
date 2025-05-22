@@ -50,7 +50,6 @@
 .form-group textarea {
   width: 100%;
   padding: var(--spacing-sm);
-  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   font-size: var(--font-md);
   resize: vertical;
@@ -82,7 +81,6 @@
 .summary-item.total {
   margin-top: var(--spacing-sm);
   padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
   font-weight: bold;
   font-size: var(--font-lg);
 }
@@ -110,7 +108,7 @@
 }
 
 .back-button:hover {
-  background-color: var(--secondary-bg-hover);
+  background-color: #DEDEDE;
 }
 
 .submit-button {

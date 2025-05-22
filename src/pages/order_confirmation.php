@@ -70,8 +70,10 @@
 <main class="fade-in">
   <div class="confirmation-container">
     <div class="confirmation-header">
-      <i class="fas fa-check-circle"></i>
-      <h1>Dziękujemy za zamówienie!</h1>
+      <div class="confirmation-header-message">
+        <i class="fas fa-check-circle"></i>
+        <h1>Dziękujemy za zamówienie!</h1>
+      </div>
       <p>Twoje zamówienie zostało przyjęte do realizacji.</p>
     </div>
 

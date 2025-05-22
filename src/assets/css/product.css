@@ -419,7 +419,7 @@ button[disabled] {
   justify-content: flex-end;
 }
 
-.edit-review-btn, .delete-review-btn, .submit-review-btn, .cancel-btn, .login-btn {
+.edit-review-btn, .delete-review-btn, .submit-review-btn, .cancel-btn, .login-btn, #product-unavailable {
   height: var(--button-height-lg);
   padding: 0 var(--spacing-md);
   border-radius: var(--radius-sm);
@@ -579,6 +579,14 @@ button[disabled] {
   font-size: var(--font-md);
 }
 
+#product-unavailable {
+  width: 100%;
+  text-align: center;
+  color: var(--error-color);
+  background-color: var(--error-color-bg);
+  cursor: auto;
+}
+
 /* Responsive styles */
 @media (max-width: 1200px) {
   .product-container {
@@ -629,7 +637,8 @@ button[disabled] {
   .delete-review-btn,
   .submit-review-btn,
   .cancel-btn,
-  .login-btn {
+  .login-btn,
+  #product-unavailable{
     height: var(--button-height-md);
     font-size: var(--font-sm);
     padding: 0 var(--spacing-sm);
@@ -738,7 +747,8 @@ button[disabled] {
   .delete-review-btn,
   .submit-review-btn,
   .cancel-btn,
-  .login-btn {
+  .login-btn,
+  #product-unavailable{
     height: var(--button-height-sm);
     font-size: var(--font-xs);
     padding: 0 var(--spacing-xs);
