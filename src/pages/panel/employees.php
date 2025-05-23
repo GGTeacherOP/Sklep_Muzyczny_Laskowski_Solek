@@ -256,7 +256,7 @@ $pracownicy = mysqli_query($connection, $sql);
             <button class="admin-button warning" onclick="editEmployee(<?php echo htmlspecialchars(json_encode($employee)); ?>)">
               <i class="fas fa-edit"></i>
             </button>
-            <?php if ($employee['stanowisko'] !== 'właściciel' && $role === 'właściciel') : ?>
+            <?php if ($employee['stanowisko'] !== 'właściciel' && ($role === 'właściciel' || $role === 'informatyk')): ?>
               <button class="admin-button danger" onclick="confirmDelete(<?php echo $employee['id']; ?>)">
                 <i class="fas fa-trash"></i>
               </button>
