@@ -445,6 +445,28 @@ html {
   background-color: var(--button-more-bg-hover);
 }
 
+.contact-section {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-bg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.contact-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.contact-info, .contact-form-wrapper {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-bg);
+}
+
 @media (max-width: 768px) {
   .hero-section {
     height: 50vh;
