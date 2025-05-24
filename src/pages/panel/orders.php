@@ -192,6 +192,7 @@ if (isset($_GET['view_details']) && is_numeric($_GET['view_details'])) {
               <h3>Informacje o kliencie</h3>
               <p><strong>Klient:</strong> <?php echo $order['nazwa_uzytkownika']; ?></p>
               <p><strong>Email:</strong> <?php echo $order['email']; ?></p>
+              <p><strong>Adres:</strong> <?php echo $order['adres_wysylki']; ?></p>
             </div>
           </div>
           

@@ -71,9 +71,9 @@
             mysqli_free_result($result);
         }
     }
-  } 
+  }
 
-  function addToCart(int $productId, string $productType, int $quantity = 1) : void
+  function addToCart(mysqli $connection, int $productId, string $productType, int $quantity = 1) : void
   {
     if (!isset($_SESSION['cart'])) {
       $_SESSION['cart'] = [
@@ -81,6 +81,35 @@
         'rent' => [],
       ];
     }
+
+    // Pobierz stan magazynowy produktu
+    $query = "SELECT stan_magazynowy FROM instrumenty WHERE id = ?";
+    $stmt = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $productId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+      $product = mysqli_fetch_assoc($result);
+      $stock = intval($product['stan_magazynowy']);
+
+      // Oblicz aktualną ilość w koszyku
+      $currentQuantity = isset($_SESSION['cart'][$productType][$productId])
+        ? $_SESSION['cart'][$productType][$productId]['quantity']
+        : 0;
+
+      // Sprawdź czy nowa ilość nie przekracza stanu magazynowego
+      if (($currentQuantity + $quantity) > $stock) {
+        // Możesz rzucić wyjątek lub ustawić ilość na maksymalną możliwą
+        $quantity = max(0, $stock - $currentQuantity);
+
+        if ($quantity <= 0) {
+          // Nie ma już dostępnych sztuk
+          return;
+        }
+      }
+    }
+    mysqli_free_result($result);
 
     if (!isset($_SESSION['cart'][$productType][$productId])) {
       $_SESSION['cart'][$productType][$productId] = [
@@ -275,5 +304,20 @@
       }
 
       mysqli_free_result($result);
+  }
+
+  function getPromoCodeId(mysqli $connection, string $promoCode) : ?int {
+    $query = "SELECT id FROM kody_promocyjne WHERE kod = ? AND aktywna = 1 AND data_rozpoczecia <= NOW() AND data_zakonczenia >= NOW()";
+    $stmt = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param($stmt, 's', $promoCode);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return intval($row['id']);
+    }
+    
+    return null;
   }
 ?>

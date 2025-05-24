@@ -10,7 +10,7 @@
   include_once '../includes/helpers/cart_helpers.php';
 
   if (isset($_POST['add_to_cart'])) {
-    addToCart($_POST['product_id'], $_POST['product_type']);
+    addToCart($connection, $_POST['product_id'], $_POST['product_type']);
     header("Location: home.php");
     exit();
   }

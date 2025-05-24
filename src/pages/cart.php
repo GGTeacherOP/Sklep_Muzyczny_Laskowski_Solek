@@ -98,7 +98,7 @@
           <ul>
             <?php
               foreach ($cartItems['buy'] as $product) {
-                echo renderCartItem($product);
+                echo renderCartItem($connection, $product);
               }
               unset($product);
             ?>
@@ -110,7 +110,7 @@
           <ul>
             <?php
               foreach ($cartItems['rent'] as $product) {
-                echo renderCartItem($product, 'rent');
+                echo renderCartItem($connection, $product, 'rent');
               }
               unset($product);
             ?>
@@ -164,7 +164,18 @@
           </div>
 
         </div>
-        <button class="checkout-button">Przejdź do kasy</button>
+        <div class="cart-actions">
+            <a href="katalog.php" class="checkout-button" id="continue-shopping">Kontynuuj zakupy</a>
+            <?php
+              if (!empty($cartItems)) {
+                if ($userId) {
+                  echo "<a href=\"checkout.php\" class=\"checkout-button\">Przejdź do kasy</a>";
+                } else {
+                  echo "<a href=\"profile.php\" class=\"checkout-button\">Zaloguj się</a>";
+                }
+              }
+            ?>
+        </div>
       </aside>
     </section>
   </section>

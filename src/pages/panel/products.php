@@ -48,19 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         break;
         
-      case 'edit_stock':
-        // Pracownicy mogą tylko zmieniać stan magazynowy
-        if (isset($_POST['product_id'])) {
-          $product_id = mysqli_real_escape_string($connection, $_POST['product_id']);
-          $stan = mysqli_real_escape_string($connection, $_POST['stan_magazynowy']);
-          
-          $sql = "UPDATE instrumenty SET stan_magazynowy = '$stan' WHERE id = '$product_id'";
-          mysqli_query($connection, $sql);
-          header('Location: panel.php?view=products&success=updated');
-          exit();
-        }
-        break;
-        
       case 'add':
         // Sprawdź uprawnienia - tylko informatyk i właściciel mogą dodawać produkty
         if ($role === 'informatyk' || $role === 'właściciel') {
@@ -253,7 +240,9 @@ $produkty = mysqli_query($connection, $sql);
         Kategoria <?php echo getSortIcon('nazwa_kategorii', $sort_column, $sort_dir); ?>
       </a>
     </th>
-    <th>Akcje</th>
+    <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
+      <th>Akcje</th>
+    <?php endif; ?>
   </tr>
   </thead>
   <tbody>
@@ -266,24 +255,18 @@ $produkty = mysqli_query($connection, $sql);
       <td><?php echo htmlspecialchars($product['stan_magazynowy']); ?></td>
       <td><?php echo htmlspecialchars($product['nazwa_producenta']); ?></td>
       <td><?php echo htmlspecialchars($product['nazwa_kategorii']); ?></td>
-      <td>
-        <div class="admin-actions">
-          <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
-          <button class="admin-button warning" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
-            <i class="fas fa-edit"></i>
-          </button>
-          <?php else: ?>
-          <button class="admin-button warning" onclick="editProductStock(<?php echo htmlspecialchars(json_encode($product)); ?>)">
-            <i class="fas fa-edit"></i>
-          </button>
-          <?php endif; ?>
-          <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
-          <button class="admin-button danger" onclick="confirmDelete(<?php echo $product['id']; ?>)">
+      <?php if ($role === 'informatyk' || $role === 'właściciel'): ?>
+        <td>
+          <div class="admin-actions">
+            <button class="admin-button warning" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="admin-button danger" onclick="confirmDelete(<?php echo $product['id']; ?>)">
               <i class="fas fa-trash"></i>
             </button>
-          <?php endif; ?>
-        </div>
-      </td>
+          </div>
+        </td>
+      <?php endif; ?>
     </tr>
   <?php endwhile; ?>
   </tbody>
@@ -319,7 +302,7 @@ $produkty = mysqli_query($connection, $sql);
         <label for="cena_sprzedazy" class="form-label">Cena sprzedaży</label>
         <input type="number" id="cena_sprzedazy" name="cena_sprzedazy" class="form-input" step="0.01" min="0" required>
       </div>
-      
+
       <div class="form-group">
         <label for="stan_magazynowy" class="form-label">Stan magazynowy</label>
         <input type="number" id="stan_magazynowy" name="stan_magazynowy" class="form-input" min="0" required>
@@ -521,16 +504,16 @@ function closeDeleteModal() {
 function editProductStock(product) {
   const modal = document.getElementById('productModal');
   const modalTitle = document.getElementById('modalTitle');
-  
+
   modalTitle.textContent = 'Edytuj stan magazynowy';
   document.getElementById('formAction').value = 'edit_stock';
   document.getElementById('productId').value = product.id;
   document.getElementById('stan_magazynowy').value = product.stan_magazynowy;
-  
+
   // Ukryj pozostałe pola formularza i wyłącz wymagania dla ukrytych pól
   document.querySelectorAll('.form-group').forEach(group => {
     group.style.display = 'none';
-    
+
     // Znajdź pola formularza wewnątrz grupy i wyłącz wymagania
     const inputs = group.querySelectorAll('input, textarea, select');
     inputs.forEach(input => {
@@ -540,13 +523,13 @@ function editProductStock(product) {
       }
     });
   });
-  
+
   // Pokaż tylko pole stanu magazynowego i upewnij się, że jest aktywne i wymagane
   const stanGroup = document.querySelector('.form-group:nth-of-type(5)');
   stanGroup.style.display = 'block';
   document.getElementById('stan_magazynowy').disabled = false;
   document.getElementById('stan_magazynowy').required = true;
-  
+
   modal.style.display = 'block';
 }
 
@@ -583,14 +566,14 @@ function validateForm() {
       alert('Cena musi być większa od 0');
       return false;
     }
-    
+
     if (parseInt(stan) < 0) {
       alert('Stan magazynowy nie może być ujemny');
       return false;
     }
   } else if (formAction === 'edit_stock') {
     const stan = document.getElementById('stan_magazynowy').value;
-    
+
     if (stan === '' || parseInt(stan) < 0) {
       alert('Stan magazynowy nie może być pusty ani ujemny');
       return false;
