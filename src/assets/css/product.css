@@ -256,7 +256,10 @@
 
 .product-actions {
   display: flex;
-  gap: var(--spacing-sm);
+}
+
+.product-actions form {
+  width: 100%;
 }
 
 .product-action-btn {
@@ -273,6 +276,7 @@
   flex: 1;
   justify-content: center;
   text-decoration: none;
+  width: 100%;
 }
 
 .buy-product-btn {

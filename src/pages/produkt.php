@@ -18,7 +18,7 @@
   // Obsługa dodawania do koszyka
   if (isset($_POST['add_to_cart'])) {
     addToCart($connection, $_POST['product_id'], $_POST['product_type']);
-    header("Location: produkt.php?id=" . $product_id . "&dodano=true");
+    header("Location: produkt.php?id=" . $product_id);
     exit();
   }
   
@@ -269,13 +269,7 @@
           <span class="price-label">Cena:</span>
           <span class="price-value"><?php echo formatPrice($product['cena_sprzedazy']); ?></span>
         </div>
-        
-        <?php if ($product['cena_wypozyczenia_dzien'] > 0): ?>
-          <div class="product-price">
-            <span class="price-label">Cena wypożyczenia (dzień):</span>
-            <span class="price-value"><?php echo formatPrice($product['cena_wypozyczenia_dzien']); ?></span>
-          </div>
-        <?php endif; ?>
+
       </div>
 
       <div class="product-availability">
@@ -303,15 +297,6 @@
             </button>
           </form>
 
-          <?php if ($product['cena_wypozyczenia_dzien'] > 0): ?>
-            <form method="post">
-              <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-              <input type="hidden" name="product_type" value="rent">
-              <button type="submit" name="add_to_cart" class="product-action-btn rent-product-btn">
-                <i class="fa-solid fa-handshake"></i> Wypożycz
-              </button>
-            </form>
-          <?php endif; ?>
         <?php endif; ?>
       </div>
     </div>
