@@ -119,53 +119,60 @@
   <section class="contact-section fade-in" id="contact">
     <div class="contact-container">
       <div class="contact-info">
-        <h2 class="section-title">Skontaktuj się z nami</h2>
+        <h2 class="contact-section-title">Skontaktuj się z nami</h2>
         <p class="contact-subtitle">
           Jeśli masz pytania dotyczące naszych produktów lub potrzebujesz pomocy w dokonaniu wyboru, nie wahaj się z
           nami skontaktować. Nasz zespół z przyjemnością odpowie na Twoje pytania i pomoże Ci znaleźć idealne
           rozwiązanie muzyczne. </p>
-        <p class="contact-details">
-          <strong>Email:</strong> kontakt@sklepmuzyczny.pl<br>
-          <strong>Telefon:</strong> +48 123 456 789<br>
-          <strong>Godziny otwarcia:</strong> Pon-Pt: 9:00 - 17:00 </p>
+        <div class="contact-details">
+          <div>
+            <p><span><i class="fa-solid fa-envelope"></i> Email:</span> kontakt@sklepmuzyczny.pl</p>
+          </div>
+          <div>
+            <p><span><i class="fa-solid fa-phone"></i> Telefon:</span> +48 123 456 789</p>
+          </div>
+          <div>
+            <p><span><i class="fa-solid fa-clock"></i> Godziny otwarcia:</span> Pon-Pt: 9:00 - 17:00</p>
+          </div>
+        </div>
       </div>
 
       <div class="contact-form-wrapper">
         <?php echo $contact_message; ?>
 
         <form class="contact-form" method="POST" action="">
-          <form class="contact-form" method="POST" action="">
-            <?php if (isset($_SESSION['user_id'])):
-              $user_id = $_SESSION['user_id'];
-              $user_query = "SELECT email FROM uzytkownicy WHERE id = $user_id";
-              $user_result = mysqli_query($connection, $user_query);
-              $user_data = mysqli_fetch_assoc($user_result);
-              $user_email = $user_data['email'];
-              ?>
-              <div class="form-group">
-                <label for="contact_email">Twój email (zalogowany jako <?php echo $user_email; ?>)</label>
-                <input type="email" id="contact_email" name="contact_email" value="<?php echo $user_email; ?>" required>
-                <small>Możesz zmienić email, jeśli chcesz otrzymać odpowiedź na inny adres</small>
-              </div>
-            <?php else: ?>
-              <div class="form-group">
-                <label for="contact_email">Twój email</label>
-                <input type="email" id="contact_email" name="contact_email" required>
-              </div>
-            <?php endif; ?>
-
+          <?php if (isset($_SESSION['user_id'])):
+            $user_id = $_SESSION['user_id'];
+            $user_query = "SELECT email FROM uzytkownicy WHERE id = $user_id";
+            $user_result = mysqli_query($connection, $user_query);
+            $user_data = mysqli_fetch_assoc($user_result);
+            $user_email = $user_data['email'];
+            ?>
             <div class="form-group">
-              <label for="contact_subject">Temat</label>
-              <input type="text" id="contact_subject" name="contact_subject" required>
+              <label for="contact_email">Twój email</label>
+              <input type="email" id="contact_email" name="contact_email" required>
+              <a href="#" class="use-account-email" data-email="<?php echo htmlspecialchars($user_email); ?>">
+                Użyj adresu mailowego na który utworzono konto
+              </a>
             </div>
-
+          <?php else: ?>
             <div class="form-group">
-              <label for="contact_message">Wiadomość</label>
-              <textarea id="contact_message" name="contact_message" rows="5" required></textarea>
+              <label for="contact_email">Twój email</label>
+              <input type="email" id="contact_email" name="contact_email" required>
             </div>
+          <?php endif; ?>
 
-            <button type="submit" name="submit_contact" class="submit-button">Wyślij wiadomość</button>
-          </form>
+          <div class="form-group">
+            <label for="contact_subject">Temat</label>
+            <input type="text" id="contact_subject" name="contact_subject" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact_message">Wiadomość</label>
+            <textarea id="contact_message" name="contact_message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" name="submit_contact" class="submit-button">Wyślij wiadomość</button>
         </form>
       </div>
     </div>
