@@ -444,6 +444,26 @@ html {
   background-color: var(--button-more-bg-hover);
 }
 
+.product-availability {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-sm);
+  margin: 4px 0;
+}
+
+.product-availability.in-stock {
+  color: var(--success-color);
+}
+
+.product-availability.out-of-stock {
+  color: var(--error-color);
+}
+
+.product-availability i {
+  font-size: 0.9em;
+}
+
 .contact-section {
   margin-bottom: var(--spacing-lg);
   border-radius: var(--radius-sm);
