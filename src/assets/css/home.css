@@ -407,22 +407,21 @@ html {
   flex-direction: column;
 }
 
-.product-action-btn {
+.product-action-btn, .submit-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
   padding: 0 var(--spacing-sm);
-  height: var(--card-size-xs-sm);
   border-radius: var(--radius-sm);
   background-color: var(--secondary-bg);
   color: var(--text-color);
   font-weight: bold;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
 }
 
-.product-action-btn:hover {
+.product-action-btn:hover, .submit-button:hover {
   background-color: #E0E0E0;
   translate: 0 2px;
 }
@@ -436,12 +435,12 @@ html {
   background-color: var(--button-buy-bg-hover);
 }
 
-.view-details-btn {
+.view-details-btn, .submit-button {
   background-color: var(--button-more-bg);
   color: var(--button-text-color);
 }
 
-.view-details-btn:hover {
+.view-details-btn:hover, .submit-button:hover {
   background-color: var(--button-more-bg-hover);
 }
 
@@ -561,42 +560,6 @@ html {
   resize: vertical;
 }
 
-.submit-button {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  background-color: var(--button-more-bg);
-  color: white;
-  border: none;
-  border-radius: var(--radius-xs);
-  font-size: var(--font-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  align-self: flex-start;
-}
-
-.submit-button:hover {
-  background-color: var(--button-more-bg-hover);
-  transform: translateY(-2px);
-}
-
-.success-message {
-  padding: var(--spacing-sm);
-  background-color: rgba(95, 187, 48, 0.1);
-  color: var(--button-buy-bg);
-  border-radius: var(--radius-xs);
-  margin-bottom: var(--spacing-md);
-  border-left: 3px solid var(--button-buy-bg);
-}
-
-.error-message {
-  padding: var(--spacing-sm);
-  background-color: var(--error-color-bg);
-  color: var(--error-color);
-  border-radius: var(--radius-xs);
-  margin-bottom: var(--spacing-md);
-  border-left: 3px solid var(--error-color);
-}
-
 .use-account-email {
   display: inline-block;
   margin-top: var(--spacing-xxs);
@@ -608,6 +571,74 @@ html {
 
 .use-account-email:hover {
   color: var(--button-more-bg-hover);
+}
+
+/* Responsywność sekcji kontaktowej */
+@media (max-width: 1024px) {
+  .contact-container {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .contact-info,
+  .contact-form-wrapper {
+    width: 100%;
+  }
+
+  .contact-info {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  }
+
+  .contact-form-wrapper {
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-section-title {
+    font-size: var(--font-xl);
+  }
+
+  .contact-subtitle {
+    font-size: var(--font-sm);
+  }
+
+  .contact-details {
+    padding: var(--spacing-sm);
+  }
+
+  .contact-details div p {
+    font-size: var(--font-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-container {
+    gap: var(--spacing-sm);
+  }
+
+  .contact-info,
+  .contact-form-wrapper {
+    padding: var(--spacing-md);
+  }
+
+  .contact-section-title {
+    font-size: var(--font-lg);
+  }
+
+  .contact-subtitle {
+    font-size: var(--font-xs);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .submit-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-sm);
+  }
 }
 
 @media (max-width: 768px) {

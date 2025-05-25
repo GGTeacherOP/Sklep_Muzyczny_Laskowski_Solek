@@ -18,21 +18,13 @@
   // Obsługa formularza kontaktowego
   $contact_message = '';
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_contact'])) {
-    $email = isset($_SESSION['user_id']) ?
-      mysqli_real_escape_string($connection, $_POST['contact_email']) :
-      mysqli_real_escape_string($connection, $_POST['contact_email']);
+    $email = mysqli_real_escape_string($connection, $_POST['contact_email']);
     $subject = mysqli_real_escape_string($connection, $_POST['contact_subject']);
     $message = mysqli_real_escape_string($connection, $_POST['contact_message']);
 
     if (!empty($email) && !empty($subject) && !empty($message)) {
       $query = "INSERT INTO wiadomosci (email, temat, tresc) VALUES ('$email', '$subject', '$message')";
-      if (mysqli_query($connection, $query)) {
-        $contact_message = '<p class="success-message">Wiadomość została wysłana. Dziękujemy!</p>';
-      } else {
-        $contact_message = '<p class="error-message">Wystąpił błąd podczas wysyłania wiadomości.</p>';
-      }
-    } else {
-      $contact_message = '<p class="error-message">Proszę wypełnić wszystkie pola formularza.</p>';
+      mysqli_query($connection, $query);
     }
     header("Location: home.php#contact");
     exit();
@@ -42,7 +34,6 @@
   $popularRentProducts = getPopularProducts($connection, 'rent');
   $productCategories = getProductCategories($connection);
 
-  // Pobieranie producentów
   $producers_query = "SELECT id, nazwa FROM producenci ORDER BY nazwa";
   $producers = mysqli_query($connection, $producers_query);
 ?>
@@ -138,8 +129,6 @@
       </div>
 
       <div class="contact-form-wrapper">
-        <?php echo $contact_message; ?>
-
         <form class="contact-form" method="POST" action="">
           <?php if (isset($_SESSION['user_id'])):
             $user_id = $_SESSION['user_id'];
@@ -152,7 +141,7 @@
               <label for="contact_email">Twój email</label>
               <input type="email" id="contact_email" name="contact_email" required>
               <a href="#" class="use-account-email" data-email="<?php echo htmlspecialchars($user_email); ?>">
-                Użyj adresu mailowego na który utworzono konto
+                Użyj adresu mailowego, na który utworzono konto
               </a>
             </div>
           <?php else: ?>
