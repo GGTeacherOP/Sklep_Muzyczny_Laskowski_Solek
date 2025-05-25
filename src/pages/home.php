@@ -15,11 +15,25 @@
     exit();
   }
 
+  // Obsługa formularza kontaktowego
+  $contact_message = '';
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_contact'])) {
+    $email = mysqli_real_escape_string($connection, $_POST['contact_email']);
+    $subject = mysqli_real_escape_string($connection, $_POST['contact_subject']);
+    $message = mysqli_real_escape_string($connection, $_POST['contact_message']);
+
+    if (!empty($email) && !empty($subject) && !empty($message)) {
+      $query = "INSERT INTO wiadomosci (email, temat, tresc) VALUES ('$email', '$subject', '$message')";
+      mysqli_query($connection, $query);
+    }
+    header("Location: home.php#contact");
+    exit();
+  }
+
   $popularBuyProducts = getPopularProducts($connection, 'buy');
   $popularRentProducts = getPopularProducts($connection, 'rent');
   $productCategories = getProductCategories($connection);
-  
-  // Pobieranie producentów
+
   $producers_query = "SELECT id, nazwa FROM producenci ORDER BY nazwa";
   $producers = mysqli_query($connection, $producers_query);
 ?>
@@ -47,7 +61,7 @@
   <section class="hero-section fade-in">
     <div class="hero-content">
       <h1 class="hero-title">Odkryj świat muzyki</h1>
-      <p class="hero-subtitle">Najlepsze instrumenty do kupienia i wypożyczenia – tylko u nas!</p>
+      <p class="hero-subtitle">Najlepsze instrumenty do kupienia - tylko u nas!</p>
       <a href="#popular-products" class="hero-button">Zobacz produkty</a>
     </div>
   </section>
@@ -78,9 +92,7 @@
       </div>
     </div>
     <div class="instrument-brands-list fade-in">
-      <?php while ($producer = mysqli_fetch_assoc($producers)) : ?>
-        <?php echo renderBrandCard($producer); ?>
-      <?php endwhile; ?>
+      <?php while ($producer = mysqli_fetch_assoc($producers)) : ?><?php echo renderBrandCard($producer); ?><?php endwhile; ?>
     </div>
   </section>
 
@@ -93,16 +105,68 @@
         } ?>
       </div>
     </div>
+  </section>
 
-    <div class="popular-section">
-      <h2 class="section-title">Najczęściej Wypożyczane</h2>
-      <div class="products-grid">
-        <?php while ($product = mysqli_fetch_assoc($popularRentProducts)) {
-          echo renderProductCard($product, 'rent');
-        } ?>
+  <section class="contact-section fade-in" id="contact">
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2 class="contact-section-title">Skontaktuj się z nami</h2>
+        <p class="contact-subtitle">
+          Jeśli masz pytania dotyczące naszych produktów lub potrzebujesz pomocy w dokonaniu wyboru, nie wahaj się z
+          nami skontaktować. Nasz zespół z przyjemnością odpowie na Twoje pytania i pomoże Ci znaleźć idealne
+          rozwiązanie muzyczne. </p>
+        <div class="contact-details">
+          <div>
+            <p><span><i class="fa-solid fa-envelope"></i> Email:</span> kontakt@sklepmuzyczny.pl</p>
+          </div>
+          <div>
+            <p><span><i class="fa-solid fa-phone"></i> Telefon:</span> +48 123 456 789</p>
+          </div>
+          <div>
+            <p><span><i class="fa-solid fa-clock"></i> Godziny otwarcia:</span> Pon-Pt: 9:00 - 17:00</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrapper">
+        <form class="contact-form" method="POST" action="">
+          <?php if (isset($_SESSION['user_id'])):
+            $user_id = $_SESSION['user_id'];
+            $user_query = "SELECT email FROM uzytkownicy WHERE id = $user_id";
+            $user_result = mysqli_query($connection, $user_query);
+            $user_data = mysqli_fetch_assoc($user_result);
+            $user_email = $user_data['email'];
+            ?>
+            <div class="form-group">
+              <label for="contact_email">Twój email</label>
+              <input type="email" id="contact_email" name="contact_email" required>
+              <a href="#" class="use-account-email" data-email="<?php echo htmlspecialchars($user_email); ?>">
+                Użyj adresu mailowego, na który utworzono konto
+              </a>
+            </div>
+          <?php else: ?>
+            <div class="form-group">
+              <label for="contact_email">Twój email</label>
+              <input type="email" id="contact_email" name="contact_email" required>
+            </div>
+          <?php endif; ?>
+
+          <div class="form-group">
+            <label for="contact_subject">Temat</label>
+            <input type="text" id="contact_subject" name="contact_subject" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact_message">Wiadomość</label>
+            <textarea id="contact_message" name="contact_message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" name="submit_contact" class="submit-button">Wyślij wiadomość</button>
+        </form>
       </div>
     </div>
   </section>
+
 </main>
 <?php mysqli_close($connection); ?>
 <?php include '../components/footer.php'; ?>

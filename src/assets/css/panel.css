@@ -311,15 +311,15 @@ body {
   font-weight: 500;
 }
 
-.status-badge.success {
+.status-badge.success, .status-badge.nowa {
   background-color: var(--button-buy-bg);
 }
 
-.status-badge.warning {
+.status-badge.warning, .status-badge.w_trakcie {
   background-color: var(--button-edit-bg);
 }
 
-.status-badge.danger {
+.status-badge.danger, .status-badge.zakonczona {
   background-color: var(--error-color);
 }
 
