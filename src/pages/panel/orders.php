@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           // Sprawdzenie czy status jest prawidłowy
           if (array_key_exists($status, ORDER_STATUSES)) {
             // Pracownik nie może ustawiać statusu 'anulowane' ani 'dostarczone'
-            if ($role === 'pracownik' && ($status === 'anulowane' || $status === 'dostarczone')) {
+            if (($role === 'pracownik' || $role === 'manager') && ($status === 'anulowane' || $status === 'dostarczone')) {
               // Przekieruj bez zmiany statusu
               header('Location: panel.php?view=orders&error=permission_denied');
               exit();
@@ -420,7 +420,7 @@ function editOrderStatus(id, status) {
   document.getElementById('modalStatusDropdownText').textContent = ORDER_STATUSES[status].label;
 
   // Jeśli pracownik, ukryj opcje 'anulowane' i 'dostarczone'
-  const isWorker = '<?php echo $role; ?>' === 'pracownik';
+  const isWorker = ['pracownik', 'manager'].includes('<?php echo $role; ?>');
   if (isWorker) {
     const options = document.querySelectorAll('#modalStatusDropdown .dropdown-item');
     options.forEach(option => {

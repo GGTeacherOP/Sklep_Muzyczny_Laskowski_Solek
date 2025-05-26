@@ -11,32 +11,6 @@ function showModal(modalId) {
     }
 }
 
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Funkcje dla wyszukiwania i filtrowania
-function filterTable(tableId, inputId, columnIndex = 1) {
-    const input = document.getElementById(inputId);
-    const table = document.getElementById(tableId);
-    
-    if (!input || !table) return;
-    
-    const filter = input.value.toLowerCase();
-    const rows = table.getElementsByTagName('tr');
-
-    for (let i = 1; i < rows.length; i++) {
-        const cell = rows[i].getElementsByTagName('td')[columnIndex];
-        if (cell) {
-            const text = cell.textContent || cell.innerText;
-            rows[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-        }
-    }
-}
-
 // Funkcja dla obsługi powiadomień
 function showNotification(message, type = 'success') {
     const notificationContainer = document.getElementById('notificationContainer');
