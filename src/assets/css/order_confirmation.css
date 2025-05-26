@@ -1,0 +1,247 @@
+@import 'global.css';
+
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+}
+
+.confirmation-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  background-color: var(--primary-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+.confirmation-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+}
+
+.confirmation-header i {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  color: var(--success-color);
+}
+
+.confirmation-header h1 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0;
+}
+
+.confirmation-header p {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: var(--text-color);
+  margin: 0;
+  font-weight: bold;
+}
+
+.confirmation-header-message {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: 2rem;
+}
+
+.order-details h2 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.order-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--button-text-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-group h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.info-group p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.order-items {
+  margin-top: 1rem;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-details {
+  flex: 2;
+}
+
+.item-name {
+  display: block;
+  font-weight: 500;
+  color: #333;
+}
+
+.item-code {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.item-quantity {
+  flex: 1;
+  text-align: center;
+  color: #555;
+}
+
+.item-price {
+  flex: 1;
+  text-align: right;
+  font-weight: 500;
+  color: #333;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-lg);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: var(--card-size-xs-sm);
+}
+
+.action-button i {
+  margin-right: var(--spacing-xs);
+}
+
+.home-button {
+  background-color: var(--button-buy-bg);
+  color: var(--button-text-color);
+}
+
+.home-button:hover {
+  background-color: var(--button-buy-bg-hover);
+}
+
+.profile-button {
+  background-color: var(--button-more-bg);
+  color: var(--button-text-color);
+}
+
+.profile-button:hover {
+  background-color: var(--button-more-bg-hover);
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+  .confirmation-container {
+    margin: 1rem;
+    padding: 1rem;
+    font-size: clamp(0.75rem, 1.25vw, 0.875rem);
+  }
+
+  .confirmation-header i {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+  }
+
+  .confirmation-header h1 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+  }
+
+  .confirmation-header p {
+    font-size: clamp(0.875rem, 1.25vw, 1rem);
+  }
+
+  .order-info {
+    padding: var(--spacing-md);
+  }
+
+  .order-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .item-details, .item-quantity, .item-price {
+    width: 100%;
+    text-align: center;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+    height: var(--button-height-md);
+    font-size: var(--font-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .confirmation-container {
+    margin: 0.5rem;
+    padding: 0.75rem;
+    font-size: clamp(0.625rem, 1vw, 0.75rem);
+  }
+
+  .confirmation-header i {
+    font-size: clamp(1rem, 1.75vw, 1.25rem);
+  }
+
+  .confirmation-header h1 {
+    font-size: clamp(1rem, 1.75vw, 1.25rem);
+  }
+
+  .confirmation-header p {
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+  }
+
+  .order-info {
+    padding: var(--spacing-sm);
+  }
+
+  .action-button {
+    height: var(--button-height-sm);
+    font-size: var(--font-sm);
+  }
+} 

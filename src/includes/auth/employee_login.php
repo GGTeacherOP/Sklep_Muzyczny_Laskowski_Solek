@@ -18,7 +18,7 @@ function handleEmployeeLogin(mysqli $connection, array &$errors, array &$values)
     $result = mysqli_stmt_get_result($stmt);
 
     if ($employee = mysqli_fetch_assoc($result)) {
-        if ($employee_password === $employee['haslo']) {
+        if (password_verify($employee_password, $employee['haslo'])) {
             $_SESSION['user_id'] = $employee['uzytkownik_id'];
             $_SESSION['employee_id'] = $employee['identyfikator'];;
             loadUserCart($connection, $employee['uzytkownik_id']);

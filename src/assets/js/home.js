@@ -91,4 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  const useAccountEmailLinks = document.querySelectorAll('.use-account-email');
+
+  useAccountEmailLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const email = this.getAttribute('data-email');
+      const emailInput = this.closest('.form-group').querySelector('input[type="email"]');
+      emailInput.value = email;
+    });
+  });
 });

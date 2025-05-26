@@ -5,7 +5,7 @@
       <h3 class="footer-title">Kontakt</h3>
       <ul class="footer-links">
         <li><a href="tel:+48123456789"><i class="fa-solid fa-phone"></i> +48 123 456 789</a></li>
-        <li><a href="mailto:kontakt@sklep.pl"><i class="fa-solid fa-envelope"></i> kontakt@sklep.pl</a></li>
+        <li><a href="mailto:kontakt@sklep.pl"><i class="fa-solid fa-envelope"></i> kontakt@sklepmuzyczny.pl</a></li>
         <li><a href="https://www.google.com/maps/place/Adres+Sklepu"><i class="fa-solid fa-location-pin"></i> Adres Sklepu</a></li>
       </ul>
     </div>

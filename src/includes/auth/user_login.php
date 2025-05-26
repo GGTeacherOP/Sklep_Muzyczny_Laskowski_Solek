@@ -13,7 +13,7 @@ function handleLogin(mysqli $connection, array &$errors, array &$values): bool {
     $result = mysqli_stmt_get_result($stmt);
 
     if ($user = mysqli_fetch_assoc($result)) {
-        if ($password === $user['haslo']) {
+      if (password_verify($password, $user['haslo'])) {
             $_SESSION['user_id'] = $user['id'];
             loadUserCart($connection, $user['id']);
             header("Location: home.php");

@@ -67,7 +67,6 @@ $wiadomosci = mysqli_query($connection, $sql);
       <li><a href="#" class="dropdown-item" onclick="selectStatus('nowa', 'Nowe')">Nowe</a></li>
       <li><a href="#" class="dropdown-item" onclick="selectStatus('w_trakcie', 'W trakcie')">W trakcie</a></li>
       <li><a href="#" class="dropdown-item" onclick="selectStatus('zakonczona', 'Zakończone')">Zakończone</a></li>
-      <li><a href="#" class="dropdown-item" onclick="selectStatus('archiwalna', 'Archiwalne')">Archiwalne</a></li>
     </ul>
   </div>
 </div>
@@ -91,7 +90,6 @@ $wiadomosci = mysqli_query($connection, $sql);
           Temat <?php echo getSortIcon('temat', $sort_column, $sort_dir); ?>
         </a>
       </th>
-      <th>Treść</th>
       <th>
         <a href="<?php echo getSortLink('data_wyslania', $sort_column, $sort_dir); ?>" class="sort-link">
           Data wysłania <?php echo getSortIcon('data_wyslania', $sort_column, $sort_dir); ?>
@@ -111,11 +109,6 @@ $wiadomosci = mysqli_query($connection, $sql);
         <td><?php echo htmlspecialchars($message['id']); ?></td>
         <td><?php echo htmlspecialchars($message['email']); ?></td>
         <td><?php echo htmlspecialchars($message['temat']); ?></td>
-        <td>
-          <button class="admin-button" onclick="showMessageContent('<?php echo htmlspecialchars(addslashes($message['tresc'])); ?>')">
-            <i class="fas fa-eye"></i> Pokaż treść
-          </button>
-        </td>
         <td><?php echo date('d.m.Y H:i', strtotime($message['data_wyslania'])); ?></td>
         <td>
           <span class="status-badge <?php echo $message['status']; ?>">
@@ -124,7 +117,6 @@ $wiadomosci = mysqli_query($connection, $sql);
                 'nowa' => 'Nowa',
                 'w_trakcie' => 'W trakcie',
                 'zakonczona' => 'Zakończona',
-                'archiwalna' => 'Archiwalna'
               ];
               echo $statusy[$message['status']] ?? $message['status'];
             ?>
@@ -132,9 +124,14 @@ $wiadomosci = mysqli_query($connection, $sql);
         </td>
         <td>
           <div class="admin-actions">
-            <button class="admin-button warning" onclick="showStatusModal(<?php echo $message['id']; ?>, '<?php echo $message['status']; ?>')">
-              <i class="fas fa-edit"></i>
+            <button class="admin-button info" onclick="showMessageContent('<?php echo htmlspecialchars(addslashes($message['tresc'])); ?>')">
+              <i class="fas fa-eye"></i>
             </button>
+            <?php if ($message['status'] !== 'zakonczona'): ?>
+              <button class="admin-button warning" onclick="showStatusModal(<?php echo $message['id']; ?>, '<?php echo $message['status']; ?>')">
+                <i class="fas fa-edit"></i>
+              </button>
+            <?php endif; ?>
           </div>
         </td>
       </tr>
@@ -170,7 +167,6 @@ $wiadomosci = mysqli_query($connection, $sql);
           <option value="nowa">Nowa</option>
           <option value="w_trakcie">W trakcie</option>
           <option value="zakonczona">Zakończona</option>
-          <option value="archiwalna">Archiwalna</option>
         </select>
       </div>
       

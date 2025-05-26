@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 20, 2025 at 02:02 AM
+-- Generation Time: Maj 27, 2025 at 12:52 AM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -53,7 +53,8 @@ INSERT INTO `dostawa_szczegoly` (`id`, `dostawa_id`, `instrument_id`, `ilosc`, `
 (12, 11, 2, 2, 1599.00, 'oczekiwana'),
 (13, 11, 1, 1, 799.00, 'oczekiwana'),
 (14, 12, 5, 5, 599.00, 'dostarczona'),
-(15, 12, 2, 2, 1599.00, 'dostarczona');
+(15, 12, 2, 2, 1599.00, 'dostarczona'),
+(16, 13, 1, 10, 799.00, 'dostarczona');
 
 -- --------------------------------------------------------
 
@@ -80,7 +81,8 @@ INSERT INTO `dostawy` (`id`, `data_zamowienia`, `data_dostawy`, `status`, `produ
 (3, '2025-05-14 14:45:00', '2025-05-20 01:41:39', 'dostarczona', 4, 3),
 (10, '2025-05-19 00:45:06', NULL, 'anulowana', 3, 2),
 (11, '2025-05-19 00:45:55', NULL, 'anulowana', 2, 2),
-(12, '2025-05-19 00:47:06', '2025-05-19 00:57:06', 'dostarczona', 5, 2);
+(12, '2025-05-19 00:47:06', '2025-05-19 00:57:06', 'dostarczona', 5, 2),
+(13, '2025-05-22 22:32:13', '2025-05-22 22:32:20', 'dostarczona', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -106,10 +108,10 @@ CREATE TABLE `instrumenty` (
 --
 
 INSERT INTO `instrumenty` (`id`, `kod_produktu`, `nazwa`, `opis`, `cena_sprzedazy`, `cena_kupna`, `cena_wypozyczenia_dzien`, `stan_magazynowy`, `producent_id`, `kategoria_id`) VALUES
-(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 799.99, 299.99, 22, 1, 1),
+(1, 'YAM1234', 'Yamaha Pacifica 112V', 'Gitary elektryczna typu stratocaster', 1499.99, 799.99, 299.99, 0, 1, 1),
 (2, 'FEN5678', 'Fender Stratocaster', 'Klasyczna gitara elektryczna', 2499.99, 1599.99, 699.99, 23, 2, 1),
 (3, 'GIB4321', 'Gibson Les Paul Standard', 'Luksusowa gitara elektryczna', 3999.99, 2599.99, 1599.99, 10, 3, 1),
-(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 999.99, 599.99, 29, 4, 1),
+(4, 'IBA9876', 'Ibanez RG550', 'Gitara elektryczna o agresywnym brzmieniu', 1899.99, 999.99, 599.99, 26, 4, 1),
 (5, 'ROL8765', 'Roland FP-30', 'Keyboard cyfrowy, idealny dla początkujących', 799.99, 599.99, 100.99, 34, 5, 4),
 (6, 'KOR6543', 'Korg Kronos', 'Profesjonalny syntezator keyboardowy', 2999.99, 1699.99, 1000.99, 9, 6, 4),
 (7, 'FGX800C', 'Yamaha FGX800C', 'Klasyczna gitara elektroakustyczna typu dreadnought z wycięciem, wykonana z drewna świerkowego i nato. Wyposażona w preamp System66 z wbudowanym tunerem.', 1799.00, 899.00, 299.00, 30, 1, 2),
@@ -216,11 +218,6 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (43, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (3).avif', 'Fender Precision Bass - widok z tyłu', 4),
 (44, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (4).avif', 'Fender Precision Bass - widok gryfu', 5),
 (45, 13, 'Fender/fender-de-player-precision-bass-mn-sns-dtb (5).avif', 'Fender Precision Bass - widok szczegółowy', 6),
-(46, 21, 'Gibson/epiphone-es-335-cherry.avif', 'Gibson ES-335 - widok ogólny', 1),
-(47, 21, 'Gibson/epiphone-es-335-cherry (1).avif', 'Gibson ES-335 - widok z przodu', 2),
-(48, 21, 'Gibson/epiphone-es-335-cherry (2).avif', 'Gibson ES-335 - widok z boku', 3),
-(49, 21, 'Gibson/epiphone-es-335-cherry (3).avif', 'Gibson ES-335 - widok z tyłu', 4),
-(50, 21, 'Gibson/epiphone-es-335-cherry (4).avif', 'Gibson ES-335 - widok szczegółowy', 5),
 (51, 18, 'Gretsch/gretsch-catalina-maple-satin-deep-cherry-burst-rock-set.avif', 'Gretsch Catalina Club - widok zestawu perkusyjnego', 1),
 (52, 20, 'Fender/0113900803_fen_ins_bck_1_rl.png', 'Fender American Professional II - widok tył', 4),
 (53, 20, 'Fender/0113900803_fen_ins_cbr_1_nr.png', 'Fender American Professional II - widok całości', 2),
@@ -234,13 +231,13 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (61, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (3).avif', 'Gretsch G2622 Streamliner - widok gryfu z przodu', 4),
 (62, 10, 'Gretsch/gretsch-g2622t-streamliner-arb (4).avif', 'Gretsch G2622 Streamliner - widok gryfu z tyłu', 5),
 (63, 14, 'Korg/korg-ms-20-mini.avif', 'Korg MS-20 - widok z przodu', 1),
-(64, 14, 'Korg/korg-ms-20-mini.avif (1)', 'Korg MS-20 - widok z góry', 2),
-(65, 14, 'Korg/korg-ms-20-mini.avif (2)', 'Korg MS-20 - widok z przodu (kable)', 3),
-(66, 14, 'Korg/korg-ms-20-mini.avif (3)', 'Korg MS-20 - widok z boku', 4),
-(67, 14, 'Korg/korg-ms-20-mini.avif (4)', 'Korg MS-20 - widok z boku (2)', 5),
-(68, 14, 'Korg/korg-ms-20-mini.avif (5)', 'Korg MS-20 - widok pokręteł', 6),
-(69, 14, 'Korg/korg-ms-20-mini.avif (6)', 'Korg MS-20 - widok wejść', 7),
-(70, 14, 'Korg/korg-ms-20-mini.avif (7)', 'Korg MS-20 - widok z tyłu', 8),
+(64, 14, 'Korg/korg-ms-20-mini (1).avif', 'Korg MS-20 - widok z góry', 2),
+(65, 14, 'Korg/korg-ms-20-mini (2).avif', 'Korg MS-20 - widok z przodu (kable)', 3),
+(66, 14, 'Korg/korg-ms-20-mini (3).avif', 'Korg MS-20 - widok z boku', 4),
+(67, 14, 'Korg/korg-ms-20-mini (4).avif', 'Korg MS-20 - widok z boku (2)', 5),
+(68, 14, 'Korg/korg-ms-20-mini (5).avif', 'Korg MS-20 - widok pokręteł', 6),
+(69, 14, 'Korg/korg-ms-20-mini (6).avif', 'Korg MS-20 - widok wejść', 7),
+(70, 14, 'Korg/korg-ms-20-mini (7).avif', 'Korg MS-20 - widok z tyłu', 8),
 (71, 7, 'Yamaha/yamaha-fgx800c-nt.avif', 'Yamaha FGX800C - widok ogólny', 1),
 (72, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_5.webp', 'Pearl Export - widok z przodu', 1),
 (73, 9, 'Pearl/pol_pl_Pearl-Export-Rock-Jet-Black-31-shellset-4958_3.webp', 'Pearl Export - widok z boku', 2),
@@ -268,7 +265,6 @@ INSERT INTO `instrument_zdjecia` (`id`, `instrument_id`, `url`, `alt_text`, `kol
 (96, 15, 'Roland/jd-xa_dr_gal.jpg', 'Roland JD-XA - widok z boku', 2),
 (97, 1, 'Yamaha/B4851F1DBB7B4AC2980E5C7F8AE91628_12073_97cc329d2145a06c31d1bd7195b15b53.jpg', 'Yamaha Pacifica 112V - widok ogólny', 1);
 
-
 -- --------------------------------------------------------
 
 --
@@ -290,8 +286,7 @@ INSERT INTO `kategorie_instrumentow` (`id`, `nazwa`) VALUES
 (1, 'Gitary elektryczne'),
 (4, 'Keyboardy'),
 (5, 'Perkusja'),
-(8, 'Syntezatory'),
-(6, 'Wiosła');
+(8, 'Syntezatory');
 
 -- --------------------------------------------------------
 
@@ -314,7 +309,8 @@ INSERT INTO `klienci` (`id`, `uzytkownik_id`) VALUES
 (3, 3),
 (4, 4),
 (5, 5),
-(10, 12);
+(10, 12),
+(11, 13);
 
 -- --------------------------------------------------------
 
@@ -362,7 +358,8 @@ INSERT INTO `koszyk` (`id`, `klient_id`) VALUES
 (3, 3),
 (4, 4),
 (5, 5),
-(8, 10);
+(8, 10),
+(25, 11);
 
 -- --------------------------------------------------------
 
@@ -385,9 +382,9 @@ CREATE TABLE `koszyk_szczegoly` (
 --
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
-(2, 2, 2, 1, 2499.99, '', '2025-05-08'),
-(4, 4, 4, 1, 1899.99, '', '2025-05-31'),
-(10, 5, 2, 1, 2499.99, '', '2025-05-20');
+(4, 4, 4, 1, 1899.99, 'buy', '2025-05-31'),
+(30, 3, 4, 26, 1899.99, 'buy', '2025-05-24'),
+(31, 25, 2, 1, 2499.99, 'buy', '2025-05-26');
 
 -- --------------------------------------------------------
 
@@ -402,7 +399,7 @@ CREATE TABLE `pracownicy` (
   `data_zatrudnienia` datetime NOT NULL DEFAULT current_timestamp(),
   `identyfikator` varchar(4) NOT NULL,
   `data_zwolnienia` datetime DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pracownicy`
@@ -484,12 +481,13 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_rejestracji`, `typ`) VALUES
-(1, 'Janek', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(2, 'Anna', 'anna.nowak@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(4, 'Maria', 'maria.wisniewska@gmail.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-(12, 'Herbert', 'herbert@example.com', '$2y$10$nPK2hvLR6usuaSMS6gau5uHv.QSh6DzmqceeGRuPht3Dl2n0Bs4KO', '2025-05-20 01:44:54', 'klient');
+(1, 'Janek', 'jan.kowalski@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+(2, 'Anna', 'anna.nowak@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+(3, 'Piotr', 'piotr.zielinski@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+(4, 'Maria', 'maria.wisniewska@gmail.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+(5, 'Adam', 'adam.kaczmarek@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+(12, 'Herbert', 'herbert@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-20 01:44:54', 'klient'),
+(13, 'Grzegorz', 'g.braun@gmail.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-26 23:34:35', 'klient');
 
 -- --------------------------------------------------------
 
@@ -503,8 +501,20 @@ CREATE TABLE `wiadomosci` (
   `temat` varchar(255) NOT NULL,
   `tresc` text NOT NULL,
   `data_wyslania` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` enum('nowa','w_trakcie','zakonczona','archiwalna') NOT NULL DEFAULT 'nowa'
+  `status` enum('nowa','w_trakcie','zakonczona') NOT NULL DEFAULT 'nowa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `wiadomosci`
+--
+
+INSERT INTO `wiadomosci` (`id`, `email`, `temat`, `tresc`, `data_wyslania`, `status`) VALUES
+(1, 'g.braun@wp.pl', 'Odzyskajmy razem niepodległość', '!', '2025-05-24 19:42:24', 'nowa'),
+(2, 'piotr.zielinski@example.com', 'tralalelo tralaleli', 'skibidi toilet', '2025-05-24 21:02:52', 'nowa'),
+(4, 'piotr.zielinski@example.com', 'asda', 'asdasa', '2025-05-24 21:06:06', 'nowa'),
+(5, 'piotr.zielinski@example.com', 'asdsaasdad', 'asdadsadaadas', '2025-05-24 21:07:31', 'nowa'),
+(6, 'anna.nowak@example.com', 'PYTANIE', 'WITAM CZY MOGĘ OTRZYMAĆ PRODUKT #14 ZA DARMO ???', '2025-05-25 15:57:03', 'w_trakcie'),
+(7, 'anna.nowak@example.com', 'test', 'testowa wiadomość', '2025-05-25 16:41:22', 'zakonczona');
 
 -- --------------------------------------------------------
 
@@ -544,20 +554,32 @@ CREATE TABLE `zamowienia` (
   `klient_id` int(11) NOT NULL,
   `data_zamowienia` datetime NOT NULL DEFAULT current_timestamp(),
   `status` enum('w przygotowaniu','wysłane','dostarczone','anulowane') NOT NULL DEFAULT 'w przygotowaniu',
-  `kod_promocyjny_id` int(11) DEFAULT NULL
+  `kod_promocyjny_id` int(11) DEFAULT NULL,
+  `adres_wysylki` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `zamowienia`
 --
 
-INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`) VALUES
-(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL),
-(2, 2, '2025-05-08 14:33:13', 'wysłane', NULL),
-(3, 3, '2025-05-08 14:33:13', 'anulowane', NULL),
-(4, 4, '2025-05-08 14:33:13', 'anulowane', NULL),
-(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL),
-(7, 5, '2025-05-20 01:30:08', 'w przygotowaniu', NULL);
+INSERT INTO `zamowienia` (`id`, `klient_id`, `data_zamowienia`, `status`, `kod_promocyjny_id`, `adres_wysylki`) VALUES
+(1, 1, '2025-05-08 14:33:13', 'w przygotowaniu', NULL, 'Grochowa 15'),
+(2, 2, '2025-05-08 14:33:13', 'wysłane', NULL, 'Grochowa 15'),
+(3, 3, '2025-05-08 14:33:13', 'anulowane', NULL, 'Grochowa 15'),
+(4, 4, '2025-05-08 14:33:13', 'anulowane', NULL, 'Grochowa 15'),
+(5, 5, '2025-05-08 14:33:13', 'wysłane', NULL, 'Grochowa 15'),
+(7, 5, '2025-05-20 01:30:08', 'w przygotowaniu', NULL, 'Grochowa 15'),
+(8, 2, '2025-05-21 22:08:23', 'w przygotowaniu', NULL, 'Solskiego 6/19'),
+(9, 2, '2025-05-21 23:09:35', 'w przygotowaniu', NULL, 'Kocjana 10/12'),
+(10, 2, '2025-05-21 23:15:24', 'w przygotowaniu', 1, 'Niepodległości 2/15'),
+(11, 2, '2025-05-22 18:14:29', 'w przygotowaniu', NULL, 'Chesty Big o\' Field 889'),
+(12, 2, '2025-05-22 18:17:19', 'w przygotowaniu', NULL, 'Chesty Big o\' Field 889'),
+(14, 2, '2025-05-22 20:52:03', 'w przygotowaniu', NULL, 'Ananasowa 6/19'),
+(15, 3, '2025-05-22 22:33:16', 'w przygotowaniu', NULL, 'Grochowa 32'),
+(16, 3, '2025-05-22 22:40:15', 'w przygotowaniu', NULL, 'Lodowa 56/1'),
+(17, 3, '2025-05-22 23:14:52', 'w przygotowaniu', NULL, 'Wielopole Skrzyńskie'),
+(18, 5, '2025-05-23 21:00:51', 'w przygotowaniu', 1, 'Chesty Big o\' Field'),
+(19, 3, '2025-05-24 20:53:17', 'w przygotowaniu', NULL, 'Niepodległości 51/123');
 
 -- --------------------------------------------------------
 
@@ -583,7 +605,27 @@ INSERT INTO `zamowienie_szczegoly` (`id`, `zamowienie_id`, `instrument_id`, `ilo
 (3, 3, 3, 1, 3999.99),
 (4, 4, 4, 1, 1899.99),
 (5, 5, 5, 1, 799.99),
-(7, 7, 5, 1, 799.99);
+(7, 7, 5, 1, 799.99),
+(8, 8, 2, 3, 2499.99),
+(9, 8, 4, 1, 1899.99),
+(10, 8, 5, 1, 799.99),
+(11, 8, 14, 3, 3999.99),
+(12, 8, 5, 1, 799.99),
+(13, 9, 2, 3, 2499.99),
+(14, 9, 4, 1, 1899.99),
+(15, 9, 5, 1, 799.99),
+(16, 9, 14, 3, 3999.99),
+(17, 9, 5, 1, 799.99),
+(18, 10, 4, 1, 1899.99),
+(19, 11, 5, 1, 799.99),
+(20, 12, 2, 599, 2499.99),
+(21, 14, 4, 1, 1899.99),
+(22, 15, 1, 8, 1499.99),
+(23, 16, 1, 31, 1499.99),
+(24, 17, 1, 1, 1499.99),
+(25, 18, 4, 1, 1899.99),
+(26, 19, 4, 1, 1899.99),
+(27, 19, 4, 1, 1899.99);
 
 --
 -- Indeksy dla zrzutów tabel
@@ -741,19 +783,19 @@ ALTER TABLE `zamowienie_szczegoly`
 -- AUTO_INCREMENT for table `dostawa_szczegoly`
 --
 ALTER TABLE `dostawa_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `dostawy`
 --
 ALTER TABLE `dostawy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `instrumenty`
 --
 ALTER TABLE `instrumenty`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `instrument_oceny`
@@ -765,7 +807,7 @@ ALTER TABLE `instrument_oceny`
 -- AUTO_INCREMENT for table `instrument_zdjecia`
 --
 ALTER TABLE `instrument_zdjecia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `kategorie_instrumentow`
@@ -777,7 +819,7 @@ ALTER TABLE `kategorie_instrumentow`
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `kody_promocyjne`
@@ -789,19 +831,19 @@ ALTER TABLE `kody_promocyjne`
 -- AUTO_INCREMENT for table `koszyk`
 --
 ALTER TABLE `koszyk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `koszyk_szczegoly`
 --
 ALTER TABLE `koszyk_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
 --
 ALTER TABLE `pracownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `producenci`
@@ -819,13 +861,13 @@ ALTER TABLE `stanowiska`
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `wiadomosci`
 --
 ALTER TABLE `wiadomosci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `wypozyczenia`
@@ -837,13 +879,13 @@ ALTER TABLE `wypozyczenia`
 -- AUTO_INCREMENT for table `zamowienia`
 --
 ALTER TABLE `zamowienia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `zamowienie_szczegoly`
 --
 ALTER TABLE `zamowienie_szczegoly`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
@@ -871,4 +913,67 @@ ALTER TABLE `instrumenty`
   ADD CONSTRAINT `instrumenty_ibfk_2` FOREIGN KEY (`kategoria_id`) REFERENCES `kategorie_instrumentow` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `
+-- Constraints for table `instrument_oceny`
+--
+ALTER TABLE `instrument_oceny`
+  ADD CONSTRAINT `instrument_oceny_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `instrument_oceny_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `instrument_zdjecia`
+--
+ALTER TABLE `instrument_zdjecia`
+  ADD CONSTRAINT `instrument_zdjecia_ibfk_1` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `klienci`
+--
+ALTER TABLE `klienci`
+  ADD CONSTRAINT `klienci_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `koszyk`
+--
+ALTER TABLE `koszyk`
+  ADD CONSTRAINT `fk_koszyk_klient` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `koszyk_szczegoly`
+--
+ALTER TABLE `koszyk_szczegoly`
+  ADD CONSTRAINT `koszyk_szczegoly_ibfk_1` FOREIGN KEY (`koszyk_id`) REFERENCES `koszyk` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `koszyk_szczegoly_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `pracownicy`
+--
+ALTER TABLE `pracownicy`
+  ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pracownicy_ibfk_2` FOREIGN KEY (`stanowisko_id`) REFERENCES `stanowiska` (`id`);
+
+--
+-- Constraints for table `wypozyczenia`
+--
+ALTER TABLE `wypozyczenia`
+  ADD CONSTRAINT `fk_wypozyczenia_instrument` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_wypozyczenia_klient` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `zamowienia`
+--
+ALTER TABLE `zamowienia`
+  ADD CONSTRAINT `fk_zamowienia_klient` FOREIGN KEY (`klient_id`) REFERENCES `klienci` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `zamowienia_ibfk_2` FOREIGN KEY (`kod_promocyjny_id`) REFERENCES `kody_promocyjne` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `zamowienie_szczegoly`
+--
+ALTER TABLE `zamowienie_szczegoly`
+  ADD CONSTRAINT `fk_zamowienie_szczegoly_instrument` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `zamowienie_szczegoly_ibfk_1` FOREIGN KEY (`zamowienie_id`) REFERENCES `zamowienia` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `zamowienie_szczegoly_ibfk_2` FOREIGN KEY (`instrument_id`) REFERENCES `instrumenty` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
