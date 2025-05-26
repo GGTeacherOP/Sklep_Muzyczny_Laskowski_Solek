@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Maj 26, 2025 at 11:19 PM
+-- Generation Time: Maj 26, 2025 at 11:38 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -314,7 +314,8 @@ INSERT INTO `klienci` (`id`, `uzytkownik_id`) VALUES
                                                   (3, 3),
                                                   (4, 4),
                                                   (5, 5),
-                                                  (10, 12);
+                                                  (10, 12),
+                                                  (11, 13);
 
 -- --------------------------------------------------------
 
@@ -362,7 +363,8 @@ INSERT INTO `koszyk` (`id`, `klient_id`) VALUES
                                              (3, 3),
                                              (4, 4),
                                              (5, 5),
-                                             (8, 10);
+                                             (8, 10),
+                                             (25, 11);
 
 -- --------------------------------------------------------
 
@@ -386,7 +388,8 @@ CREATE TABLE `koszyk_szczegoly` (
 
 INSERT INTO `koszyk_szczegoly` (`id`, `koszyk_id`, `instrument_id`, `ilosc`, `cena`, `typ`, `okres_wypozyczenia`) VALUES
                                                                                                                       (4, 4, 4, 1, 1899.99, 'buy', '2025-05-31'),
-                                                                                                                      (30, 3, 4, 26, 1899.99, 'buy', '2025-05-24');
+                                                                                                                      (30, 3, 4, 26, 1899.99, 'buy', '2025-05-24'),
+                                                                                                                      (31, 25, 2, 1, 2499.99, 'buy', '2025-05-26');
 
 -- --------------------------------------------------------
 
@@ -483,12 +486,13 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `nazwa_uzytkownika`, `email`, `haslo`, `data_rejestracji`, `typ`) VALUES
-                                                                                                       (1, 'Janek', 'jan.kowalski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-                                                                                                       (2, 'Anna', 'anna.nowak@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-                                                                                                       (3, 'Piotr', 'piotr.zielinski@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-                                                                                                       (4, 'Maria', 'maria.wisniewska@gmail.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-                                                                                                       (5, 'Adam', 'adam.kaczmarek@example.com', 'password123', '2025-05-08 14:33:12', 'pracownik'),
-                                                                                                       (12, 'Herbert', 'herbert@example.com', '$2y$10$nPK2hvLR6usuaSMS6gau5uHv.QSh6DzmqceeGRuPht3Dl2n0Bs4KO', '2025-05-20 01:44:54', 'klient');
+                                                                                                       (1, 'Janek', 'jan.kowalski@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+                                                                                                       (2, 'Anna', 'anna.nowak@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+                                                                                                       (3, 'Piotr', 'piotr.zielinski@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+                                                                                                       (4, 'Maria', 'maria.wisniewska@gmail.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+                                                                                                       (5, 'Adam', 'adam.kaczmarek@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-08 14:33:12', 'pracownik'),
+                                                                                                       (12, 'Herbert', 'herbert@example.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-20 01:44:54', 'klient'),
+                                                                                                       (13, 'Grzegorz', 'g.braun@gmail.com', '$2y$10$41nV0mCXv7ywXA6yVm8nwOXSFyfciUW7bLXaFAs89gXxP4gxjDEhm', '2025-05-26 23:34:35', 'klient');
 
 -- --------------------------------------------------------
 
@@ -820,7 +824,7 @@ ALTER TABLE `kategorie_instrumentow`
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `kody_promocyjne`
@@ -832,13 +836,13 @@ ALTER TABLE `kody_promocyjne`
 -- AUTO_INCREMENT for table `koszyk`
 --
 ALTER TABLE `koszyk`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `koszyk_szczegoly`
 --
 ALTER TABLE `koszyk_szczegoly`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
@@ -862,7 +866,7 @@ ALTER TABLE `stanowiska`
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `wiadomosci`
